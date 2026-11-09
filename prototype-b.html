@@ -215,6 +215,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nbanner.on .l .n{color:var(--red)}
 .nbanner .l b{font-weight:600;color:inherit}
 .nbanner .l .n{font-weight:700}
+.nbanner .l .nn{font-weight:700;color:var(--red)}
 .nbanner .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
 .nbanner .l.done{color:var(--gray-700)}
 .nbanner .l.done>.ic{color:var(--ok)}
@@ -754,8 +755,8 @@ function renderFbar(){
   var tot=summary(S.pid).total,bn=$("nbanner"),bh="";
   if(c){n=overListP(c).length;
     bh='<span class="l" title="처리 방법: '+esc(c.how)+'">'+I("alert")+'<b>'+esc(c.t)+'</b><span class="n">'+n+'명</span></span><span class="sp"></span>'+
-       '<button type="button" class="ba2" data-sumpop>'+I("list")+'전체 조건 보기</button><button type="button" class="ba2" id="cclear">'+I("x")+'조건 해제</button>';}
-  else if(tot){bh='<span class="l">'+I("bell")+'처리 필요 지원자 <span class="cnt">'+tot+'</span></span><span class="sp"></span><button type="button" class="ba2" data-sumpop>'+I("list")+'전체 조건 보기</button>';}
+       '<button type="button" class="ba2" data-sumpop>'+I("list")+'전체 보기</button><button type="button" class="ba2" id="cclear">'+I("x")+'조건 해제</button>';}
+  else if(tot){bh='<span class="l">'+I("bell")+'처리를 기다리는 지원자가 <b class="nn">'+tot+'명</b> 있어요.</span><span class="sp"></span><button type="button" class="ba2" data-sumpop>'+I("list")+'전체 보기</button>';}
   else if(S.justDone===S.pid){bh='<span class="l done">'+I("check")+'기준을 넘긴 지원자를 모두 처리했어요</span>';}
   bn.hidden=!bh;bn.className="nbanner"+(c||tot?" on":"");bn.innerHTML=bh;
   var left="",rest="";
