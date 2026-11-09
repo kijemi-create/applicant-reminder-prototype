@@ -281,8 +281,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .lr:hover{background:#fafbfc}
 .lr.sel{background:rgba(240,245,255,.4)}
 .lr.out{opacity:.35}
-.lr.hot{background:transparent}
-.lr.hot:hover{background:#fafbfc}
+.lr.hot{background:var(--red-50)}
+.lr.hot:hover{background:#ffeae8}
 .lr>div{padding:16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
 .pos{font-size:15px;font-weight:700;color:var(--gray-900)}
 .who{flex-direction:row!important;align-items:center;justify-content:flex-start!important;gap:12px}
@@ -652,7 +652,7 @@ function renderTabs(){
   var l=S.db[S.pid],c=S.cond?cond(S.cond):null;
   $("tabs").innerHTML=STAGES.map(function(s,i){
     var inSt=l.filter(function(a){return a.stage===i&&a.final!=="fail"&&passF(a);}),n=inSt.length,ov=0;
-    if(c){n=inSt.filter(function(a){return inList(c,a);}).length;ov=n;}
+    if(c){n=inSt.filter(c.inScope).length;ov=n;}
     return '<button type="button" class="tab'+(i===S.tab?' on':'')+'" data-tab="'+i+'">'+s+' <span class="n">'+n+'</span>'+'</button>';
   }).join("");
 }
@@ -681,7 +681,7 @@ function stBadge(a){if(a.final==="fail")return '<span class="bdg gray">불합격
 
 function visibleRows(){
   var l=S.db[S.pid];
-  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (c.inScope(a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}
   return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
 function renderList(){
@@ -695,13 +695,13 @@ function renderList(){
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>'+c.col+' '+I("sort")+'</div><div>면접 일정</div></div>';
     var nOver=rows.filter(function(a){return c.inScope(a)&&c.over(a);}).length;
     rows.forEach(function(a,i){
-      var inS=inList(c,a),ov=inS,el=c.el(a);
+      var inS=c.inScope(a),ov=inS&&c.over(a),el=c.el(a);
       var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):ov?'<span class="bdg red">'+el+'일 경과</span>':'<span class="bdg gray">'+el+'일 경과</span>';
       h+='<div class="lr'+(S.sel[a.id]?' sel':ov?' hot':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">QA</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length&&fActive()){h+='<div class="empty"><b>필터에 맞는 지원자가 없어요</b>조건 안에서 필터를 줄이거나 초기화해 보세요.<br><button type="button" class="rst" data-freset>필터 초기화</button></div>';}
     else if(!rows.length){
-      var left=overList(S.pid,c).length;
+      var left=S.db[S.pid].filter(c.inScope).length;
       h+=left?'<div class="empty"><b>이 단계에는 조건에 해당하는 지원자가 없어요</b>숫자가 있는 단계 탭을 확인해 보세요.</div>':(summary(S.pid).total?'<div class="empty"><b>이 조건의 지원자를 모두 처리했어요</b>다른 조건에 처리할 지원자가 남아 있어요.<br><button type="button" class="rst" data-nextcond>다른 조건 보기</button></div>':'<div class="empty"><b>처리 필요 지원자를 모두 처리했어요</b>새로 기준을 넘는 지원자가 생기면 다시 알려드려요.<br><button type="button" class="rst" data-condx>전체 지원자 보기</button></div>');
     }
   }else{
@@ -838,13 +838,13 @@ function toast(m){var t=$("toast");t.innerHTML=I("ok")+'<span>'+esc(m)+'</span>'
 function afterChange(ids){
   if(S.lastTotal>0&&summary(S.pid).total===0){S.justDone=S.pid;}
   if(S.lastTotal>0&&summary(S.pid).total===0)setTimeout(function(){toast("기준을 넘긴 지원자를 모두 처리했어요");},2700);
-  if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!inList(c,a))S.leaving[a.id]=1;});}
+  if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!c.inScope(a))S.leaving[a.id]=1;});}
   render();if(Object.keys(S.leaving).length)setTimeout(function(){S.leaving={};render();},1400);
 }
 function selected(){return Object.keys(S.sel).filter(function(k){return S.sel[k];});}
 function doMove(ids,st){ids.forEach(function(id){var a=findA(id);if(a.final)return;a.stage=st;a.se=0;if(st===3)a.final="pass";});}
 function doFinal(ids,r){ids.forEach(function(id){var a=findA(id);a.final=r;if(r==="pass")a.stage=3;});}
-function leaveNote(ids){if(!S.cond)return "";var c=cond(S.cond),n=ids.filter(function(id){return !inList(c,findA(id));}).length;return n?" 조건에서 "+n+"명이 빠졌어요.":"";}
+function leaveNote(ids){if(!S.cond)return "";var c=cond(S.cond),n=ids.filter(function(id){return !c.inScope(findA(id));}).length;return n?" 조건에서 "+n+"명이 빠졌어요.":"";}
 function closePops(){document.querySelectorAll(".bulk .pop").forEach(function(m){m.remove();});}
 
 document.addEventListener("click",function(e){
