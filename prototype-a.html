@@ -499,6 +499,17 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .ctx .ba2 .ic{font-size:14px}
 .ctx .bdv{width:1px;height:20px;background:#e2e6e8}
 .ctx.on{animation:tdn .2s ease-out}
+
+/* 제안안 위계: 공고 → 조건(보기) → 포지션 → 단계. 조건 바는 포지션 탭 위, 진입 버튼은 포지션 탭 줄 오른쪽 */
+.prow{margin-top:24px;min-height:44px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--gray-100)}
+.prow .ptabs{margin-top:0;border-bottom:0;flex:1;min-width:0}
+.prow .needwrap{margin-left:auto}
+.prow+.tool{margin-top:16px}
+.ctx+.prow{margin-top:16px}
+.prow .needbtn{height:32px;font-size:13px;padding:0 10px}
+.prow .needbtn .ic{font-size:18px}
+.prow .ctip{left:auto;right:0}
+.prow .ctip::before{left:auto;right:20px}
 /* 토스트: XDS Biz BZToast (success) · 뷰포트 우측 상단 고정 (상단 24 · 우측 20) */
 .toast{position:fixed;top:24px;right:20px;background:#30363c;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;line-height:20px;font-weight:600;z-index:70;box-shadow:0 0 6px rgba(0,0,0,.04),0 8px 16px rgba(0,0,0,.08);max-width:min(420px,calc(100vw - 40px));display:flex;gap:8px;align-items:flex-start}
 .toast .ic{font-size:16px;color:#02b160;flex:none;margin-top:2px}
@@ -550,7 +561,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
   <button type="button" class="pbtn" data-go="mail" aria-pressed="false">월요일 리마인드 메일</button>
   <button type="button" class="pbtn" id="doneBtn">모두 처리한 상태</button>
   <button type="button" class="pbtn" id="resetBtn">처음부터 다시</button>
-  <span class="pseg" role="group" aria-label="진입 UI"><button type="button" data-ui="banner" aria-pressed="false">현재안 · 배너</button><button type="button" data-ui="tool" aria-pressed="true">제안안 · 툴바 + 조건 바</button></span>
+  <span class="pseg" role="group" aria-label="진입 UI"><button type="button" data-ui="banner" aria-pressed="false">현재안 · 배너</button><button type="button" data-ui="tool" aria-pressed="true">제안안 · 조건 바 + 탭 줄 진입</button></span>
   <span class="sp"></span>
   <span>오늘 26.11.05(목) · 예시 데이터 · 경과일 N은 가안</span>
 </div>
@@ -567,10 +578,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
       <div class="posts" id="posts"></div>
       <div class="gnotice" id="gnotice"><span aria-hidden="true">📢</span>불합격·최종 합격 처리 시, 결과가 자동으로 안내되지 않습니다. 결과 안내는 원할 때 해 주세요.</div>
       <div class="nbanner" id="nbanner" hidden></div>
-      <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
+      <div class="ctx" id="ctxbar" hidden></div>
+      <div class="prow" id="prow"><div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div><span class="needwrap" id="needEntry" hidden></span></div>
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
-        <span class="needwrap" id="needEntry" hidden></span>
         <span class="sp"></span>
         <span class="fwrap"><button type="button" class="vsel" id="qvBtn" data-fmenu="view" data-r="1" aria-haspopup="menu"></button></span>
         <span class="vdiv"></span>
@@ -581,7 +592,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
         <span class="vdiv"></span>
         <button type="button" class="obtn" data-todo><span class="ic" data-i="edit"></span>채용 단계 편집</button>
       </div>
-      <div class="ctx" id="ctxbar" hidden></div>
       <div class="fbar" id="fbar"></div>
       <div class="tabs" id="tabs"></div>
       <div class="list" id="list"></div>
@@ -828,7 +838,7 @@ var UI="tool",TIP=0;
 function renderEntry(){
   var tool=UI==="tool",ne=$("needEntry"),cx=$("ctxbar"),c=S.cond?cond(S.cond):null,tot=summary(S.pid).total;
   document.querySelectorAll("[data-ui]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ui===UI));});
-  if(!tool){ne.hidden=true;ne.innerHTML="";cx.hidden=true;cx.innerHTML="";return;}
+  if(!tool){ne.hidden=true;ne.innerHTML="";cx.hidden=true;cx.innerHTML="";$("prow").hidden=$("ptabs").hidden;return;}
   $("nbanner").hidden=true;$("nbanner").innerHTML="";
   /* 툴바 진입 버튼: 조건 적용 전에만. 조건 적용 중에는 조건 바가 대신함 */
   var eh="";
@@ -837,6 +847,7 @@ function renderEntry(){
   ne.hidden=!eh;ne.innerHTML=eh;
   var ch="";
   if(c){var nn=overListP(c).length;ch='<span class="lb">'+I("lac")+'처리 필요 조건</span><b>'+esc(c.t)+' <span class="n">'+nn+'명</span></b><span class="sub">'+esc(c.hint||c.how)+'</span><button type="button" class="ba2" data-sumpop>다른 조건 보기</button><span class="bdv" aria-hidden="true"></span><button type="button" class="ba2" id="cclear">조건 해제 '+I("x")+'</button>';}
+  $("prow").hidden=$("ptabs").hidden&&ne.hidden;
   var was=!cx.hidden;cx.hidden=!ch;cx.className="ctx"+(ch&&!was?" on":"");cx.innerHTML=ch;
 }
 function renderFbar(){
