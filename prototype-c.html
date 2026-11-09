@@ -138,19 +138,25 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 /* C안: 카카오톡 전체/안읽음 방식 보기 탭 */
 .shead{margin-top:48px}
 .shead .st{margin:0;font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
-.vtabs{margin-top:24px;display:flex;gap:8px}
-.shead+.vtabs{margin-top:16px}
+.vrow{margin-top:24px;display:flex;align-items:center;gap:8px;min-width:0}
+.shead+.vrow{margin-top:16px}
+.vtabs{display:flex;gap:8px;flex:none}
 .vt{position:relative;height:36px;padding:0 14px;border-radius:999px;background:var(--gray-50);font-size:14px;line-height:20px;font-weight:500;color:var(--gray-800);display:inline-flex;align-items:center;gap:6px}
 .vt:hover{background:var(--gray-100)}
 .vt.on{background:var(--gray-800);color:#fff;font-weight:600}
 .vt .dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
 .vt .htip{top:calc(100% + 8px);left:0}
 .vt:hover .htip{display:block}
-.chead{margin-top:20px;display:flex;align-items:center;gap:8px;position:relative}
-.chead .ct{display:inline-flex;align-items:center;gap:8px;font-size:16px;line-height:24px;font-weight:700;color:var(--gray-950);letter-spacing:-.3px;text-align:left}
-.chead .ct .dd{width:32px;height:32px;border:1px solid var(--gray-200);border-radius:50%;display:grid;place-items:center;background:#fff;flex:none}
-.chead .ct .dd .ic{font-size:16px;transform:rotate(90deg);color:var(--gray-700)}
-.chead .ct:hover .dd{background:var(--gray-50)}
+/* 처리필요 탭 오른쪽 조건 선택 (탭과 구분되는 선택 상자 모양) */
+.chead{display:flex;align-items:center;gap:6px;position:relative;min-width:0}
+.chead .vsep{display:inline-grid;color:var(--gray-400)}
+.chead .vsep .ic{font-size:16px}
+.chead .ct{height:36px;max-width:560px;display:inline-flex;align-items:center;gap:6px;padding:0 10px 0 12px;border:1px solid var(--gray-200);border-radius:8px;background:#fff;font-size:14px;line-height:20px;font-weight:600;color:var(--gray-950);white-space:nowrap;min-width:0}
+.chead .ct:hover{background:var(--gray-50)}
+.chead .ct .ctt{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.chead .ct b{color:var(--red);font-weight:700;flex:none}
+.chead .ct .dd{display:inline-grid;flex:none;margin-left:2px}
+.chead .ct .dd .ic{font-size:16px;transform:rotate(90deg);color:var(--gray-600)}
 .chead .cinfo .ic{font-size:18px;color:var(--gray-500)}
 .cmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:25;min-width:380px;background:#fff;border:1px solid var(--gray-100);border-radius:10px;padding:8px;box-shadow:0 0 4px rgba(0,0,0,.04),0 4px 8px -1px rgba(0,0,0,.08);display:flex;flex-direction:column}
 .cmenu .hd{font-size:12px;line-height:18px;color:var(--gray-500);padding:6px 12px 4px;font-weight:600}
@@ -390,8 +396,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
       <div class="trow"><h2 class="h2">지원자 관리</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
       <div class="shead"><h3 class="st">현재 공고 지원자</h3></div>
-      <div class="vtabs" id="vtabs" role="tablist" aria-label="지원자 보기"></div>
-      <div class="chead" id="chead" hidden></div>
+      <div class="vrow"><div class="vtabs" id="vtabs" role="tablist" aria-label="지원자 보기"></div><div class="chead" id="chead" hidden></div></div>
       <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
@@ -620,7 +625,7 @@ function renderView(){
     '<button type="button" class="vt'+(need?' on':'')+'" role="tab" aria-selected="'+need+'" data-vt="need">처리필요'+(tot?'<span class="dot" aria-label="처리할 지원자 있음"></span>':'')+(need?'':'<span class="htip" role="tooltip"><b>처리필요</b>기준 기간이 지나도록 처리되지 않은 지원자를 모아 보여줘요.'+(tot?' 지금 '+tot+'명이 있어요.':' 지금은 없어요.')+'</span>')+'</button>';
   $("chead").hidden=!need;if(!need){$("chead").innerHTML="";return;}
   var c=cond(S.cond),n=overListP(c).length,open=!!document.querySelector(".cmenu");
-  $("chead").innerHTML='<button type="button" class="ct" data-cmenu aria-haspopup="menu">'+esc(c.t)+' ('+n+'명)<span class="dd">'+I("chev")+'</span></button>';
+  $("chead").innerHTML='<span class="vsep" aria-hidden="true">'+I("chev")+'</span><button type="button" class="ct" data-cmenu aria-haspopup="menu" aria-label="처리 필요 조건 선택: '+esc(c.t)+' '+n+'명"><span class="ctt">'+esc(c.t)+'</span> <b>'+n+'명</b><span class="dd">'+I("chev")+'</span></button>';
   if(open)openCmenu();
 }
 function closeCmenu(){var m=document.querySelector(".cmenu");if(m)m.remove();}
