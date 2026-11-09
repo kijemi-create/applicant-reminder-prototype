@@ -125,6 +125,17 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nmenu .tip b .ic{font-size:18px;color:var(--ok)}
 .nmenu .tip span{font-size:13px;line-height:20px;color:var(--gray-600);padding-left:24px}
 .shead+.ptabs{margin-top:12px}
+.nb .cv{transform:none}
+.ctitle{margin-top:20px;display:flex;align-items:center;gap:8px}
+.ctitle b{font-size:18px;line-height:26px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
+.ctitle b .n{color:var(--brand)}
+.cx2{width:28px;height:28px;border-radius:50%;border:1px solid var(--gray-200);background:#fff;display:grid;place-items:center;color:var(--gray-700)}
+.cx2:hover{background:var(--gray-50)}
+.cx2 .ic{font-size:14px}
+.ctitle+.ptabs{margin-top:8px}
+.crit button.cur{background:var(--brand-50)}
+.crit button.cur .t{color:var(--brand);font-weight:700}
+.crit .now{font-style:normal;margin-left:8px;font-size:12px;font-weight:600;color:var(--brand);background:#fff;border:1px solid var(--brand);border-radius:4px;padding:1px 6px}
 /* 포지션 탭 (포지션 N개) */
 .ptabs{margin-top:24px;display:flex;gap:24px;border-bottom:1px solid var(--gray-100)}
 .ptab{height:44px;font-size:15px;line-height:22px;font-weight:500;color:var(--gray-600);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
@@ -388,6 +399,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
       <div class="trow"><h2 class="h2">지원자 관리</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
       <div class="shead"><h3 class="st">현재 공고 지원자</h3><span id="needWrap"></span></div>
+      <div class="ctitle" id="ctitle" hidden></div>
       <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
@@ -602,22 +614,19 @@ function renderList(){
   $("list").innerHTML=h;
 }
 function renderNeed(){
-  var tot=summary(S.pid).total,c=S.cond?cond(S.cond):null,w=$("needWrap"),open=!!w.querySelector(".nmenu"),label,cls,ic;
-  if(c){label=esc(c.t)+' <b>'+overListP(c).length+'명</b>';cls="nb on";ic="bell";}
-  else if(tot){label='처리 필요<span class="cnt">'+tot+'</span>';cls="nb";ic="bell";}
-  else{label='처리 완료';cls="nb done";ic="check";}
-  w.innerHTML='<button type="button" class="'+cls+'" data-nmenu aria-haspopup="menu" aria-expanded="'+open+'">'+I(ic)+'<span class="lbl">'+label+'</span><span class="cv">'+I("chev")+'</span></button>'+(c?'<button type="button" class="nx" data-nclear aria-label="조건 해제">'+I("x")+'</button>':'');
-  if(open)openNmenu();
+  var tot=summary(S.pid).total,c=S.cond?cond(S.cond):null,w=$("needWrap"),open=!!w.querySelector(".nmenu");
+  w.innerHTML=tot?'<button type="button" class="nb" data-nopen aria-haspopup="dialog">'+I("bell")+'<span class="lbl">처리 필요<span class="cnt">'+tot+'</span></span><span class="cv">'+I("chev")+'</span></button>'
+    :'<button type="button" class="nb done" data-ntip aria-label="처리 완료, 안내 보기">'+I("check")+'<span class="lbl">처리 완료</span></button>';
+  if(open&&!tot)openNmenu();
+  /* 포지션 탭 위: 지금 보고 있는 조건 */
+  $("ctitle").hidden=!c;
+  $("ctitle").innerHTML=c?'<b>'+esc(c.t)+' <span class="n">('+overListP(c).length+'명)</span></b><button type="button" class="cx2" data-nclear aria-label="조건 해제, 전체 지원자 보기" title="조건 해제">'+I("x")+'</button>':'';
 }
 function closeNmenu(){var m=document.querySelector(".nmenu");if(m)m.remove();}
 function openNmenu(){
-  closeNmenu();var tot=summary(S.pid).total,m=document.createElement("div");m.className="nmenu";m.setAttribute("role","menu");
-  if(!tot&&!S.cond){m.innerHTML='<div class="tip"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>새로 기준을 넘는 지원자가 생기면 이 버튼에 인원이 다시 표시돼요.</span></div>';}
-  else{
-    m.innerHTML='<div class="hd">처리 필요 조건<span>한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+[ALL].concat(CONDS).map(function(x){var n=overListP(x).length,on=x.id===S.cond,z=!n&&!on;return '<button type="button" class="'+(x.id===99?'allb ':'')+(on?'on':'')+'" '+(z?'disabled':'data-npick="'+x.id+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):'')+'</button>';}).join("")+
-      '<div class="ft">'+(S.cond?'<button type="button" data-nclear>조건 해제 · 전체 지원자 보기</button>':'')+'<button type="button" data-sumpop>요약 팝업으로 보기</button></div>';
-  }
-  $("needWrap").appendChild(m);$("needWrap").querySelector(".nb").setAttribute("aria-expanded","true");
+  closeNmenu();var m=document.createElement("div");m.className="nmenu";m.setAttribute("role","status");
+  m.innerHTML='<div class="tip"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>새로 기준을 넘는 지원자가 생기면 이 버튼에 인원이 다시 표시돼요.</span></div>';
+  $("needWrap").appendChild(m);
 }
 function renderNotice(){var b=$("noticeCb");if(!b)return;b.classList.toggle("dis",!!S.cond);b.setAttribute("aria-disabled",String(!!S.cond));}
 function renderBulk(){var n=Object.keys(S.sel).filter(function(k){return S.sel[k];}).length;$("bulk").hidden=!n;$("bn").textContent=n+"명";}
@@ -635,11 +644,11 @@ function showSummary(){
   if(!s.total){toast("지금은 처리가 필요한 지원자가 없어요");return;}
   $("overlay").innerHTML='<div class="backdrop" data-close></div><div class="dwrap" data-close><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dT">'+
     '<div class="hd"><span class="pn">'+esc(p.name)+'</span><h2 id="dT">처리를 기다리는 지원자가 <em>'+s.total+'명</em> 있어요</h2><p>지원자가 채용 진행 상황을 기다리고 있어요. 신속한 안내는 좋은 채용 경험과 기업에 대한 긍정적인 인상을 만들어요.</p></div>'+
-    '<ul class="crit" style="margin:0"><li class="allrow"><button type="button" data-apply="99"><span class="t">처리 필요 지원자 전체 보기</span><span class="n">'+s.total+'명</span>'+I("chev")+'</button></li>'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+r.c.t+'</span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
+    '<ul class="crit" style="margin:0"><li class="allrow"><button type="button" data-apply="99"'+(S.cond===99?' class="cur" aria-current="true"':'')+'><span class="t">처리 필요 지원자 전체 보기'+(S.cond===99?'<em class="now">지금 보는 중</em>':'')+'</span><span class="n">'+s.total+'명</span>'+I("chev")+'</button></li>'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"'+(r.c.id===S.cond?' class="cur" aria-current="true"':'')+'><span class="t">'+r.c.t+(r.c.id===S.cond?'<em class="now">지금 보는 중</em>':'')+'</span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
     '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있어요.<br>조건별 기준은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간이에요.</span></div>'+
     '<div class="btns"><button type="button" class="bt sec" data-close>닫기</button></div>'+
     '</div></div>';
-  var f=$("overlay").querySelector("[data-apply]");if(f)f.focus();
+  var f=$("overlay").querySelector(".crit .cur")||$("overlay").querySelector("[data-apply]");if(f)f.focus();
 }
 function findA(id){return S.db[S.pid].find(function(a){return a.id===id;});}
 function sheet(title,body,foot){
@@ -726,8 +735,8 @@ document.addEventListener("click",function(e){
   if(d.condx!==undefined){S.cond=null;S.sel={};render();return;}
   if(d.notice!==undefined){toast(S.cond?"처리 필요 조건과 함께 쓸 수 없어요":"프로토타입 범위 밖 기능이에요");return;}
   if(d.ptab!==undefined){S.pos=d.ptab||null;S.sel={};pickTab();render();return;}
-  if(d.nmenu!==undefined){if(document.querySelector(".nmenu"))closeNmenu();else openNmenu();return;}
-  if(d.npick){closeNmenu();S.cond=+d.npick;toast(cond(S.cond).how);S.sel={};pickTab();render();return;}
+  if(d.nopen!==undefined){closeNmenu();showSummary();return;}
+  if(d.ntip!==undefined){if(document.querySelector(".nmenu"))closeNmenu();else openNmenu();return;}
   if(d.nclear!==undefined){closeNmenu();S.cond=null;S.sel={};render();return;}
   if(d.sumpop!==undefined){closeNmenu();showSummary();return;}
   if(d.todo!==undefined){toast("프로토타입 범위 밖 기능이에요");return;}
