@@ -207,7 +207,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fwrap:has(.fmenu) .htip{display:none}
 .fmenu .hd .hdn{display:block;font-weight:400;color:var(--gray-400);margin-top:2px}
 /* 처리 필요 배너 (B안) */
-.nbanner{margin-top:32px;height:48px;display:flex;align-items:center;gap:8px;padding:0 8px 0 16px;border-radius:8px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:14px;line-height:20px;color:var(--gray-800)}
+.nbanner{margin-top:32px;height:64px;display:flex;align-items:center;gap:8px;padding:0 8px 0 16px;border-radius:8px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:14px;line-height:20px;color:var(--gray-800)}
 .nbanner.on{background:var(--red-50);border-color:var(--red-100);color:var(--gray-950)}
 .nbanner .l{display:inline-flex;align-items:center;gap:8px;font-weight:500;white-space:nowrap;min-width:0}
 .nbanner .l>.ic{font-size:18px;color:var(--red)}
@@ -219,6 +219,12 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nbanner .l{gap:6px}
 .nbanner .bpri{height:32px;padding:0 12px;border-radius:6px;background:var(--red);color:#fff;font-size:13px;font-weight:600;white-space:nowrap;margin-right:4px}
 .nbanner .bpri:hover{background:var(--red-600)}
+.nbanner .bdv{width:1px;height:14px;background:var(--red-100)}
+.nbanner .l.two{gap:10px}
+.nbanner .l.two .tx{display:flex;flex-direction:column;gap:2px}
+.nbanner .l.two .tx b{font-size:14px;line-height:20px;font-weight:700;color:var(--gray-950)}
+.nbanner .l.two .tx .n{color:var(--red)}
+.nbanner .l.two .tx .sub{font-size:13px;line-height:18px;font-weight:400;color:var(--gray-700)}
 .nbanner .lbtn{height:36px;padding:0 10px 0 6px;margin-left:-6px;border-radius:6px;color:inherit;font-size:14px}
 .nbanner .lbtn:hover{background:rgba(242,42,35,.06)}
 .nbanner .lbtn .cv{display:inline-grid;transform:rotate(90deg);margin-left:2px}
@@ -618,12 +624,12 @@ var POS={A:["QA","인사관리자","그래픽 디자이너"],B:["사무보조","
 function build(){var db={};Object.keys(SEED).forEach(function(k){db[k]=SEED[k].map(function(r,i){var v=r[9];var iv=v===0?{k:"none"}:v[0]==="p"?{k:"p"}:v[0]==="c"?{k:"c",d:v[1]}:v[0]==="r"?{k:"r",n:v[1]}:{k:"d",n:v[1]};return {id:k+i,name:r[0],age:r[1],g:r[2],edu:EDU[r[3]],car:CAR[r[4]],stage:r[5],applied:r[6],se:r[7],lv:r[8],iv:iv,final:r[10]||null,dup:i%4===1,pos:POS[k][i%POS[k].length]};});});return db;}
 
 var CONDS=[
- {id:1,how:"최종합격 또는 불합격을 입력하면 목록에서 빠져요",s:"지원 후 16일 미처리",n:16,t:"지원 후 16일 동안 최종 결과 미입력",col:"지원일",sort:"지원일 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=16;}},
- {id:2,how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",s:"단계 진입 후 14일 정체",n:14,t:"현재 단계 진입 후 14일 동안 단계 이동·합불 없음",col:"단계 진입일",sort:"단계 진입 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.se;},over:function(a){return a.se>=14;}},
- {id:3,how:"지원서를 열람하면 목록에서 빠져요",s:"미열람 7일 경과",n:7,t:"미열람 상태로 7일 경과",col:"지원일",sort:"지원일 오래된순",scope:"미열람 지원자",inScope:function(a){return a.lv<0&&!a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=7;}},
- {id:4,how:"단계를 이동하거나 합불을 입력하면 목록에서 빠져요",s:"열람 후 9일 정체",n:9,t:"열람 후 9일 동안 단계 이동·합불 없음",col:"마지막 열람일",sort:"마지막 열람일 오래된순",scope:"열람 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.lv>=0;},el:function(a){return a.lv;},over:function(a){return a.lv>=9&&a.se>=a.lv;}},
- {id:6,how:"변경 요청을 확인해 일정을 다시 제안하거나 면접을 취소하면 목록에서 빠져요",s:"일정 변경 요청 7일 미처리",n:7,t:"면접 일정 변경 요청 후 7일 동안 처리 없음",col:"변경 요청일",sort:"변경 요청 오래된순",scope:"일정 변경 요청 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="r";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=7&&a.se>=a.iv.n;}},
- {id:7,how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",s:"면접 후 12일 정체",n:12,t:"면접 종료 후 12일 동안 단계 이동·합불 없음",col:"면접 종료일",sort:"면접 종료 오래된순",scope:"면접 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="d";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=12&&a.se>=a.iv.n;}}
+ {id:1,hint:"최종 합격 또는 불합격으로 심사해주세요.",how:"최종합격 또는 불합격을 입력하면 목록에서 빠져요",s:"지원 후 16일 미처리",n:16,t:"지원 후 16일 동안 최종 결과 미입력",col:"지원일",sort:"지원일 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=16;}},
+ {id:2,hint:"다음 단계로 이동하거나 심사해주세요.",how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",s:"단계 진입 후 14일 정체",n:14,t:"현재 단계 진입 후 14일 동안 단계 이동·합불 없음",col:"단계 진입일",sort:"단계 진입 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.se;},over:function(a){return a.se>=14;}},
+ {id:3,hint:"지원서를 열람해주세요.",how:"지원서를 열람하면 목록에서 빠져요",s:"미열람 7일 경과",n:7,t:"미열람 상태로 7일 경과",col:"지원일",sort:"지원일 오래된순",scope:"미열람 지원자",inScope:function(a){return a.lv<0&&!a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=7;}},
+ {id:4,hint:"다음 단계로 이동하거나 심사해주세요.",how:"단계를 이동하거나 합불을 입력하면 목록에서 빠져요",s:"열람 후 9일 정체",n:9,t:"열람 후 9일 동안 단계 이동·합불 없음",col:"마지막 열람일",sort:"마지막 열람일 오래된순",scope:"열람 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.lv>=0;},el:function(a){return a.lv;},over:function(a){return a.lv>=9&&a.se>=a.lv;}},
+ {id:6,hint:"‘일정변경요청 확인’에서 일정을 다시 제안하거나 취소해주세요.",how:"변경 요청을 확인해 일정을 다시 제안하거나 면접을 취소하면 목록에서 빠져요",s:"일정 변경 요청 7일 미처리",n:7,t:"면접 일정 변경 요청 후 7일 동안 처리 없음",col:"변경 요청일",sort:"변경 요청 오래된순",scope:"일정 변경 요청 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="r";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=7&&a.se>=a.iv.n;}},
+ {id:7,hint:"면접 결과에 따라 다음 단계로 이동하거나 심사해주세요.",how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",s:"면접 후 12일 정체",n:12,t:"면접 종료 후 12일 동안 단계 이동·합불 없음",col:"면접 종료일",sort:"면접 종료 오래된순",scope:"면접 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="d";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=12&&a.se>=a.iv.n;}}
 ];
 function inList(c,a){return c.inScope(a)&&c.over(a);}
 var TAGS={1:"결과 미입력",2:"단계 이동 없음",3:"미열람",4:"열람 후 미처리",6:"일정 변경 요청",7:"면접 후 미처리"};
@@ -769,9 +775,9 @@ function renderFbar(){
   var tot=summary(S.pid).total,bn=$("nbanner"),bh="",cls="nbanner";
   if(c){
     var nn=overListP(c).length;
-    bh='<span class="fwrap"><button type="button" class="l lbtn" data-fmenu="cond" aria-haspopup="menu" title="처리 방법: '+esc(c.how)+'">'+I("alert")+'<span class="bmsg"><b>'+esc(c.t)+' '+nn+'명</b>'+josa(nn+'명')+' 확인해주세요.</span><span class="cv">'+I("chev")+'</span></button></span><span class="sp"></span>'+
-       '<button type="button" class="ba2" id="cclear">조건 해제</button>';cls+=" on";}
-  else if(tot){bh='<span class="l">'+I("bell")+'<span class="bmsg">처리를 기다리는 지원자가 <b class="nn">'+tot+'명</b> 있어요.</span></span><span class="sp"></span><button type="button" class="bpri" data-sumpop>처리 필요 지원자 보기</button>';cls+=" on";}
+    bh='<span class="l two">'+I("alert")+'<span class="tx"><b>'+esc(c.t)+' <span class="n">'+nn+'명</span></b><span class="sub">'+esc(c.hint||c.how)+'</span></span></span><span class="sp"></span>'+
+       '<button type="button" class="ba2" data-sumpop>다른 조건 보기</button><span class="bdv" aria-hidden="true"></span><button type="button" class="ba2" id="cclear">조건 해제</button>';cls+=" on";}
+  else if(tot){bh='<span class="l">'+I("bell")+'<span class="bmsg">처리를 기다리는 지원자가 <b class="nn">'+tot+'명</b> 있어요.</span></span><span class="sp"></span><button type="button" class="bpri" data-sumpop>확인하기</button>';cls+=" on";}
   else if(S.justDone===S.pid){bh='<span class="l">'+I("check")+'<span class="bmsg">모두 처리했어요</span></span>';cls+=" ok";}
   bn.hidden=!bh;bn.className=cls;bn.innerHTML=bh;
   var left="",rest="";
