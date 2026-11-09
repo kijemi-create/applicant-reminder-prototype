@@ -1,6 +1,6 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<title>A안 · 처리 필요 버튼 | 처리 유도 프로토타입</title>
+<title>A안 · 배너형 | 처리 유도 프로토타입</title>
 
 <style>
 /* Layout: 기업 지원자 목록(hiring-beta) 실측값 재현. 상단 시나리오 바 + 1440 기준 앱 프레임 */
@@ -79,6 +79,16 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .card .tt{font-size:14px;line-height:18px;font-weight:700;color:var(--gray-950);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .mt{font-size:14px;line-height:18px;color:var(--gray-500);display:flex;align-items:center;gap:4px}
 .card .mt .due{color:var(--red);font-weight:600}
+/* 공고 카드 처리 필요 칩 */
+.card .tl{display:flex;align-items:center;gap:6px}
+.pneed{height:24px;display:inline-flex;align-items:center;gap:4px;padding:0 8px 0 6px;border-radius:4px;border:1px solid var(--gray-200);background:#fff;color:var(--gray-900);font-size:12px;line-height:18px;font-weight:600;cursor:pointer;white-space:nowrap}
+.pneed:hover{border-color:var(--gray-400);background:var(--gray-50)}
+.pneed .ic{font-size:14px!important;color:var(--gray-600)!important}
+.pneed b{font-weight:700;color:var(--red)}
+.pneed.done{cursor:default;color:var(--gray-600);font-weight:500}
+.pneed.done:hover{border-color:var(--gray-200);background:#fff}
+.pneed.done .ic{color:var(--ok)!important}
+
 .bdg{display:inline-flex;align-items:center;justify-content:center;gap:4px;height:24px;padding:2px 8px;border-radius:4px;font-size:12px;line-height:18px;font-weight:500;white-space:nowrap}
 .bdg.info{background:var(--info-50);color:var(--info)}
 .bdg.line{background:#fff;border:1px solid var(--gray-200);color:var(--gray-800)}
@@ -89,81 +99,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .bdg.sm{height:20px;padding:0 6px;font-size:12px}
 
 /* 툴바 */
-/* 현재 공고 지원자 타이틀 + 처리 필요 버튼 (지역 필터 버튼 방식) */
-.shead{margin-top:40px;display:flex;align-items:center;gap:12px}
-.shead .st{margin:0;font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
-#needWrap{position:relative;display:inline-flex;align-items:center}
-.nb{height:32px;font-size:13px!important;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 14px;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font-size:14px;line-height:20px;font-weight:600;color:var(--gray-950);white-space:nowrap}
-.nb:hover{background:var(--gray-50)}
-.nb>.ic{font-size:18px;color:var(--red)}
-.nb .lbl{display:inline-flex;align-items:center;gap:6px}
-.nb .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:600;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
-.nb .cv{display:inline-grid;transform:rotate(90deg)}
-.nb .cv .ic{font-size:16px;color:var(--gray-600)}
-.nb.on{border-color:var(--brand);background:var(--brand-50);color:var(--brand);padding-right:40px}
-.nb.on>.ic,.nb.on .cv .ic{color:var(--brand)}
-.nb.on b{font-weight:700}
-.nb.done{color:var(--gray-600);font-weight:500}
-.nb.done>.ic{color:var(--ok)}
-.nx{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:var(--brand)}
-.nx:hover{background:rgba(27,85,246,.1)}
-.nx .ic{font-size:14px}
-.nb.on .cv{margin-right:2px}
-.nmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:25;min-width:380px;background:#fff;border:1px solid var(--gray-100);border-radius:10px;padding:8px;box-shadow:0 0 4px rgba(0,0,0,.04),0 4px 8px -1px rgba(0,0,0,.08);display:flex;flex-direction:column}
-.nmenu .hd{font-size:12px;line-height:18px;color:var(--gray-500);padding:6px 12px 4px;font-weight:600}
-.nmenu .hd span{display:block;font-weight:400;color:var(--gray-400)}
-.nmenu button{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px;border-radius:6px;font-size:14px;line-height:20px;color:var(--gray-950);text-align:left}
-.nmenu button:hover{background:var(--gray-50)}
-.nmenu button.on{color:var(--brand);font-weight:600}
-.nmenu button:disabled{color:var(--gray-300);background:none;cursor:default}
-.nmenu button .n{color:var(--red);font-weight:600;font-size:13px}
-.nmenu .allb{border-bottom:1px solid var(--gray-100);border-radius:6px 6px 0 0;font-weight:600}
-.nmenu .ft{border-top:1px solid var(--gray-100);margin-top:6px;padding-top:6px}
-.nmenu .ft button{color:var(--gray-600);font-size:13px}
-.nmenu .tip{padding:8px 8px 6px;display:flex;flex-direction:column;gap:4px;width:300px}
-.nmenu .tip b{display:flex;align-items:center;gap:6px;font-size:14px;line-height:20px;color:var(--gray-950)}
-.nmenu .tip b .ic{font-size:18px;color:var(--ok)}
-.nmenu .tip span{font-size:13px;line-height:20px;color:var(--gray-600);padding-left:24px}
-.shead+.ptabs{margin-top:12px}
-/* 상태 | 액션 분할 버튼 (로드맵 완주율 | 전체 목록 보기 방식) */
-.splt{height:32px;display:inline-flex;align-items:center;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font-size:13px;line-height:20px;font-weight:600;color:var(--gray-950);white-space:nowrap;overflow:hidden}
-.splt .sl{height:100%;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 12px;color:inherit;font-weight:600}
-.splt button.sl:hover,.splt .sr:hover{background:var(--gray-50)}
-.splt .sl>.ic{font-size:16px;color:var(--red)}
-.splt .cnt{min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
-.splt .sdv{width:1px;height:14px;background:var(--gray-200);flex:none}
-.splt .sr{height:100%;display:inline-flex;align-items:center;gap:2px;padding:0 8px 0 12px;color:var(--gray-700);font-weight:600}
-.splt .sr .cv{display:inline-grid;transform:rotate(90deg)}
-.splt .sr .cv .ic{font-size:14px;color:var(--gray-500)}
-.splt.on{border-color:var(--red-100);background:var(--red-50)}
-.splt.on .sl{color:var(--red);padding-right:12px}
-.splt.on .sl>.ic{color:var(--red)}
-.splt.on .sl b{font-weight:700}
-.splt.on .sdv{background:var(--red-100)}
-.splt.on .sr{color:var(--gray-800)}
-.splt.on .sr:hover{background:rgba(242,42,35,.06)}
-.splt.on .sr .cv .ic{color:var(--gray-500)}
-.splt .sx{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:var(--brand);margin-left:2px}
-.splt .sx:hover{background:rgba(27,85,246,.12)}
-.splt .sx .ic{font-size:13px}
-.nb .cv{transform:none}
-.ctitle{margin-top:16px;display:flex;align-items:center;gap:8px}
-/* 선택한 조건: 노션식 필터 칩 (B안 조건 칩과 동일, 화살표 없이 ×만) */
-.cchip{height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 4px 0 12px;border:1px solid var(--brand);border-radius:999px;background:var(--brand-50);color:var(--brand);font-size:13px;line-height:20px;font-weight:600;white-space:nowrap}
-.cchip>.ic{font-size:16px}
-.ctitle .cchip b{font-size:inherit;line-height:inherit;letter-spacing:normal;color:inherit;font-weight:700}
-.cchip .cx{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:var(--brand)}
-.cchip .cx:hover{background:rgba(27,85,246,.1)}
-.cchip .cx .ic{font-size:14px}
-.ctitle b{font-size:18px;line-height:26px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
-.ctitle b .n{color:var(--brand)}
-.cx2{width:28px;height:28px;border-radius:50%;border:1px solid var(--gray-200);background:#fff;display:grid;place-items:center;color:var(--gray-700)}
-.cx2:hover{background:var(--gray-50)}
-.cx2 .ic{font-size:14px}
-.ctitle+.ptabs{margin-top:8px}
-.crit button.cur{background:var(--brand-50)}
-.crit button.cur .t{color:var(--brand);font-weight:700}
-.crit .now{font-style:normal;margin-left:8px;font-size:12px;font-weight:600;color:var(--brand);background:#fff;border:1px solid var(--brand);border-radius:4px;padding:1px 6px}
 /* 포지션 탭 (포지션 N개) */
 .ptabs{margin-top:24px;display:flex;gap:24px;border-bottom:1px solid var(--gray-100)}
 .ptab{height:44px;font-size:15px;line-height:22px;font-weight:500;color:var(--gray-600);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
@@ -177,11 +112,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .seg span.on{background:#fff;color:var(--gray-950);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .seg .ic{font-size:18px}
 .cbl{display:inline-flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:500;color:var(--gray-800);margin-right:8px}
-.cbl#noticeCb{position:relative}
-.cbl.dis{color:var(--gray-300);cursor:not-allowed}
-.cbl.dis .ck{border-color:var(--gray-100);background:var(--gray-50)}
-.cbl#noticeCb .htip{display:none;top:calc(100% + 8px);left:0;font-weight:400}
-.cbl.dis:hover .htip{display:block}
 .vdiv{width:1px;height:20px;background:var(--gray-100);margin:0 4px}
 
 /* 처리 필요 지원자 버튼 (신규) */
@@ -189,12 +119,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .reopen:hover{background:var(--gray-50)}
 .reopen .ic{font-size:18px;color:var(--red)}
 .reopen .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums}
-.reopen.on{border-color:var(--brand);background:var(--brand-50);color:var(--brand)}
-.reopen.on:hover{background:#e2eaff}
 .reopen.done{color:var(--gray-600);font-weight:500;padding:0 12px}
 .reopen.done .ic{color:var(--gray-500)}
 .rwrap{position:relative;display:inline-flex}
-.rpop{position:absolute;top:calc(100% + 8px);left:0;z-index:25;width:300px;background:#fff;border:1px solid var(--gray-100);border-radius:10px;padding:14px 16px;box-shadow:0 0 4px rgba(0,0,0,.04),0 4px 8px -1px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:4px}
+.rpop{position:absolute;top:calc(100% + 8px);right:8px;z-index:25;width:300px;background:#fff;border:1px solid var(--gray-100);border-radius:10px;padding:14px 16px;box-shadow:0 0 4px rgba(0,0,0,.04),0 4px 8px -1px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:4px}
 .rpop b{display:flex;align-items:center;gap:6px;font-size:14px;line-height:20px;font-weight:600;color:var(--gray-950)}
 .rpop b .ic{font-size:18px;color:var(--ok)}
 .rpop span{font-size:13px;line-height:20px;color:var(--gray-600);padding-left:24px}
@@ -207,26 +135,186 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .tab.on .n{color:var(--info)}
 .tab .dot{width:6px;height:6px;border-radius:50%;background:var(--red);margin-left:-1px;align-self:flex-start;margin-top:7px}
 
-/* 조건 적용 안내 (신규) */
-.cban{margin-top:8px;display:flex;align-items:center;gap:12px;padding:8px 8px 8px 16px;background:var(--brand-50);border-radius:8px;color:var(--brand)}
-.cban .ic{font-size:20px}
-.cinfo{position:relative;display:inline-grid;cursor:help;outline:none}
-.htip{display:none;position:absolute;top:calc(100% + 10px);left:-8px;z-index:24;width:max-content;max-width:320px;padding:10px 12px;border-radius:8px;background:var(--gray-900);color:#fff;font-size:13px;line-height:20px;font-weight:400;white-space:normal;box-shadow:0 4px 12px rgba(0,0,0,.16)}
-.htip b{display:block;font-size:12px;font-weight:600;color:var(--gray-300);margin-bottom:2px}
-.cinfo:hover .htip,.cinfo:focus .htip{display:block}
+/* 조건·필터 칩 바 (필터 칩안 · Vercel 참고) */
+.fbar{margin-top:16px;display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-height:36px}
+.fbar .lbl{font-size:13px;font-weight:600;color:var(--gray-500);margin-right:2px}
+.fbar .sp{flex:1}
+.fwrap{position:relative;display:inline-flex}
+.chip{height:32px;display:inline-flex;align-items:center;gap:4px;padding:0 4px 0 12px;border-radius:999px;font-size:13px;line-height:20px;font-weight:500;border:1px solid var(--gray-200);background:#fff;color:var(--gray-800);white-space:nowrap}
+.chip .cx{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:var(--gray-600)}
+.chip .cx:hover{background:rgba(0,0,0,.06)}
+.chip .cx .ic{font-size:14px}
+.chip.cond{background:var(--brand-50);border-color:var(--brand);color:var(--brand);padding-left:0}
+.chip.cond .cb{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 4px 0 12px;border-radius:999px 0 0 999px;color:inherit;font-weight:600}
+.chip.cond .cb .ic{font-size:16px}
+.chip.cond .cb .cv{font-size:14px;transform:rotate(90deg)}
+.chip.cond .n{color:inherit;font-weight:700}
+.chip.cond .cx{color:var(--brand)}
+.chip.cond .cx:hover{background:rgba(27,85,246,.1)}
+.chip.sug{border-style:dashed;border-color:var(--gray-300);color:var(--gray-700);padding:0 12px;gap:6px}
+.chip.sug:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-50)}
+.chip.sug .n{color:var(--red);font-weight:600}
+.chip.add{border-style:dashed;padding:0 12px;color:var(--gray-600)}
+.chip.add:hover{background:var(--gray-50)}
+.sortb{height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:500;color:var(--gray-800)}
+.sortb:hover{background:var(--gray-50)}
+.sortb .ic{font-size:16px;color:var(--gray-600)}
+.sortb .cv{font-size:14px;transform:rotate(90deg)}
+.fdesc{margin-top:8px;font-size:13px;line-height:20px;color:var(--gray-600);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fdesc i{width:1px;height:12px;background:var(--gray-200)}
+.fdesc b{color:var(--red);font-weight:600}
+.fdesc .from{color:var(--gray-500)}
+.fmenu{position:absolute;top:calc(100% + 6px);left:0;z-index:25;min-width:240px;background:#fff;border:1px solid var(--gray-100);border-radius:10px;padding:8px;box-shadow:0 0 4px rgba(0,0,0,.04),0 4px 8px -1px rgba(0,0,0,.08);display:flex;flex-direction:column}
+.fmenu.r{left:auto;right:0}
+.fmenu .hd{font-size:12px;line-height:18px;color:var(--gray-500);padding:6px 12px 4px;font-weight:600}
+.fmenu button{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px;border-radius:6px;font-size:14px;line-height:20px;color:var(--gray-950);text-align:left;white-space:nowrap}
+.fmenu button:hover{background:var(--gray-50)}
+.fmenu button.on{color:var(--brand);font-weight:600}
+.fmenu button .ic{font-size:18px;color:var(--brand)}
+.fmenu button .n{color:var(--gray-500);font-size:13px;font-weight:400}
+.ibtn.on{border-color:var(--brand);color:var(--brand);background:var(--brand-50)}
 .empty .rst{margin-top:16px;height:36px;padding:0 14px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:600;background:#fff;color:var(--gray-950)}
 .empty .rst:hover{background:var(--gray-50)}
-.cban .lb{font-size:14px;font-weight:600;white-space:nowrap}
-.selw{position:relative}
-.selw select{appearance:none;height:36px;border:1px solid var(--gray-200);border-radius:8px;background:#fff;padding:0 36px 0 12px;font-size:14px;font-weight:600;color:var(--gray-950)}
-.selw::after{content:"";position:absolute;right:14px;top:13px;width:6px;height:6px;border:solid var(--gray-700);border-width:0 1.5px 1.5px 0;transform:rotate(45deg);pointer-events:none}
-.cban .mt{font-size:13px;color:var(--gray-700);display:flex;gap:8px;align-items:center;white-space:nowrap}
-.cban .mt b{color:var(--red);font-weight:600}
-.cban .mt i{width:1px;height:12px;background:var(--gray-200)}
-.cban .sp{flex:1}
-.cban .x{height:36px;padding:0 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--gray-800);display:inline-flex;align-items:center;gap:4px}
-.cban .x:hover{background:rgba(27,85,246,.08)}
-.cban .x .ic{font-size:16px;color:var(--gray-700)}
+.cbl{cursor:pointer}
+/* 필터 칩 줄: 기존 필터 시트 항목을 그룹별 칩으로 노출 */
+/* 처리 필요 칩: 조건 미적용 시 조건 칩 자리에 노출 → 모두 처리하면 처리 완료 */
+.chip.need{padding:0 8px 0 10px;gap:6px;border-color:var(--gray-300);background:#fff;color:var(--gray-950);font-weight:600}
+.chip.need:hover{border-color:var(--gray-500);background:var(--gray-50)}
+.chip.need .ic{font-size:16px;color:var(--gray-700)}
+.chip.need .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.chip.need .cv{display:inline-grid;font-size:14px;transform:rotate(90deg);color:var(--gray-500)}
+.chip.donec{padding:0 12px 0 10px;gap:6px;background:var(--gray-50);color:var(--gray-600)}
+.chip.donec .ic{font-size:16px;color:var(--ok)}
+.fmenu .ft{border-top:1px solid var(--gray-100);margin-top:6px;padding-top:6px}
+.fmenu .ft button{color:var(--gray-600);font-size:13px}
+.fmenu button.zero{color:var(--gray-300);cursor:default;background:none}
+.fmenu .tip{padding:8px 8px 6px;display:flex;flex-direction:column;gap:4px;width:280px;white-space:normal}
+.fmenu .tip b{display:flex;align-items:center;gap:6px;font-size:14px;line-height:20px;color:var(--gray-950)}
+.fmenu .tip b .ic{font-size:18px;color:var(--ok)}
+.fmenu .tip span{font-size:13px;line-height:20px;color:var(--gray-600);padding-left:24px}
+/* 보기 범위 드롭다운 (미열람 / 결과 안내 전 체크박스 통합) */
+.vsel{height:36px;display:inline-flex;align-items:center;gap:4px;border:1px solid var(--gray-200);border-radius:8px;background:#fff;padding:0 8px 0 12px;font-size:14px;font-weight:500;color:var(--gray-950);white-space:nowrap}
+.vsel:hover{background:var(--gray-50)}
+.vsel .cv{display:inline-grid;font-size:16px;transform:rotate(90deg);color:var(--gray-500)}
+.vsel.on{border-color:var(--gray-950);font-weight:600}
+.fmenu .vopt small{margin-left:auto;font-size:12px;color:var(--gray-400);font-weight:400}
+.fmenu .vopt:disabled{color:var(--gray-300);cursor:default;background:none}
+/* 조건 칩 처리 방법 툴팁 */
+.chip.cond{position:relative}
+.htip{display:none;position:absolute;top:calc(100% + 8px);left:0;z-index:24;width:max-content;max-width:320px;padding:10px 12px;border-radius:8px;background:var(--gray-900);color:#fff;font-size:13px;line-height:20px;font-weight:400;white-space:normal;box-shadow:0 4px 12px rgba(0,0,0,.16)}
+.htip b{display:block;font-size:12px;font-weight:600;color:var(--gray-300);margin-bottom:2px}
+.chip.cond:hover .htip{display:block}
+.fwrap:has(.fmenu) .htip{display:none}
+.fmenu .hd .hdn{display:block;font-weight:400;color:var(--gray-400);margin-top:2px}
+/* 처리 필요 배너 (A안 · 배너형) */
+.nbanner{margin-top:32px;height:48px;display:flex;align-items:center;gap:8px;padding:0 8px 0 16px;border-radius:8px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:14px;line-height:20px;color:var(--gray-800)}
+.nbanner.on{background:var(--red-50);border-color:var(--red-100);color:var(--gray-950)}
+.nbanner .l{display:inline-flex;align-items:center;gap:8px;font-weight:500;white-space:nowrap;min-width:0}
+.nbanner .l>.ic{font-size:18px;color:var(--red)}
+.nbanner.on .l>.ic{color:var(--red)}
+.nbanner.on .l .n{color:var(--red)}
+.nbanner .l b{font-weight:600;color:inherit}
+.nbanner .l .n{font-weight:700}
+.nbanner .l .nn{font-weight:700;color:var(--red)}
+.nbanner .l{gap:6px}
+.nbanner .bpri{height:32px;padding:0 12px;border-radius:6px;background:var(--red);color:#fff;font-size:13px;font-weight:600;white-space:nowrap;margin-right:4px}
+.nbanner .bpri:hover{background:var(--red-600)}
+.nbanner .bdv{width:1px;height:14px;background:var(--red-100)}
+.nbanner .l.two{gap:10px}
+.nbanner .l.two{min-width:0;flex:1}
+.nbanner .l.two+.sp{display:none}
+.nbanner .l.two .tx{display:flex;align-items:baseline;gap:12px;min-width:0}
+.nbanner .l.two .tx b{font-size:14px;line-height:20px;font-weight:700;color:var(--gray-950);white-space:nowrap}
+.nbanner .l.two .tx .n{color:var(--red)}
+.nbanner .l.two .tx .sub{font-size:13px;line-height:20px;font-weight:400;color:var(--gray-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.nbanner .lbtn{height:36px;padding:0 10px 0 6px;margin-left:-6px;border-radius:6px;color:inherit;font-size:14px}
+.nbanner .lbtn:hover{background:rgba(242,42,35,.06)}
+.nbanner .lbtn .cv{display:inline-grid;transform:rotate(90deg);margin-left:2px}
+.nbanner .lbtn .cv .ic{font-size:16px;color:var(--gray-600)}
+.nbanner .fwrap .fmenu{top:calc(100% + 6px)}
+.nbanner .fmenu .n{color:var(--red)!important;font-weight:600!important}
+.nbanner.ok{background:var(--ok-50);border-color:#bfe8cf;color:var(--ok)}
+.nbanner.ok .l>.ic{color:var(--ok)}
+.nbanner.ok .bmsg{font-weight:600}
+.nbanner .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
+.nbanner .l.done{color:var(--gray-700)}
+.nbanner .l.done>.ic{color:var(--ok)}
+.nbanner .sp{flex:1}
+.nbanner .ba2{height:36px;padding:0 10px;border-radius:6px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:var(--gray-800);white-space:nowrap}
+.nbanner .ba2 .ic{font-size:16px;color:var(--gray-600)}
+.nbanner .ba2:hover{background:rgba(19,22,24,.05)}
+.nbanner.on .ba2:hover{background:rgba(242,42,35,.06)}
+.nbanner+.ptabs{margin-top:16px}
+/* 노션식 필터 바: [조건] | [정렬 pill][필터 pill…][+ 필터] ……… [초기화] */
+.fbar .fdiv{width:1px;height:20px;background:var(--gray-200);margin:0 4px}
+.fp{height:32px;display:inline-flex;align-items:center;gap:2px;border:1px solid var(--gray-200);border-radius:999px;background:var(--gray-50);color:var(--gray-800);font-size:13px;line-height:20px;white-space:nowrap}
+.fp .pb{display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 4px 0 12px;border-radius:999px 0 0 999px;color:inherit}
+.fp .pb b{font-weight:600;color:var(--gray-950)}
+.fp .pb .ic{font-size:15px;color:var(--gray-500)}
+.fp .pb .cv{display:inline-grid;font-size:14px;transform:rotate(90deg);color:var(--gray-500)}
+.fp .cx{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:var(--gray-500);margin-right:4px}
+.fp .cx:hover{background:rgba(0,0,0,.06)}
+.fp .cx .ic{font-size:14px}
+.fp.novalue .pb{color:var(--gray-500)}
+.fp:hover{border-color:var(--gray-300)}
+.fadd{height:32px;display:inline-flex;align-items:center;gap:4px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:500;color:var(--gray-600)}
+.fadd:hover{background:var(--gray-50);color:var(--gray-950)}
+.fadd .ic{font-size:16px}
+.fall{height:32px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--gray-600)}
+.fall:hover{background:var(--gray-50);color:var(--gray-950)}
+.fmenu .srch{margin:0 0 6px;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 10px;font:inherit;font-size:13px;width:100%}
+.fmenu .ghd{font-size:12px;color:var(--gray-400);padding:8px 12px 2px;font-weight:600}
+.fmenu .addi{justify-content:flex-start}
+.fmenu .addi small{margin-left:auto;font-size:12px;color:var(--gray-400);font-weight:400}
+.fmenu .addi:disabled{color:var(--gray-300);cursor:default;background:none}
+.fmenu .ehd{display:flex;align-items:center;justify-content:space-between;padding:6px 12px 4px}
+.fmenu .ehd b{font-size:13px;color:var(--gray-950)}
+.fmenu .ehd span{font-size:12px;color:var(--gray-500)}
+.fmenu .del{font-size:12px!important;color:var(--gray-500)!important;padding:4px 6px!important}
+.fmenu .del:hover{color:var(--red)!important;background:var(--red-50)!important}
+.fmenu.sortpop2{min-width:0}
+.fmenu.sortpop2 .row{display:flex;gap:8px;padding:4px}
+.fchips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fchips .ic.lead{font-size:18px;color:var(--gray-500);margin-right:2px}
+.chip.fc{padding:0 10px 0 12px;gap:2px;color:var(--gray-800)}
+.chip.fc:hover{background:var(--gray-50)}
+.chip.fc .cv,.chip.fc.on .cb2 .cv{display:inline-grid;font-size:14px;transform:rotate(90deg);color:var(--gray-500)}
+.chip.fc.on{padding:0 4px 0 0;border-color:var(--gray-950);background:var(--gray-50);color:var(--gray-950);font-weight:600}
+.chip.fc.on .cb2{display:inline-flex;align-items:center;gap:2px;height:30px;padding:0 2px 0 12px;border-radius:999px 0 0 999px;color:inherit;font-weight:600}
+.fchips .rs{font-size:13px;font-weight:600;color:var(--brand);padding:0 6px;height:32px}
+.fchips .rs:hover{text-decoration:underline}
+.fmenu .opt{justify-content:flex-start;gap:10px}
+.fmenu .opt .ck{flex:none;pointer-events:none}
+.fmenu .opt:disabled{color:var(--gray-300);cursor:not-allowed;background:none}
+.fmenu .opt small{margin-left:auto;font-size:12px;color:var(--gray-400)}
+.fmenu .dnote{padding:8px 12px 4px;font-size:12px;color:var(--gray-500)}
+.fmenu .drow{padding:4px 12px;width:320px}
+.fmenu .drow input{height:40px}
+.selw{position:relative;display:inline-flex}
+.selw select{appearance:none;height:40px;min-width:150px;border:1px solid var(--gray-200);border-radius:8px;background:#fff;padding:0 36px 0 12px;font:inherit;font-size:14px;color:var(--gray-950)}
+.selw::after{content:"";position:absolute;right:14px;top:15px;width:6px;height:6px;border:solid var(--gray-500);border-width:0 1.5px 1.5px 0;transform:rotate(45deg);pointer-events:none}
+.sortpop{flex-direction:row;gap:8px;min-width:0;padding:8px}
+.fdesc .rs{font-size:13px;color:var(--brand);font-weight:600}
+.fdesc .rs:hover{text-decoration:underline}
+/* 필터 시트 (실서비스 규격) */
+.ftabs{display:flex;gap:16px;border-bottom:1px solid var(--gray-100);margin:-8px 0 0}
+.ftabs button{height:40px;font-size:14px;font-weight:500;color:var(--gray-600);border-bottom:2px solid transparent;margin-bottom:-1px}
+.ftabs button.on{color:var(--gray-950);font-weight:600;border-color:var(--gray-950)}
+.fsec{display:flex;flex-direction:column;gap:16px;padding-bottom:24px;border-bottom:1px solid var(--gray-100)}
+.fsec:last-child{border-bottom:0}
+.fsec h3{margin:0;font-size:16px;line-height:24px;font-weight:700}
+.fgrp{display:flex;flex-direction:column;gap:8px}
+.fgrp>span{font-size:13px;line-height:20px;color:var(--gray-600)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{height:36px;padding:0 14px;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font-size:14px;font-weight:500;color:var(--gray-950);white-space:nowrap}
+.pill:hover{background:var(--gray-50)}
+.pill.on{border-color:var(--gray-950);background:var(--gray-50);font-weight:600}
+.pill:disabled{color:var(--gray-300);background:var(--gray-50);border-color:var(--gray-100);cursor:not-allowed}
+.drow{display:flex;align-items:center;gap:8px}
+.drow input{flex:1;height:44px;border:1px solid var(--gray-200);border-radius:8px;padding:0 12px;font:inherit;font-size:14px;color:var(--gray-950);background:#fff}
+.fcnt{flex:1;font-size:14px;color:var(--gray-600)}
+.fcnt b{color:var(--brand);font-weight:600}
+.cbl .ck{pointer-events:none}
 
 /* 리스트 */
 .list{margin-top:16px}
@@ -238,8 +326,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .lr:hover{background:#fafbfc}
 .lr.sel{background:rgba(240,245,255,.4)}
 .lr.out{opacity:.35}
-.lr.hot{background:var(--red-50)}
-.lr.hot:hover{background:#ffeae8}
+.lr{position:relative}
+.lr.need::before{content:"";position:absolute;left:0;top:50%;height:20px;transform:translateY(-50%);width:3px;border-radius:0 2px 2px 0;background:var(--red)}
 .lr>div{padding:16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
 .pos{font-size:15px;font-weight:700;color:var(--gray-900)}
 .who{flex-direction:row!important;align-items:center;justify-content:flex-start!important;gap:12px}
@@ -408,7 +496,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
-  <span class="ptag">A안 · 처리 필요 버튼</span>
+  <span class="ptag">A안 · 배너형</span>
   <b>시나리오</b>
   <button type="button" class="pbtn" data-go="app" aria-pressed="true">지원자 관리 진입 (주간 첫 방문)</button>
   <button type="button" class="pbtn" data-go="mail" aria-pressed="false">월요일 리마인드 메일</button>
@@ -428,21 +516,21 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
     <main>
       <div class="trow"><h2 class="h2">지원자 관리</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
-      <div class="shead"><h3 class="st">현재 공고 지원자</h3><span id="needWrap"></span></div>
-      <div class="ctitle" id="ctitle" hidden></div>
+      <div class="nbanner" id="nbanner" hidden></div>
       <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
         <span class="sp"></span>
-        <label class="cbl"><span class="ck"></span>미열람 지원자만 보기</label>
-        <button type="button" class="cbl" id="noticeCb" data-notice><span class="ck"></span>안내 전 지원자만 보기<span class="htip" role="tooltip">처리 필요 조건과 함께 쓸 수 없어요. 처리 필요 지원자는 아직 최종 결과가 없는 지원자예요.</span></button>
+        <span class="fwrap"><button type="button" class="vsel" id="qvBtn" data-fmenu="view" data-r="1" aria-haspopup="menu"></button></span>
+        <span class="vdiv"></span>
         <button type="button" class="ibtn" data-todo aria-label="검색"><span class="ic" data-i="search"></span></button>
-        <button type="button" class="ibtn" data-todo aria-label="필터"><span class="ic" data-i="filter"></span></button>
-        <button type="button" class="ibtn" data-todo aria-label="정렬"><span class="ic" data-i="sort"></span></button>
+        <span class="fwrap"><button type="button" class="ibtn" id="tbFilter" data-fmenu="add" data-r="1" aria-label="필터"><span class="ic" data-i="filter"></span></button></span>
+        <span class="fwrap"><button type="button" class="ibtn" id="tbSort" data-fmenu="sort" data-r="1" aria-label="정렬"><span class="ic" data-i="sort"></span></button></span>
         <button type="button" class="ibtn" data-todo aria-label="즐겨찾기"><span class="ic" data-i="star"></span></button>
         <span class="vdiv"></span>
         <button type="button" class="obtn" data-todo><span class="ic" data-i="edit"></span>채용 단계 편집</button>
       </div>
+      <div class="fbar" id="fbar"></div>
       <div class="tabs" id="tabs"></div>
       <div class="list" id="list"></div>
       <div class="bulk" id="bulk" hidden>
@@ -538,12 +626,12 @@ var POS={A:["QA","인사관리자","그래픽 디자이너"],B:["사무보조","
 function build(){var db={};Object.keys(SEED).forEach(function(k){db[k]=SEED[k].map(function(r,i){var v=r[9];var iv=v===0?{k:"none"}:v[0]==="p"?{k:"p"}:v[0]==="c"?{k:"c",d:v[1]}:v[0]==="r"?{k:"r",n:v[1]}:{k:"d",n:v[1]};return {id:k+i,name:r[0],age:r[1],g:r[2],edu:EDU[r[3]],car:CAR[r[4]],stage:r[5],applied:r[6],se:r[7],lv:r[8],iv:iv,final:r[10]||null,dup:i%4===1,pos:POS[k][i%POS[k].length]};});});return db;}
 
 var CONDS=[
- {id:1,how:"최종합격 또는 불합격을 입력하면 목록에서 빠져요",n:16,t:"지원 후 16일 동안 최종 결과 미입력",col:"지원일",sort:"지원일 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=16;}},
- {id:2,how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",n:14,t:"현재 단계 진입 후 14일 동안 단계 이동·합불 없음",col:"단계 진입일",sort:"단계 진입 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.se;},over:function(a){return a.se>=14;}},
- {id:3,how:"지원서를 열람하면 목록에서 빠져요",n:7,t:"미열람 상태로 7일 경과",col:"지원일",sort:"지원일 오래된순",scope:"미열람 지원자",inScope:function(a){return a.lv<0&&!a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=7;}},
- {id:4,how:"단계를 이동하거나 합불을 입력하면 목록에서 빠져요",n:9,t:"열람 후 9일 동안 단계 이동·합불 없음",col:"마지막 열람일",sort:"마지막 열람일 오래된순",scope:"열람 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.lv>=0;},el:function(a){return a.lv;},over:function(a){return a.lv>=9&&a.se>=a.lv;}},
- {id:6,how:"변경 요청을 확인해 일정을 다시 제안하거나 면접을 취소하면 목록에서 빠져요",n:7,t:"면접 일정 변경 요청 후 7일 동안 처리 없음",col:"변경 요청일",sort:"변경 요청 오래된순",scope:"일정 변경 요청 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="r";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=7&&a.se>=a.iv.n;}},
- {id:7,how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",n:12,t:"면접 종료 후 12일 동안 단계 이동·합불 없음",col:"면접 종료일",sort:"면접 종료 오래된순",scope:"면접 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="d";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=12&&a.se>=a.iv.n;}}
+ {id:1,hint:"최종 합격 또는 불합격으로 심사해주세요.",how:"최종합격 또는 불합격을 입력하면 목록에서 빠져요",s:"지원 후 16일 미처리",n:16,t:"지원 후 16일 동안 최종 결과 미입력",col:"지원일",sort:"지원일 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=16;}},
+ {id:2,hint:"다음 단계로 이동하거나 심사해주세요.",how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",s:"단계 진입 후 14일 정체",n:14,t:"현재 단계 진입 후 14일 동안 단계 이동·합불 없음",col:"단계 진입일",sort:"단계 진입 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.se;},over:function(a){return a.se>=14;}},
+ {id:3,hint:"지원서를 열람해주세요.",how:"지원서를 열람하면 목록에서 빠져요",s:"미열람 7일 경과",n:7,t:"미열람 상태로 7일 경과",col:"지원일",sort:"지원일 오래된순",scope:"미열람 지원자",inScope:function(a){return a.lv<0&&!a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=7;}},
+ {id:4,hint:"다음 단계로 이동하거나 심사해주세요.",how:"단계를 이동하거나 합불을 입력하면 목록에서 빠져요",s:"열람 후 9일 정체",n:9,t:"열람 후 9일 동안 단계 이동·합불 없음",col:"마지막 열람일",sort:"마지막 열람일 오래된순",scope:"열람 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.lv>=0;},el:function(a){return a.lv;},over:function(a){return a.lv>=9&&a.se>=a.lv;}},
+ {id:6,hint:"‘일정변경요청 확인’에서 일정을 다시 제안하거나 취소해주세요.",how:"변경 요청을 확인해 일정을 다시 제안하거나 면접을 취소하면 목록에서 빠져요",s:"일정 변경 요청 7일 미처리",n:7,t:"면접 일정 변경 요청 후 7일 동안 처리 없음",col:"변경 요청일",sort:"변경 요청 오래된순",scope:"일정 변경 요청 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="r";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=7&&a.se>=a.iv.n;}},
+ {id:7,hint:"면접 결과에 따라 다음 단계로 이동하거나 심사해주세요.",how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 빠져요",s:"면접 후 12일 정체",n:12,t:"면접 종료 후 12일 동안 단계 이동·합불 없음",col:"면접 종료일",sort:"면접 종료 오래된순",scope:"면접 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="d";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=12&&a.se>=a.iv.n;}}
 ];
 function inList(c,a){return c.inScope(a)&&c.over(a);}
 var TAGS={1:"결과 미입력",2:"단계 이동 없음",3:"미열람",4:"열람 후 미처리",6:"일정 변경 요청",7:"면접 후 미처리"};
@@ -554,24 +642,62 @@ function cond(id){return id===99?ALL:CONDS.find(function(c){return c.id===id;});
 function overList(pid,c){return S.db[pid].filter(function(a){return c.inScope(a)&&c.over(a);});}
 function summary(pid){var rows=[],ids={};CONDS.forEach(function(c){var l=overList(pid,c);if(l.length){rows.push({c:c,n:l.length});l.forEach(function(a){ids[a.id]=1;});}});return {rows:rows,total:Object.keys(ids).length};}
 
+function months(a){var c=a.car[0];if(c==="신입")return 0;var y=/(\d+)년/.exec(c),m=/(\d+)개월/.exec(c);return (y?+y[1]*12:0)+(m?+m[1]:0);}
+var EDU_RANK=["고등학교 졸업 미만","고등학교","대학(2,3년)","대학교(4년)","대학원"];
+function eduRank(a){for(var i=EDU_RANK.length-1;i>=0;i--){if(a.edu[0].indexOf(EDU_RANK[i])===0)return i;}return 0;}
+var AGES=[[0,20,"20세 이하"],[21,25,"21-25세"],[26,30,"26-30세"],[31,35,"31-35세"],[36,40,"36-40세"],[41,45,"41-45세"],[46,50,"46-50세"],[51,55,"51-55세"],[56,60,"56-60세"],[61,999,"61세 이상"]];
+var CARS=[[0,1,"신입 (1개월 미만)"],[1,3,"1개월 이상 ~ 3개월 미만"],[3,6,"3개월 이상 ~ 6개월 미만"],[6,12,"6개월 이상 ~ 1년 미만"],[12,36,"1년 이상 ~ 3년 미만"],[36,60,"3년 이상 ~ 5년 미만"],[60,120,"5년 이상 ~ 10년 미만"],[120,240,"10년 이상 ~ 20년 미만"],[240,9999,"20년 이상"]];
+/* 실서비스 필터 시트 구성 (hiring.dev 기준). 사진등록·우대 조건은 예시 데이터에 해당자가 없음 */
+var FCATS=[
+ {t:"진행 현황",g:[
+  {k:"stage",t:"채용 단계",o:STAGES.map(function(s,i){return {v:i,t:s};}),f:function(a,v){return a.stage===v;},out:[3]},
+  {k:"st",t:"지원자 상태",o:[{v:"ing",t:"진행중"},{v:"fail",t:"불합격"},{v:"pass",t:"최종합격"}],f:function(a,v){return v==="ing"?!a.final:a.final===v;},out:["fail","pass"]},
+  {k:"iv",t:"면접 상태",o:[{v:"adj",t:"조율중"},{v:"conf",t:"면접 확정"},{v:"done",t:"면접 완료"}],f:function(a,v){return v==="adj"?(a.iv.k==="p"||a.iv.k==="r"):v==="conf"?a.iv.k==="c":a.iv.k==="d";}}]},
+ {t:"지원 정보",g:[
+  {k:"date",t:"지원일",date:true},
+  {k:"dup",t:"중복 지원",o:[{v:1,t:"지원 이력 있음"},{v:0,t:"지원 이력 없음"}],f:function(a,v){return !!a.dup===!!v;}},
+  {k:"photo",t:"지원자 구분",o:[{v:1,t:"사진등록 지원자"}],f:function(){return false;}}]},
+ {t:"인적 정보",g:[
+  {k:"g",t:"성별",o:[{v:"남",t:"남성"},{v:"여",t:"여성"}],f:function(a,v){return a.g===v;}},
+  {k:"age",t:"나이",o:AGES.map(function(x,i){return {v:i,t:x[2]};}),f:function(a,v){return a.age>=AGES[v][0]&&a.age<=AGES[v][1];}},
+  {k:"edu",t:"최종학력",o:EDU_RANK.map(function(x,i){return {v:i,t:x};}),f:function(a,v){return eduRank(a)===v;}},
+  {k:"car",t:"총 경력",o:CARS.map(function(x,i){return {v:i,t:x[2]};}),f:function(a,v){var m=months(a);return m>=CARS[v][0]&&m<CARS[v][1];}}]},
+ {t:"우대 조건",g:[
+  {k:"pref",t:"취업우대·병역",o:["보훈대상자","취업보호 대상자","고용지원금 대상자","장애 취업지원 대상자","군필자"].map(function(x,i){return {v:i,t:x};}),f:function(){return false;}}]}
+];
+var FG={};FCATS.forEach(function(c){c.g.forEach(function(g){FG[g.k]=g;});});
+var FTOTAL=FCATS.reduce(function(s,c){return s+c.g.reduce(function(t,g){return t+(g.o?g.o.length:0);},0);},0);
+function fCount(f){return Object.keys(f).reduce(function(s,k){return s+f[k].length;},0);}
+function passF(a){if(S.qv==="unread"&&!(a.lv<0))return false;if(S.qv==="notice"&&!(a.final&&!a.noticed))return false;return Object.keys(S.f).every(function(k){var vs=S.f[k];return !vs.length||vs.some(function(v){return FG[k].f(a,v);});});}
+function fActive(){return !!S.qv||fCount(S.f)>0;}
+var QV=[{v:null,t:"전체 지원자"},{v:"unread",t:"미열람 지원자"},{v:"notice",t:"결과 안내 전 지원자",d:"합불은 정했지만 결과를 안내하지 않은 지원자"}];
+function isOut(g,v){return !!(S.cond&&g.out&&g.out.indexOf(v)>=0);}
+/* 정렬: 실서비스와 같은 기준 + 순서 2단 선택. 조건 적용 중에는 조건 기준일이 기준 목록 맨 앞에 추가됨 */
+function sortBys(){var l=[{v:"applied",t:"지원일"},{v:"name",t:"이름"},{v:"age",t:"나이"},{v:"edu",t:"학력"},{v:"car",t:"경력"}];if(S.cond){var c=cond(S.cond);if(c.col==="지원일")l.shift();l.unshift({v:"cond",t:c.col});}return l;}
+function sortOrds(by){return (by==="applied"||by==="cond")?[{v:"new",t:"최신순"},{v:"old",t:"오래된 순"}]:[{v:"asc",t:"오름차순"},{v:"desc",t:"내림차순"}];}
+function sortDef(){return S.cond?{by:"cond",ord:"old"}:{by:"applied",ord:"new"};}
+function sortCur(){return S.sort||sortDef();}
+function sortRows(r,c){var s=sortCur();
+  if(s.by==="cond")return r.sort(function(x,y){return s.ord==="old"?c.el(y)-c.el(x):c.el(x)-c.el(y);});
+  if(s.by==="applied")return r.sort(function(x,y){return s.ord==="old"?y.applied-x.applied:x.applied-y.applied;});
+  var key={name:function(a){return a.name;},age:function(a){return a.age;},edu:eduRank,car:months}[s.by];
+  r.sort(function(x,y){var a=key(x),b=key(y);var d=typeof a==="string"?a.localeCompare(b,"ko"):a-b;return s.ord==="desc"?-d:d;});
+  return r;}
 var S;
-function init(){S={db:build(),pid:"A",tab:0,cond:null,sel:{},seen:{},view:"app",leaving:{}};S.mailSnap={A:summary("A"),B:summary("B"),C:summary("C")};}
+var S;
+function init(){S={db:build(),pid:"A",tab:0,cond:null,sel:{},seen:{},view:"app",leaving:{},sort:null,f:{},qv:null,justDone:null,from:"popup"};S.mailSnap={A:summary("A"),B:summary("B"),C:summary("C")};}
 init();
 
 /* ---------- 렌더 ---------- */
 function renderPosts(){
   $("posts").innerHTML='<button type="button" class="allp" data-todo>'+I("all")+'전체보기</button>'+POSTS.map(function(p){
     var unread=S.db[p.id].filter(function(a){return a.lv<0&&!a.final;}).length;
-    return '<button type="button" class="card'+(p.id===S.pid?' on':'')+'" data-post="'+p.id+'"><div class="top">'+(p.open?'<span class="bdg info">진행중</span>':'<span class="bdg line">채용마감</span>')+I("ext")+'</div><span class="tt">'+esc(p.name)+'</span><span class="mt">'+p.period+' · 미열람 '+unread+'</span></button>';
+    var need=0;/* 공고 카드 진입점 제거 */
+    return '<button type="button" class="card'+(p.id===S.pid?' on':'')+'" data-post="'+p.id+'"><div class="top"><span class="tl">'+(p.open?'<span class="bdg info">진행중</span>':'<span class="bdg line">채용마감</span>')+(need?'<span class="pneed" data-psum="'+p.id+'" role="button" tabindex="0" aria-label="처리 필요 지원자 '+need+'명, 요약 보기">'+I("bell")+'처리 필요 <b>'+need+'</b></span>':'')+'</span>'+I("ext")+'</div><span class="tt">'+esc(p.name)+'</span><span class="mt">'+p.period+' · 미열람 '+unread+'</span></button>';
   }).join("");
 }
 function renderReopen(){S.lastTotal=summary(S.pid).total;}
 function closeR(){var p=document.querySelector(".rpop");if(p)p.remove();}
-function showDoneTip(){
-  closeR();var p=document.createElement("div");p.className="rpop";p.setAttribute("role","status");
-  p.innerHTML='<b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>새로 기준을 넘는 지원자가 생기면 이 버튼에 인원이 다시 표시돼요.</span>';
-  $("reopenWrap").appendChild(p);
-}
 function posOK(a){return !S.pos||a.pos===S.pos;}
 function overListP(c){return overList(S.pid,c).filter(posOK);}
 function renderPtabs(){var ps=POS[S.pid]||[],el=$("ptabs");if(ps.length<2){el.hidden=true;el.innerHTML="";return;}el.hidden=false;
@@ -579,7 +705,7 @@ function renderPtabs(){var ps=POS[S.pid]||[],el=$("ptabs");if(ps.length<2){el.hi
 function renderTabs(){
   var l=S.db[S.pid].filter(posOK),c=S.cond?cond(S.cond):null;
   $("tabs").innerHTML=STAGES.map(function(s,i){
-    var inSt=l.filter(function(a){return a.stage===i&&a.final!=="fail";}),n=inSt.length,ov=0;
+    var inSt=l.filter(function(a){return a.stage===i&&a.final!=="fail"&&passF(a);}),n=inSt.length,ov=0;
     if(c){n=inSt.filter(function(a){return inList(c,a);}).length;ov=n;}
     return '<button type="button" class="tab'+(i===S.tab?' on':'')+'" data-tab="'+i+'">'+s+' <span class="n">'+n+'</span>'+(ov?'<span class="dot" title="기준 초과 '+ov+'명"></span>':'')+'</button>';
   }).join("");
@@ -609,8 +735,8 @@ function stBadge(a){if(a.final==="fail")return '<span class="bdg gray">불합격
 
 function visibleRows(){
   var l=S.db[S.pid].filter(posOK);
-  if(S.cond){var c=cond(S.cond);var r=l.filter(function(a){return (inList(c,a)||S.leaving[a.id])&&a.stage===S.tab;});r.sort(function(x,y){var ox=c.inScope(x)&&c.over(x),oy=c.inScope(y)&&c.over(y);if(ox!==oy)return ox?-1:1;return c.el(y)-c.el(x);});return r;}
-  return l.filter(function(a){return a.stage===S.tab;}).sort(function(x,y){return x.applied-y.applied;});
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}
+  return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
 function renderList(){
   var rows=visibleRows();
@@ -625,9 +751,10 @@ function renderList(){
     rows.forEach(function(a,i){
       var inS=inList(c,a),ov=inS,el=c.el(a);
       var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):ov?'<span class="bdg red">'+el+'일 경과</span>':'<span class="bdg gray">'+el+'일 경과</span>';
-      h+='<div class="lr'+(S.sel[a.id]?' sel':ov?' hot':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
-    if(!rows.length){
+    if(!rows.length&&fActive()){h+='<div class="empty"><b>필터에 맞는 지원자가 없어요</b>조건 안에서 필터를 줄이거나 초기화해 보세요.<br><button type="button" class="rst" data-freset>필터 초기화</button></div>';}
+    else if(!rows.length){
       var left=overListP(c).length;
       h+=left?'<div class="empty"><b>이 단계에는 조건에 해당하는 지원자가 없어요</b>숫자가 있는 단계 탭을 확인해 보세요.</div>':(summary(S.pid).total?'<div class="empty"><b>이 조건의 지원자를 모두 처리했어요</b>다른 조건에 처리할 지원자가 남아 있어요.<br><button type="button" class="rst" data-nextcond>다른 조건 보기</button></div>':'<div class="empty"><b>처리 필요 지원자를 모두 처리했어요</b>새로 기준을 넘는 지원자가 생기면 다시 알려드려요.<br><button type="button" class="rst" data-condx>전체 지원자 보기</button></div>');
     }
@@ -636,38 +763,84 @@ function renderList(){
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 '+I("info")+'</div><div>면접 일정</div></div>';
     rows.forEach(function(a){
       var wait=a.final?stBadge(a):(a.se>=3?'<span class="bdg gray">현재 단계 '+a.se+'일째</span>':'');
-      h+='<div class="lr'+(S.sel[a.id]?' sel':ALL.inScope(a)?' hot':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ALL.inScope(a)?' need':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
-    if(!rows.length)h+='<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
+    if(!rows.length)h+=fActive()?'<div class="empty"><b>필터에 맞는 지원자가 없어요</b>필터를 줄이거나 초기화해 보세요.<br><button type="button" class="rst" data-freset>필터 초기화</button></div>':'<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
   }
   $("list").style.setProperty("--cols",cols);
   $("list").innerHTML=h;
 }
-function renderNeed(){
-  var tot=summary(S.pid).total,c=S.cond?cond(S.cond):null,w=$("needWrap"),open=!!w.querySelector(".nmenu");
-  var right='<span class="sdv" aria-hidden="true"></span><button type="button" class="sr" data-nmenu aria-haspopup="menu">전체 보기<span class="cv">'+I("chev")+'</span></button>';
-  /* [상태 | 전체 보기 ⌄] 한 버튼. 조건 선택 시 빨간 칩, 바꿀 때는 '전체 보기' 드롭다운에서 */
-  if(c)w.innerHTML='<span class="splt on"><span class="sl" title="처리 방법: '+esc(c.how)+'">'+I("bell")+esc(c.t)+' <b>'+overListP(c).length+'명</b></span>'+right+'</span>';
-  else if(tot)w.innerHTML='<span class="splt"><button type="button" class="sl" data-nmenu aria-haspopup="menu">'+I("bell")+'처리 필요<span class="cnt">'+tot+'</span></button>'+right+'</span>';
-  else w.innerHTML='<button type="button" class="nb done" data-ntip aria-label="처리 완료, 안내 보기">'+I("check")+'<span class="lbl">처리 완료</span></button>';
-  if(open)openNmenu(!tot&&!c);
-  $("ctitle").hidden=true;$("ctitle").innerHTML="";
+function josa(w){var ch=w.charCodeAt(w.length-1);return (ch>=0xAC00&&ch<=0xD7A3&&(ch-0xAC00)%28)?"을":"를";}
+function renderFbar(){
+  var h="",c=S.cond?cond(S.cond):null,n=0;
+  /* 처리 필요 배너: 한 자리에서 [처리 필요 지원자 N] ↔ [조건명 · 전체 조건 보기 · 조건 해제] */
+  var tot=summary(S.pid).total,bn=$("nbanner"),bh="",cls="nbanner";
+  if(c){
+    var nn=overListP(c).length;
+    bh='<span class="l two">'+I("alert")+'<span class="tx"><b>'+esc(c.t)+' <span class="n">'+nn+'명</span></b><span class="sub">'+esc(c.hint||c.how)+'</span></span></span><span class="sp"></span>'+
+       '<button type="button" class="ba2" data-sumpop>다른 조건 보기</button><span class="bdv" aria-hidden="true"></span><button type="button" class="ba2" id="cclear">조건 해제</button>';cls+=" on";}
+  else if(tot){bh='<span class="l">'+I("bell")+'<span class="bmsg">처리를 기다리는 지원자가 <b class="nn">'+tot+'명</b> 있어요.</span></span><span class="sp"></span><button type="button" class="bpri" data-sumpop>확인하기</button>';cls+=" on";}
+  else if(S.justDone===S.pid){bh='<span class="l">'+I("check")+'<span class="bmsg">모두 처리했어요</span></span>';cls+=" ok";}
+  bn.hidden=!bh;bn.className=cls;bn.innerHTML=bh;
+  var left="",rest="";
+  /* 2층: 사용자가 건 정렬·필터만 pill로 (노션 방식). 안 건 항목은 숨김 */
+  if(S.sort){var cs=sortCur(),bl=sortBys().find(function(x){return x.v===cs.by;}),ol=sortOrds(cs.by).find(function(x){return x.v===cs.ord;});
+    rest+='<span class="fwrap"><span class="fp"><button type="button" class="pb" data-fmenu="spill">'+I("sort")+'<b>'+esc(bl.t)+'</b> '+ol.t+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-sdel aria-label="정렬 삭제">'+I("x")+'</button></span></span>';}
+  Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
+    rest+='<span class="fwrap"><span class="fp'+(vs.length?'':' novalue')+'"><button type="button" class="pb" data-fmenu="g:'+k+'">'+pillLabel(g)+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-fgx="'+k+'" aria-label="'+g.t+' 필터 삭제">'+I("x")+'</button></span></span>';});
+  if(Object.keys(S.f).length)rest+='<span class="fwrap"><button type="button" class="fadd" data-fmenu="add">'+I("filter")+'필터 추가</button></span>';
+  if(rest)rest+='<span class="sp"></span><button type="button" class="fall" data-fall>초기화</button>';
+  h=left+(left&&rest?'<span class="fdiv" aria-hidden="true"></span>':'')+rest;
+  /* 처리할 지원자도, 건 정렬·필터도 없으면 줄 전체를 숨겨 실서비스 화면과 같게 */
+  $("fbar").hidden=!h;$("fbar").innerHTML=h;
+  var qv=QV.find(function(x){return x.v===S.qv;});$("qvBtn").innerHTML=qv.t+'<span class="cv">'+I("chev")+'</span>';$("qvBtn").classList.toggle("on",!!S.qv);
+  $("tbFilter").classList.toggle("on",fCount(S.f)>0);
+  $("tbSort").classList.toggle("on",!!S.sort);
 }
-function closeNmenu(){var m=document.querySelector(".nmenu");if(m)m.remove();}
-function openNmenu(tip){
-  closeNmenu();var m=document.createElement("div");m.className="nmenu";m.setAttribute("role",tip?"status":"menu");
-  if(tip)m.innerHTML='<div class="tip"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>새로 기준을 넘는 지원자가 생기면 이 버튼에 인원이 다시 표시돼요.</span></div>';
-  else m.innerHTML='<div class="hd">처리 필요 조건<span>한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+[ALL].concat(CONDS).map(function(x){var n=overListP(x).length,on=x.id===S.cond,z=!n&&!on;return '<button type="button" class="'+(x.id===99?'allb ':'')+(on?'on':'')+'" '+(z?'disabled':'data-npick="'+x.id+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):'')+'</button>';}).join("")+
-    '<div class="ft">'+(S.cond?'<button type="button" data-nclear>조건 해제 · 전체 지원자 보기</button>':'')+'<button type="button" data-sumpop>요약 팝업으로 보기</button></div>';
-  $("needWrap").appendChild(m);
+function pillLabel(g){var vs=S.f[g.k]||[];if(!vs.length)return esc(g.t);var first=g.o.find(function(o){return o.v===vs[0];}).t;return esc(g.t)+': <b>'+esc(first)+(vs.length>1?' 외 '+(vs.length-1):'')+'</b>';}
+function addMenu(){
+  var c=S.cond?cond(S.cond):null;
+  return '<input class="srch" id="faddq" placeholder="필터 항목 검색" aria-label="필터 항목 검색">'+FCATS.map(function(cat){return '<div class="ghd">'+cat.t+'</div>'+cat.g.map(function(g){var on=!!S.f[g.k];return '<button type="button" class="addi" data-fadd="'+g.k+'"'+(on?' disabled':'')+'>'+g.t+(on?'<small>추가됨</small>':'')+'</button>';}).join("");}).join("");
 }
-function renderNotice(){var b=$("noticeCb");if(!b)return;b.classList.toggle("dis",!!S.cond);b.setAttribute("aria-disabled",String(!!S.cond));}
+function groupMenu(k){
+  var g=FG[k],c=S.cond?cond(S.cond):null;
+  var hd='<div class="ehd"><span><b>'+g.t+'</b>'+(c&&!g.date?' · 조건 안에서 좁히기':'')+'</span><button type="button" class="del" data-fgx="'+k+'">삭제</button></div>';
+  if(g.date){var p=POSTS.find(function(q){return q.id===S.pid;});return hd+'<div class="drow"><input readonly value="20'+p.period.slice(0,8)+'" aria-label="지원일 시작"><span>~</span><input readonly value="2026.11.05" aria-label="지원일 종료"></div><div class="dnote">프로토타입에서는 기간 변경을 지원하지 않아요.</div>';}
+  return hd+g.o.map(function(o){var on=(S.f[k]||[]).indexOf(o.v)>=0,out=isOut(g,o.v);return '<button type="button" class="opt" data-fco="'+k+'" data-v="'+o.v+'"'+(out?' disabled':'')+'><span class="ck'+(on&&!out?' on':'')+'"></span>'+o.t+(out?'<small>조건 범위 밖</small>':'')+'</button>';}).join("");
+}
+function closeF(){document.querySelectorAll(".fmenu").forEach(function(m){m.remove();});}
+function sortPopHtml(){var cur=sortCur();return '<span class="selw"><select id="sBy" aria-label="정렬 기준">'+sortBys().map(function(x){return '<option value="'+x.v+'"'+(x.v===cur.by?' selected':'')+'>'+esc(x.t)+'</option>';}).join("")+'</select></span><span class="selw"><select id="sOrd" aria-label="정렬 순서">'+sortOrds(cur.by).map(function(x){return '<option value="'+x.v+'"'+(x.v===cur.ord?' selected':'')+'>'+x.t+'</option>';}).join("")+'</select></span>';}
+function openF(t){
+  var kind=t.dataset.fmenu,wrap=t.closest(".fwrap"),had=wrap.querySelector(".fmenu");closeF();if(had)return;
+  var m=document.createElement("div"),h="";m.className="fmenu"+(t.dataset.r?" r":"")+(kind==="sort"?" sortpop":"");
+  if(kind.indexOf("g:")===0){h=groupMenu(kind.slice(2));}
+  else if(kind==="add"){h=addMenu();}
+  else if(kind==="spill"){m.className+=" sortpop2";h='<div class="ehd"><span><b>정렬</b></span><button type="button" class="del" data-sdel>삭제</button></div><div class="row">'+sortPopHtml()+'</div>';}
+  else if(kind==="cond"){h='<div class="hd">'+(S.cond?'조건 바꾸기':'처리 필요 조건 선택')+'<span class="hdn">한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length,z=!n&&!on;return '<button type="button" '+(z?'class="zero" disabled':'data-fcond="'+x.id+'" class="'+(on?"on":"")+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):"")+'</button>';}).join("")+'<div class="ft"><button type="button" data-sumpop>요약 팝업으로 보기</button></div>';}
+  else if(kind==="view"){h='<div class="hd">보기</div>'+QV.map(function(x){var on=x.v===S.qv,out=x.v==="notice"&&!!S.cond;return '<button type="button" class="vopt'+(on?' on':'')+'" data-qv="'+(x.v||"")+'"'+(out?' disabled':'')+(x.d?' title="'+x.d+'"':'')+'><span>'+x.t+'</span>'+(out?'<small>조건 범위 밖</small>':on?I("check"):'')+'</button>';}).join("");}
+  else if(kind==="done"){h='<div class="tip" role="status"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>다음에 들어올 때는 이 칩이 보이지 않아요. 새로 기준을 넘는 지원자가 생기면 다시 표시돼요.</span></div>';}
+  else h=sortPopHtml();
+  m.innerHTML=h;wrap.appendChild(m);var qi=m.querySelector("#faddq");if(qi)qi.focus();
+}
+function openFilterSheet(){
+  S.fd=JSON.parse(JSON.stringify(S.f));
+  var c=S.cond?cond(S.cond):null,p=POSTS.find(function(q){return q.id===S.pid;});
+  var body='<div class="ftabs">'+FCATS.map(function(x,i){return '<button type="button" data-fcat="'+i+'"'+(i?'':' class="on"')+'>'+x.t+'</button>';}).join("")+'</div>'+
+    (c?'<div class="ibox">'+I("info")+'<div>‘'+esc(c.t)+'’ 조건 안에서 좁혀요. 조건 범위 밖 항목은 선택할 수 없어요.</div></div>':'')+
+    FCATS.map(function(x,i){return '<section class="fsec" id="fcat'+i+'"><h3>'+x.t+'</h3>'+x.g.map(function(g){
+      if(g.date)return '<div class="fgrp"><span>'+g.t+'</span><div class="drow"><input readonly value="20'+p.period.slice(0,8)+'" aria-label="지원일 시작"><span>~</span><input readonly value="2026.11.05" aria-label="지원일 종료"></div></div>';
+      return '<div class="fgrp"><span>'+g.t+'</span><div class="pills">'+g.o.map(function(o){var on=(S.fd[g.k]||[]).indexOf(o.v)>=0,out=isOut(g,o.v);return '<button type="button" class="pill'+(on&&!out?' on':'')+'" data-fopt="'+g.k+'" data-v="'+o.v+'"'+(out?' disabled title="조건 범위 밖"':'')+'>'+o.t+'</button>';}).join("")+'</div></div>';
+    }).join("")+'</section>';}).join("");
+  sheet("필터",body,'<span class="fcnt" id="fcnt"></span><button type="button" class="bt sec" data-fclear>초기화</button><button type="button" class="bt pri" data-fapply>적용하기</button>');
+  updFcnt();
+}
+function updFcnt(){$("fcnt").innerHTML='<b>'+fCount(S.fd)+'</b>/'+FTOTAL+'개 선택';}
 function renderBulk(){var n=Object.keys(S.sel).filter(function(k){return S.sel[k];}).length;$("bulk").hidden=!n;$("bn").textContent=n+"명";}
 function render(){
   $("appView").hidden=S.view!=="app";$("mailView").hidden=S.view!=="mail";
   document.querySelectorAll("[data-go]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.go===S.view));});
   if(S.view==="mail"){renderMail();return;}
-  renderPosts();renderReopen();renderPtabs();renderTabs();renderNeed();renderList();renderBulk();renderNotice();
+  renderPosts();renderReopen();renderPtabs();renderTabs();renderFbar();renderList();renderBulk();
 }
 
 /* ---------- 오버레이 ---------- */
@@ -677,11 +850,11 @@ function showSummary(){
   if(!s.total){toast("지금은 처리가 필요한 지원자가 없어요");return;}
   $("overlay").innerHTML='<div class="backdrop" data-close></div><div class="dwrap" data-close><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dT">'+
     '<div class="hd"><span class="pn">'+esc(p.name)+'</span><h2 id="dT">처리를 기다리는 지원자가 <em>'+s.total+'명</em> 있어요</h2><p>지원자가 채용 진행 상황을 기다리고 있어요. 신속한 안내는 좋은 채용 경험과 기업에 대한 긍정적인 인상을 만들어요.</p></div>'+
-    '<ul class="crit" style="margin:0"><li class="allrow"><button type="button" data-apply="99"'+(S.cond===99?' class="cur" aria-current="true"':'')+'><span class="t">처리 필요 지원자 전체 보기'+(S.cond===99?'<em class="now">지금 보는 중</em>':'')+'</span><span class="n">'+s.total+'명</span>'+I("chev")+'</button></li>'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"'+(r.c.id===S.cond?' class="cur" aria-current="true"':'')+'><span class="t">'+r.c.t+(r.c.id===S.cond?'<em class="now">지금 보는 중</em>':'')+'</span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
+    '<ul class="crit" style="margin:0">'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+r.c.t+'</span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
     '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있어요.<br>조건별 기준은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간이에요.</span></div>'+
     '<div class="btns"><button type="button" class="bt sec" data-close>닫기</button></div>'+
     '</div></div>';
-  var f=$("overlay").querySelector(".crit .cur")||$("overlay").querySelector("[data-apply]");if(f)f.focus();
+  var f=$("overlay").querySelector("[data-apply]");if(f)f.focus();
 }
 function findA(id){return S.db[S.pid].find(function(a){return a.id===id;});}
 function sheet(title,body,foot){
@@ -717,11 +890,11 @@ function openChat(id){
 var tt;
 function toast(m){var t=$("toast");t.innerHTML=I("ok")+'<span>'+esc(m)+'</span>';t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},2600);}
 function afterChange(ids){
-  if(S.lastTotal>0&&summary(S.pid).total===0)setTimeout(function(){toast("기준을 넘긴 지원자를 모두 처리했어요");},2700);
+  if(S.lastTotal>0&&summary(S.pid).total===0){S.justDone=S.pid;clearTimeout(S.doneBT);S.doneBT=setTimeout(function(){S.justDone=null;render();},5000+(S.cond?1400:0));}
   if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!inList(c,a))S.leaving[a.id]=1;});}
   render();setTimeout(function(){S.leaving={};
     /* 조건의 지원자를 모두 처리하면 조건을 풀고 전체 지원자를 보여줌 */
-    if(S.cond&&!overList(S.pid,cond(S.cond)).length){S.cond=null;S.sort=null;S.sel={};toast("조건의 지원자를 모두 처리했어요. 전체 지원자를 보여드려요");}
+    if(S.cond&&!overList(S.pid,cond(S.cond)).length){S.cond=null;S.sort=null;S.sel={};if(summary(S.pid).total)toast("조건의 지원자를 모두 처리했어요. 전체 지원자를 보여드려요");}
     else if(S.cond&&!visibleRows().length)pickTab();
     render();},Object.keys(S.leaving).length?1400:0);
 }
@@ -734,17 +907,36 @@ function closePops(){document.querySelectorAll(".bulk .pop").forEach(function(m)
 document.addEventListener("click",function(e){
   if(!e.target.closest(".ba[data-menu]")||e.target.closest(".pop"))closePops();
   if(!e.target.closest("#reopen"))closeR();
-  if(!e.target.closest("#needWrap"))closeNmenu();
+  if(!e.target.closest(".fwrap"))closeF();
+  var ps=e.target.closest("[data-psum]");
+  if(ps){var pid=ps.dataset.psum;if(pid!==S.pid){S.seen[pid]=true;enter(pid,null);}showSummary();return;}
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
   if(d.go){S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
   if(t.id==="resetBtn"){init();closeOverlay();enter("A",null);return;}
   if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON")closeOverlay();return;}
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
-  if(t.id==="reopen"){if(summary(S.pid).total)showSummary();else if(document.querySelector(".rpop"))closeR();else showDoneTip();return;}
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태예요");return;}
-  if(d.apply){toast(cond(+d.apply).how);S.cond=+d.apply;S.sel={};pickTab();closeOverlay();render();return;}
-  if(t.id==="cclear"){S.cond=null;S.sel={};render();return;}
+  if(d.apply){toast(cond(+d.apply).how);S.cond=+d.apply;S.sel={};S.sort=null;S.f={};S.qv=null;S.from="popup";pickTab();closeOverlay();render();return;}
+  if(t.id==="cclear"){S.cond=null;S.sel={};S.sort=null;render();return;}
+  if(d.fmenu){openF(t);return;}
+  if(d.fcond){toast(cond(+d.fcond).how);if(S.qv==="notice")S.qv=null;S.cond=+d.fcond;S.sort=null;S.sel={};pickTab();closeF();render();return;}
+  if(d.sug){toast(cond(+d.sug).how);S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
+  if(d.freset!==undefined){S.f={};S.qv=null;S.sel={};render();return;}
+  if(d.qv!==undefined){S.qv=d.qv||null;S.sel={};closeF();render();return;}
+  if(d.fsheet!==undefined){openFilterSheet();return;}
+  if(d.fco){var g2=FG[d.fco],v2=g2.o.find(function(o){return String(o.v)===d.v;}).v,arr2=S.f[d.fco]||(S.f[d.fco]=[]),ix2=arr2.indexOf(v2);if(ix2>=0)arr2.splice(ix2,1);else arr2.push(v2);S.sel={};render();var tr=document.querySelector('[data-fmenu="g:'+d.fco+'"]');if(tr)openF(tr);return;}
+  if(d.fgx){delete S.f[d.fgx];S.sel={};closeF();render();return;}
+  if(d.fadd){if(!S.f[d.fadd])S.f[d.fadd]=[];closeF();render();var tr2=document.querySelector('[data-fmenu="g:'+d.fadd+'"]');if(tr2)openF(tr2);return;}
+  if(d.sumpop!==undefined){closeF();showSummary();return;}
+  if(d.nextcond!==undefined){var cb=document.querySelector('[data-fmenu="cond"]');if(cb){cb.scrollIntoView({block:"center"});openF(cb);}return;}
+  if(d.condx!==undefined){S.cond=null;S.sort=null;S.sel={};render();return;}
+  if(d.sdel!==undefined){S.sort=null;closeF();render();return;}
+  if(d.fall!==undefined){S.f={};S.sort=null;S.sel={};closeF();render();return;}
+  if(d.fcat){var sec=$("fcat"+d.fcat),sb=sec.parentNode;sb.scrollTo({top:sec.offsetTop-sb.offsetTop-16,behavior:"smooth"});document.querySelectorAll(".ftabs button").forEach(function(b){b.classList.toggle("on",b===t);});return;}
+  if(d.fopt){var g=FG[d.fopt],v=g.o.find(function(o){return String(o.v)===d.v;}).v,arr=S.fd[d.fopt]||(S.fd[d.fopt]=[]),ix=arr.indexOf(v);if(ix>=0)arr.splice(ix,1);else arr.push(v);t.classList.toggle("on",ix<0);updFcnt();return;}
+  if(d.fclear!==undefined){S.fd={};document.querySelectorAll(".pill.on").forEach(function(b){b.classList.remove("on");});updFcnt();return;}
+  if(d.fapply!==undefined){Object.keys(S.fd).forEach(function(k){if(!S.fd[k].length)delete S.fd[k];});S.f=S.fd;S.sel={};closeOverlay();render();toast(fCount(S.f)?"필터를 적용했어요. 이 단계에 "+visibleRows().length+"명이 보여요.":"필터를 해제했어요.");return;}
   if(d.sel){S.sel[d.sel]=!S.sel[d.sel];render();return;}
   if(d.all!==undefined){var rows=visibleRows(),all=rows.every(function(a){return S.sel[a.id];});rows.forEach(function(a){S.sel[a.id]=!all;});render();return;}
   if(d.open){openApplicant(d.open);return;}
@@ -764,21 +956,23 @@ document.addEventListener("click",function(e){
   if(d.ivact){var a=findA(d.id);a.iv=d.ivact==="repropose"?{k:"p"}:{k:"none"};var n6=leaveNote([d.id]);closeOverlay();afterChange([d.id]);toast((d.ivact==="repropose"?"수정한 일정으로 다시 제안했어요.":"면접을 취소했어요.")+n6);return;}
   if(d.mgo){closeOverlay();enter(d.mgo,d.mcond?+d.mcond:null,true);if(d.mcond)toast(cond(+d.mcond).how);return;}
   if(t.id==="mCta"){closeOverlay();enter("A",null,true);return;}
-  if(d.nextcond!==undefined){showSummary();return;}
-  if(d.condx!==undefined){S.cond=null;S.sel={};render();return;}
-  if(d.notice!==undefined){toast(S.cond?"처리 필요 조건과 함께 쓸 수 없어요":"프로토타입 범위 밖 기능이에요");return;}
   if(d.ptab!==undefined){S.pos=d.ptab||null;S.sel={};pickTab();render();return;}
-  if(d.nmenu!==undefined){if(document.querySelector(".nmenu"))closeNmenu();else openNmenu(false);return;}
-  if(d.ntip!==undefined){if(document.querySelector(".nmenu"))closeNmenu();else openNmenu(true);return;}
-  if(d.npick){closeNmenu();S.cond=+d.npick;toast(cond(S.cond).how);S.sel={};pickTab();render();return;}
-  if(d.nclear!==undefined){closeNmenu();S.cond=null;S.sel={};render();return;}
-  if(d.sumpop!==undefined){closeNmenu();showSummary();return;}
   if(d.todo!==undefined){toast("프로토타입 범위 밖 기능이에요");return;}
 });
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeOverlay();closePops();closeNmenu();}});
+document.addEventListener("change",function(e){
+  if(e.target.id==="sBy"){var by=e.target.value;S.sort={by:by,ord:sortOrds(by)[by==="cond"?1:0].v};}
+  else if(e.target.id==="sOrd"){var c0=sortCur();S.sort={by:c0.by,ord:e.target.value};}
+  else return;
+  var d0=sortDef();if(S.sort.by===d0.by&&S.sort.ord===d0.ord)S.sort=null;
+  var fromPill=!!e.target.closest(".sortpop2");render();
+  if(fromPill){var sp=document.querySelector('[data-fmenu="spill"]');if(sp)openF(sp);}
+  else{var pop=document.querySelector(".sortpop");if(pop)pop.innerHTML=sortPopHtml();}
+});
+document.addEventListener("input",function(e){if(e.target.id!=="faddq")return;var v=e.target.value.trim();e.target.parentNode.querySelectorAll(".addi").forEach(function(b){b.hidden=!!v&&b.textContent.indexOf(v)<0;});});
+document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.psum){e.preventDefault();e.target.click();return;}if(e.key==="Escape"){closeOverlay();closePops();closeF();}});
 
 function enter(pid,c,fromMail){
-  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";pickTab();render();
+  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qv=null;S.justDone=null;S.from=fromMail?"mail":"popup";pickTab();render();
   if(fromMail){S.seen[pid]=true;return;}
   if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total)showSummary();}
 }
