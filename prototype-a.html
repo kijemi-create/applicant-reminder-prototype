@@ -238,8 +238,9 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nbanner.ok .bmsg{font-weight:600}
 .nbanner .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
 /* 배너: 피그마 시안(BZBanner) 컬러와 동일 */
-.nbanner{height:54px;padding:8px 16px;border-color:#d5e4ff;background:#eef3ff;font-size:15px;line-height:22px;color:#30363c}
-.nbanner.on{background:#eef3ff;border-color:#d5e4ff;color:#30363c}
+.nbanner{height:54px;padding:8px 16px;border-color:#d5e4ff;background:#fff;box-shadow:0 0 6px rgba(0,0,0,.04),0 8px 16px -1px rgba(0,0,0,.08);font-size:15px;line-height:22px;color:#30363c}
+.nbanner.on{background:#fff;border-color:#d5e4ff;color:#30363c}
+.nbanner.ok{box-shadow:none}
 .nbanner .l{font-weight:600;gap:8px}
 .nbanner .l>.ic,.nbanner.on .l>.ic{font-size:20px;color:#131618}
 .nbanner .l .nn,.nbanner.on .l .n,.nbanner .l.two .tx .n{color:#1b55f6;font-weight:600}
@@ -468,8 +469,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .ts{align-self:center;font-size:12px;color:var(--gray-500)}
 
 /* 토스트 */
-.toast{position:fixed;left:50%;bottom:calc(32px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--gray-800);color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;line-height:20px;z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.18);max-width:calc(100vw - 32px);display:flex;gap:8px;align-items:center}
-.toast .ic{font-size:18px;color:#4ade80}
+/* 토스트: XDS Biz BZToast (success) · 뷰포트 우측 상단 고정 (상단 24 · 우측 20) */
+.toast{position:fixed;top:24px;right:20px;background:#30363c;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;line-height:20px;font-weight:600;z-index:70;box-shadow:0 0 6px rgba(0,0,0,.04),0 8px 16px rgba(0,0,0,.08);max-width:min(420px,calc(100vw - 40px));display:flex;gap:8px;align-items:flex-start}
+.toast .ic{font-size:16px;color:#02b160;flex:none;margin-top:2px}
+@keyframes tdn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 
 /* 메일 */
 .mailc{max-width:1440px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(19,22,24,.12);overflow:hidden}
@@ -503,7 +506,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
   .dialog{animation:fade .15s ease-out}
   .sheet{animation:slide .3s cubic-bezier(.2,.8,.2,1)}
   .backdrop{animation:fade .15s ease-out}
-  .toast{animation:up .2s ease-out}
+  .toast{animation:tdn .2s ease-out}
   @keyframes fade{from{opacity:0}to{opacity:1}}
   @keyframes slide{from{transform:translateX(100%)}to{transform:none}}
   @keyframes up{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -865,7 +868,7 @@ function showSummary(){
   var p=POSTS.find(function(x){return x.id===S.pid;}),s=summary(S.pid);
   if(!s.total){toast("지금은 처리가 필요한 지원자가 없어요");return;}
   $("overlay").innerHTML='<div class="backdrop" data-close></div><div class="dwrap" data-close><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dT">'+
-    '<div class="hd"><span class="pn">'+esc(p.name)+'</span><h2 id="dT">처리를 기다리는 지원자가 <em>'+s.total+'명</em> 있어요</h2><p>지원자가 채용 진행 상황을 기다리고 있어요. 신속한 안내는 좋은 채용 경험과 기업에 대한 긍정적인 인상을 만들어요.</p></div>'+
+    '<div class="hd"><span class="pn">'+esc(p.name)+'</span><h2 id="dT">처리를 기다리는 지원자가 <em>'+s.total+'명</em> 있어요</h2><p>결과를 빨리 알려줄수록 기업에 대한 인상도 좋아집니다.</p></div>'+
     '<ul class="crit" style="margin:0">'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+r.c.t+'</span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
     '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있어요.<br>조건별 기준은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간이에요.</span></div>'+
     '<div class="btns"><button type="button" class="bt sec" data-close>닫기</button></div>'+
