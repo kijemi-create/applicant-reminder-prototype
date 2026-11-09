@@ -93,7 +93,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .shead{margin-top:32px;display:flex;align-items:center;gap:12px}
 .shead .st{margin:0;font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
 #needWrap{position:relative;display:inline-flex;align-items:center}
-.nb{height:40px;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 14px;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font-size:14px;line-height:20px;font-weight:600;color:var(--gray-950);white-space:nowrap}
+.nb{height:32px;font-size:13px!important;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 14px;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font-size:14px;line-height:20px;font-weight:600;color:var(--gray-950);white-space:nowrap}
 .nb:hover{background:var(--gray-50)}
 .nb>.ic{font-size:18px;color:var(--red)}
 .nb .lbl{display:inline-flex;align-items:center;gap:6px}
@@ -125,6 +125,26 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nmenu .tip b .ic{font-size:18px;color:var(--ok)}
 .nmenu .tip span{font-size:13px;line-height:20px;color:var(--gray-600);padding-left:24px}
 .shead+.ptabs{margin-top:12px}
+/* 상태 | 액션 분할 버튼 (로드맵 완주율 | 전체 목록 보기 방식) */
+.splt{height:32px;display:inline-flex;align-items:center;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font-size:13px;line-height:20px;font-weight:600;color:var(--gray-950);white-space:nowrap;overflow:hidden}
+.splt .sl{height:100%;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 12px;color:inherit;font-weight:600}
+.splt button.sl:hover,.splt .sr:hover{background:var(--gray-50)}
+.splt .sl>.ic{font-size:16px;color:var(--red)}
+.splt .cnt{min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
+.splt .sdv{width:1px;height:14px;background:var(--gray-200);flex:none}
+.splt .sr{height:100%;display:inline-flex;align-items:center;gap:2px;padding:0 8px 0 12px;color:var(--gray-700);font-weight:600}
+.splt .sr .cv .ic{font-size:14px;color:var(--gray-500)}
+.splt.on{border-color:var(--brand);background:var(--brand-50)}
+.splt.on .sl{color:var(--brand);padding-right:4px}
+.splt.on .sl>.ic{color:var(--brand)}
+.splt.on .sl b{font-weight:700}
+.splt.on .sdv{background:rgba(27,85,246,.25)}
+.splt.on .sr{color:var(--brand)}
+.splt.on .sr:hover{background:rgba(27,85,246,.08)}
+.splt.on .sr .cv .ic{color:var(--brand)}
+.splt .sx{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:var(--brand);margin-left:2px}
+.splt .sx:hover{background:rgba(27,85,246,.12)}
+.splt .sx .ic{font-size:13px}
 .nb .cv{transform:none}
 .ctitle{margin-top:16px;display:flex;align-items:center;gap:8px}
 /* 선택한 조건: 노션식 필터 칩 (B안 조건 칩과 동일, 화살표 없이 ×만) */
@@ -622,12 +642,13 @@ function renderList(){
 }
 function renderNeed(){
   var tot=summary(S.pid).total,c=S.cond?cond(S.cond):null,w=$("needWrap"),open=!!w.querySelector(".nmenu");
-  w.innerHTML=tot?'<button type="button" class="nb" data-nopen aria-haspopup="dialog">'+I("bell")+'<span class="lbl">처리 필요<span class="cnt">'+tot+'</span></span><span class="cv">'+I("chev")+'</span></button>'
-    :'<button type="button" class="nb done" data-ntip aria-label="처리 완료, 안내 보기">'+I("check")+'<span class="lbl">처리 완료</span></button>';
+  var right='<span class="sdv" aria-hidden="true"></span><button type="button" class="sr" data-nopen aria-haspopup="dialog">전체 조건 보기<span class="cv">'+I("chev")+'</span></button>';
+  /* 진입점과 지금 상태를 한 버튼에: [상태 | 전체 조건 보기 >] */
+  if(c)w.innerHTML='<span class="splt on"><span class="sl" title="처리 방법: '+esc(c.how)+'">'+I("filter")+esc(c.t)+' <b>'+overListP(c).length+'명</b><button type="button" class="sx" data-nclear aria-label="조건 해제, 전체 지원자 보기" title="조건 해제">'+I("x")+'</button></span>'+right+'</span>';
+  else if(tot)w.innerHTML='<span class="splt"><button type="button" class="sl" data-nopen aria-haspopup="dialog">'+I("bell")+'처리 필요<span class="cnt">'+tot+'</span></button>'+right+'</span>';
+  else w.innerHTML='<button type="button" class="nb done" data-ntip aria-label="처리 완료, 안내 보기">'+I("check")+'<span class="lbl">처리 완료</span></button>';
   if(open&&!tot)openNmenu();
-  /* 포지션 탭 위: 지금 보고 있는 조건 */
-  $("ctitle").hidden=!c;
-  $("ctitle").innerHTML=c?'<span class="cchip">'+I("filter")+'<span class="t">'+esc(c.t)+' <b>'+overListP(c).length+'명</b></span><button type="button" class="cx" data-nclear aria-label="조건 해제, 전체 지원자 보기" title="조건 해제">'+I("x")+'</button></span>':'';
+  $("ctitle").hidden=true;$("ctitle").innerHTML="";
 }
 function closeNmenu(){var m=document.querySelector(".nmenu");if(m)m.remove();}
 function openNmenu(){

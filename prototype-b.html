@@ -206,6 +206,23 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .chip.cond:hover .htip{display:block}
 .fwrap:has(.fmenu) .htip{display:none}
 .fmenu .hd .hdn{display:block;font-weight:400;color:var(--gray-400);margin-top:2px}
+/* 처리 필요 배너 (B안) */
+.nbanner{margin-top:16px;height:48px;display:flex;align-items:center;gap:8px;padding:0 8px 0 16px;border-radius:8px;background:var(--gray-50);font-size:14px;line-height:20px;color:var(--gray-800)}
+.nbanner.on{background:var(--brand-50);color:var(--brand)}
+.nbanner .l{display:inline-flex;align-items:center;gap:8px;font-weight:500;white-space:nowrap;min-width:0}
+.nbanner .l>.ic{font-size:18px;color:var(--red)}
+.nbanner.on .l>.ic{color:var(--brand)}
+.nbanner .l b{font-weight:600;color:inherit}
+.nbanner .l .n{font-weight:700}
+.nbanner .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
+.nbanner .l.done{color:var(--gray-700)}
+.nbanner .l.done>.ic{color:var(--ok)}
+.nbanner .sp{flex:1}
+.nbanner .ba2{height:36px;padding:0 10px;border-radius:6px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:var(--gray-800);white-space:nowrap}
+.nbanner .ba2 .ic{font-size:16px;color:var(--gray-600)}
+.nbanner .ba2:hover{background:rgba(19,22,24,.05)}
+.nbanner.on .ba2:hover{background:rgba(27,85,246,.08)}
+.nbanner+.fbar{margin-top:12px}
 /* 노션식 필터 바: [조건] | [정렬 pill][필터 pill…][+ 필터] ……… [초기화] */
 .fbar .fdiv{width:1px;height:20px;background:var(--gray-200);margin:0 4px}
 .fp{height:32px;display:inline-flex;align-items:center;gap:2px;border:1px solid var(--gray-200);border-radius:999px;background:var(--gray-50);color:var(--gray-800);font-size:13px;line-height:20px;white-space:nowrap}
@@ -488,6 +505,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
         <span class="vdiv"></span>
         <button type="button" class="obtn" data-todo><span class="ic" data-i="edit"></span>채용 단계 편집</button>
       </div>
+      <div class="nbanner" id="nbanner" hidden></div>
       <div class="fbar" id="fbar"></div>
       <div class="tabs" id="tabs"></div>
       <div class="list" id="list"></div>
@@ -730,17 +748,15 @@ function renderList(){
 }
 function renderFbar(){
   var h="",c=S.cond?cond(S.cond):null,n=0;
-  /* 1층: 조건(범위). 팝업·메일로 들어왔을 때만, 또는 처리 필요 추천 */
-  if(c){
-    n=overListP(c).length;
-    h='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기. 처리 방법: '+esc(c.how)+'">'+I("filter")+esc(c.t)+' <span class="n">'+n+'명</span><span class="cv">'+I("chev")+'</span></button><span class="htip" role="tooltip"><b>처리 방법</b>'+esc(c.how)+'</span><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';
-  }else{
-    /* 조건을 해제하면 같은 자리에 '처리 필요 지원자'로 남고, 모두 처리하면 '처리 완료' */
-    var tot=summary(S.pid).total;/* 입구: 목록 위 칩 하나. 조건 해제 시 '처리 필요 지원자'로 복귀 */
-    if(tot)h='<span class="fwrap"><button type="button" class="chip need" data-fmenu="cond" aria-label="처리 필요 지원자 '+tot+'명, 조건 선택">'+I("bell")+'처리 필요 지원자<span class="cnt">'+tot+'</span><span class="cv">'+I("chev")+'</span></button></span>';
-    else if(S.justDone===S.pid)h='<span class="fwrap"><button type="button" class="chip donec" data-fmenu="done" aria-label="모두 처리했어요, 안내 보기">'+I("check")+'모두 처리했어요</button></span>';
-  }
-  var left=h,rest="";
+  /* 처리 필요 배너: 한 자리에서 [처리 필요 지원자 N] ↔ [조건명 · 전체 조건 보기 · 조건 해제] */
+  var tot=summary(S.pid).total,bn=$("nbanner"),bh="";
+  if(c){n=overListP(c).length;
+    bh='<span class="l" title="처리 방법: '+esc(c.how)+'">'+I("filter")+'<b>'+esc(c.t)+'</b><span class="n">'+n+'명</span></span><span class="sp"></span>'+
+       '<button type="button" class="ba2" data-sumpop>'+I("list")+'전체 조건 보기</button><button type="button" class="ba2" id="cclear">'+I("x")+'조건 해제</button>';}
+  else if(tot){bh='<span class="l">'+I("bell")+'처리 필요 지원자 <span class="cnt">'+tot+'</span></span><span class="sp"></span><button type="button" class="ba2" data-sumpop>'+I("list")+'전체 조건 보기</button>';}
+  else if(S.justDone===S.pid){bh='<span class="l done">'+I("check")+'기준을 넘긴 지원자를 모두 처리했어요</span>';}
+  bn.hidden=!bh;bn.className="nbanner"+(c?" on":"");bn.innerHTML=bh;
+  var left="",rest="";
   /* 2층: 사용자가 건 정렬·필터만 pill로 (노션 방식). 안 건 항목은 숨김 */
   if(S.sort){var cs=sortCur(),bl=sortBys().find(function(x){return x.v===cs.by;}),ol=sortOrds(cs.by).find(function(x){return x.v===cs.ord;});
     rest+='<span class="fwrap"><span class="fp"><button type="button" class="pb" data-fmenu="spill">'+I("sort")+'<b>'+esc(bl.t)+'</b> '+ol.t+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-sdel aria-label="정렬 삭제">'+I("x")+'</button></span></span>';}
