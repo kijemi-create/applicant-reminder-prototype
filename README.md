@@ -1,6 +1,6 @@
 # 지원자 처리 지연·누락 방지 · 처리 유도 프로토타입
 
 - [A안 · 배너형](./prototype-a.html)
-- [B안 · 탭형](./prototype-b.html)
+- [B안 · 칩형](./prototype-b.html)
 
 화면의 지원자와 수치는 모두 예시 데이터입니다.
