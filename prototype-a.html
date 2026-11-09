@@ -126,7 +126,14 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nmenu .tip span{font-size:13px;line-height:20px;color:var(--gray-600);padding-left:24px}
 .shead+.ptabs{margin-top:12px}
 .nb .cv{transform:none}
-.ctitle{margin-top:20px;display:flex;align-items:center;gap:8px}
+.ctitle{margin-top:16px;display:flex;align-items:center;gap:8px}
+/* 선택한 조건: 노션식 필터 칩 (B안 조건 칩과 동일, 화살표 없이 ×만) */
+.cchip{height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 4px 0 12px;border:1px solid var(--brand);border-radius:999px;background:var(--brand-50);color:var(--brand);font-size:13px;line-height:20px;font-weight:600;white-space:nowrap}
+.cchip>.ic{font-size:16px}
+.ctitle .cchip b{font-size:inherit;line-height:inherit;letter-spacing:normal;color:inherit;font-weight:700}
+.cchip .cx{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:var(--brand)}
+.cchip .cx:hover{background:rgba(27,85,246,.1)}
+.cchip .cx .ic{font-size:14px}
 .ctitle b{font-size:18px;line-height:26px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
 .ctitle b .n{color:var(--brand)}
 .cx2{width:28px;height:28px;border-radius:50%;border:1px solid var(--gray-200);background:#fff;display:grid;place-items:center;color:var(--gray-700)}
@@ -620,7 +627,7 @@ function renderNeed(){
   if(open&&!tot)openNmenu();
   /* 포지션 탭 위: 지금 보고 있는 조건 */
   $("ctitle").hidden=!c;
-  $("ctitle").innerHTML=c?'<b>'+esc(c.t)+' <span class="n">('+overListP(c).length+'명)</span></b><button type="button" class="cx2" data-nclear aria-label="조건 해제, 전체 지원자 보기" title="조건 해제">'+I("x")+'</button>':'';
+  $("ctitle").innerHTML=c?'<span class="cchip">'+I("filter")+'<span class="t">'+esc(c.t)+' <b>'+overListP(c).length+'명</b></span><button type="button" class="cx" data-nclear aria-label="조건 해제, 전체 지원자 보기" title="조건 해제">'+I("x")+'</button></span>':'';
 }
 function closeNmenu(){var m=document.querySelector(".nmenu");if(m)m.remove();}
 function openNmenu(){
