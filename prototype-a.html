@@ -96,6 +96,11 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .seg span.on{background:#fff;color:var(--gray-950);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .seg .ic{font-size:18px}
 .cbl{display:inline-flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:500;color:var(--gray-800);margin-right:8px}
+.cbl#noticeCb{position:relative}
+.cbl.dis{color:var(--gray-300);cursor:not-allowed}
+.cbl.dis .ck{border-color:var(--gray-100);background:var(--gray-50)}
+.cbl#noticeCb .htip{display:none;top:calc(100% + 8px);left:0;font-weight:400}
+.cbl.dis:hover .htip{display:block}
 .vdiv{width:1px;height:20px;background:var(--gray-100);margin:0 4px}
 
 /* 처리 필요 지원자 버튼 (신규) */
@@ -345,6 +350,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
         <span class="rwrap" id="reopenWrap" style="margin-left:8px"><button type="button" class="reopen" id="reopen"></button></span>
         <span class="sp"></span>
         <label class="cbl"><span class="ck"></span>미열람 지원자만 보기</label>
+        <button type="button" class="cbl" id="noticeCb" data-notice><span class="ck"></span>안내 전 지원자만 보기<span class="htip" role="tooltip">처리 필요 조건과 함께 쓸 수 없어요. 처리 필요 지원자는 아직 최종 결과가 없는 지원자예요.</span></button>
         <button type="button" class="ibtn" data-todo aria-label="검색"><span class="ic" data-i="search"></span></button>
         <button type="button" class="ibtn" data-todo aria-label="필터"><span class="ic" data-i="filter"></span></button>
         <button type="button" class="ibtn" data-todo aria-label="정렬"><span class="ic" data-i="sort"></span></button>
@@ -566,12 +572,13 @@ function renderBanner(){
   $("csel").innerHTML=[ALL].concat(CONDS).map(function(x){return '<option value="'+x.id+'"'+(x.id===S.cond?' selected':'')+'>'+x.t+' ('+overList(S.pid,x).length+'명)</option>';}).join("");
 
 }
+function renderNotice(){var b=$("noticeCb");if(!b)return;b.classList.toggle("dis",!!S.cond);b.setAttribute("aria-disabled",String(!!S.cond));}
 function renderBulk(){var n=Object.keys(S.sel).filter(function(k){return S.sel[k];}).length;$("bulk").hidden=!n;$("bn").textContent=n+"명";}
 function render(){
   $("appView").hidden=S.view!=="app";$("mailView").hidden=S.view!=="mail";
   document.querySelectorAll("[data-go]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.go===S.view));});
   if(S.view==="mail"){renderMail();return;}
-  renderPosts();renderReopen();renderTabs();renderBanner();renderList();renderBulk();
+  renderPosts();renderReopen();renderTabs();renderBanner();renderList();renderBulk();renderNotice();
 }
 
 /* ---------- 오버레이 ---------- */
@@ -665,6 +672,7 @@ document.addEventListener("click",function(e){
   if(t.id==="mCta"){closeOverlay();enter("A",null,true);return;}
   if(d.nextcond!==undefined){showSummary();return;}
   if(d.condx!==undefined){S.cond=null;S.sel={};render();return;}
+  if(d.notice!==undefined){toast(S.cond?"처리 필요 조건과 함께 쓸 수 없어요":"프로토타입 범위 밖 기능이에요");return;}
   if(d.todo!==undefined){toast("프로토타입 범위 밖 기능이에요");return;}
 });
 $("csel").addEventListener("change",function(){toast(cond(+this.value).how);S.cond=+this.value;S.sel={};pickTab();render();});
