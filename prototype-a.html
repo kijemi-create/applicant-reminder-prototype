@@ -469,47 +469,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .ts{align-self:center;font-size:12px;color:var(--gray-500)}
 
 /* 토스트 */
-
-/* 기존 서비스 띠배너 (결과 안내 분리 공지) */
-.gnotice{margin-top:32px;min-height:48px;display:flex;align-items:center;gap:8px;padding:0 16px;border-radius:8px;background:#eef3ff;color:#1b55f6;font-size:14px;font-weight:600}
-.gnotice+.nbanner{margin-top:12px}
-/* 프로토타입 진입 UI 토글 */
-.pseg{display:inline-flex;border:1px solid var(--gray-300);border-radius:999px;overflow:hidden;background:#fff}
-.pseg button{padding:5px 12px;font-size:12px;font-weight:500;color:var(--gray-700)}
-.pseg button[aria-pressed="true"]{background:var(--gray-900);color:#fff}
-/* 제안안: 툴바 진입 버튼 */
-.needwrap{position:relative;display:inline-flex;margin-left:12px}
-.needbtn{height:40px;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 12px;border:1px solid #d5e4ff;border-radius:8px;background:#fff;font-size:14px;font-weight:600;color:#30363c;white-space:nowrap}
-.needbtn:hover{background:#eef3ff}
-.needbtn .ic{font-size:20px;color:#131618}
-.needbtn b{color:#1b55f6;font-weight:600}
-.needbtn .cv{display:inline-grid;color:var(--gray-500)}.needbtn .cv .ic{font-size:16px;color:var(--gray-500)}
-.needbtn.ok{border-color:#bfe8cf;background:#e9f8ef;color:#12a150;cursor:default}.needbtn.ok .ic{color:#12a150}
-.ctip{position:absolute;top:calc(100% + 10px);left:0;background:#30363c;color:#fff;font-size:13px;font-weight:500;line-height:20px;padding:8px 12px;border-radius:8px;white-space:nowrap;z-index:40;box-shadow:0 8px 16px rgba(0,0,0,.12);animation:tdn .2s ease-out}
-.ctip::before{content:"";position:absolute;top:-5px;left:20px;width:10px;height:10px;background:#30363c;transform:rotate(45deg)}
-/* 제안안: 조건 바 (목록 필터 맥락) */
-.ctx{margin-top:12px;min-height:48px;display:flex;align-items:center;gap:10px;padding:0 8px 0 12px;border-radius:8px;background:#f4f6f7;font-size:14px;line-height:20px;color:#30363c}
-.ctx .lb{flex:none;height:24px;padding:0 8px;border-radius:6px;background:#fff;border:1px solid #d5e4ff;color:#1b55f6;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
-.ctx .lb .ic{font-size:14px;color:#1b55f6}
-.ctx b{font-weight:600;white-space:nowrap}
-.ctx .n{color:#1b55f6}
-.ctx .sub{color:#6c767f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
-.ctx .ba2{height:32px;padding:0 12px;border-radius:6px;font-size:13px;font-weight:500;color:#30363c;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
-.ctx .ba2:hover{background:rgba(0,0,0,.05)}
-.ctx .ba2 .ic{font-size:14px}
-.ctx .bdv{width:1px;height:20px;background:#e2e6e8}
-.ctx.on{animation:tdn .2s ease-out}
-
-/* 제안안 위계: 공고 → 조건(보기) → 포지션 → 단계. 조건 바는 포지션 탭 위, 진입 버튼은 포지션 탭 줄 오른쪽 */
-.prow{margin-top:24px;min-height:44px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--gray-100)}
-.prow .ptabs{margin-top:0;border-bottom:0;flex:1;min-width:0}
-.prow .needwrap{margin-left:auto}
-.prow+.tool{margin-top:16px}
-.ctx+.prow{margin-top:16px}
-.prow .needbtn{height:32px;font-size:13px;padding:0 10px}
-.prow .needbtn .ic{font-size:18px}
-.prow .ctip{left:auto;right:0}
-.prow .ctip::before{left:auto;right:20px}
 /* 토스트: XDS Biz BZToast (success) · 뷰포트 우측 상단 고정 (상단 24 · 우측 20) */
 .toast{position:fixed;top:24px;right:20px;background:#30363c;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;line-height:20px;font-weight:600;z-index:70;box-shadow:0 0 6px rgba(0,0,0,.04),0 8px 16px rgba(0,0,0,.08);max-width:min(420px,calc(100vw - 40px));display:flex;gap:8px;align-items:flex-start}
 .toast .ic{font-size:16px;color:#02b160;flex:none;margin-top:2px}
@@ -561,7 +520,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
   <button type="button" class="pbtn" data-go="mail" aria-pressed="false">월요일 리마인드 메일</button>
   <button type="button" class="pbtn" id="doneBtn">모두 처리한 상태</button>
   <button type="button" class="pbtn" id="resetBtn">처음부터 다시</button>
-  <span class="pseg" role="group" aria-label="진입 UI"><button type="button" data-ui="banner" aria-pressed="false">현재안 · 배너</button><button type="button" data-ui="tool" aria-pressed="true">제안안 · 조건 바 + 탭 줄 진입</button></span>
   <span class="sp"></span>
   <span>오늘 26.11.05(목) · 예시 데이터 · 경과일 N은 가안</span>
 </div>
@@ -576,10 +534,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
     <main>
       <div class="trow"><h2 class="h2">지원자 관리</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
-      <div class="gnotice" id="gnotice"><span aria-hidden="true">📢</span>불합격·최종 합격 처리 시, 결과가 자동으로 안내되지 않습니다. 결과 안내는 원할 때 해 주세요.</div>
       <div class="nbanner" id="nbanner" hidden></div>
-      <div class="ctx" id="ctxbar" hidden></div>
-      <div class="prow" id="prow"><div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div><span class="needwrap" id="needEntry" hidden></span></div>
+      <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
         <span class="sp"></span>
@@ -834,22 +790,6 @@ function renderList(){
   $("list").innerHTML=h;
 }
 function josa(w){var ch=w.charCodeAt(w.length-1);return (ch>=0xAC00&&ch<=0xD7A3&&(ch-0xAC00)%28)?"을":"를";}
-var UI="tool",TIP=0;
-function renderEntry(){
-  var tool=UI==="tool",ne=$("needEntry"),cx=$("ctxbar"),c=S.cond?cond(S.cond):null,tot=summary(S.pid).total;
-  document.querySelectorAll("[data-ui]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ui===UI));});
-  if(!tool){ne.hidden=true;ne.innerHTML="";cx.hidden=true;cx.innerHTML="";$("prow").hidden=$("ptabs").hidden;return;}
-  $("nbanner").hidden=true;$("nbanner").innerHTML="";
-  /* 툴바 진입 버튼: 조건 적용 전에만. 조건 적용 중에는 조건 바가 대신함 */
-  var eh="";
-  if(!c&&tot)eh='<button type="button" class="needbtn" data-sumpop aria-haspopup="dialog">'+I("lac")+'처리 필요 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button>'+(TIP===1?'<span class="ctip" role="status">처리가 필요한 지원자는 여기에서 다시 확인할 수 있습니다.</span>':"");
-  else if(!c&&S.justDone===S.pid)eh='<span class="needbtn ok">'+I("check")+'모두 처리했습니다</span>';
-  ne.hidden=!eh;ne.innerHTML=eh;
-  var ch="";
-  if(c){var nn=overListP(c).length;ch='<span class="lb">'+I("lac")+'처리 필요 조건</span><b>'+esc(c.t)+' <span class="n">'+nn+'명</span></b><span class="sub">'+esc(c.hint||c.how)+'</span><button type="button" class="ba2" data-sumpop>다른 조건 보기</button><span class="bdv" aria-hidden="true"></span><button type="button" class="ba2" id="cclear">조건 해제 '+I("x")+'</button>';}
-  $("prow").hidden=$("ptabs").hidden&&ne.hidden;
-  var was=!cx.hidden;cx.hidden=!ch;cx.className="ctx"+(ch&&!was?" on":"");cx.innerHTML=ch;
-}
 function renderFbar(){
   var h="",c=S.cond?cond(S.cond):null,n=0;
   /* 처리 필요 배너: 한 자리에서 [처리 필요 지원자 N] ↔ [조건명 · 전체 조건 보기 · 조건 해제] */
@@ -919,7 +859,7 @@ function render(){
   $("appView").hidden=S.view!=="app";$("mailView").hidden=S.view!=="mail";
   document.querySelectorAll("[data-go]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.go===S.view));});
   if(S.view==="mail"){renderMail();return;}
-  renderPosts();renderReopen();renderPtabs();renderTabs();renderFbar();renderEntry();renderList();renderBulk();
+  renderPosts();renderReopen();renderPtabs();renderTabs();renderFbar();renderList();renderBulk();
 }
 
 /* ---------- 오버레이 ---------- */
@@ -991,11 +931,8 @@ document.addEventListener("click",function(e){
   if(ps){var pid=ps.dataset.psum;if(pid!==S.pid){S.seen[pid]=true;enter(pid,null);}showSummary();return;}
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
   if(d.go){S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
-  if(d.ui){UI=d.ui;TIP=0;render();return;}
-  if(t.id==="resetBtn"){init();TIP=0;closeOverlay();enter("A",null);return;}
-  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON"){var wasSum=!!$("overlay").querySelector("[data-apply]");closeOverlay();
-    /* 제안안: 요약 팝업을 처음 닫으면 다시 여는 위치를 한 번 알려줌 */
-    if(wasSum&&UI==="tool"&&TIP===0&&!S.cond&&summary(S.pid).total){TIP=1;renderEntry();setTimeout(function(){TIP=2;renderEntry();},4000);}}return;}
+  if(t.id==="resetBtn"){init();closeOverlay();enter("A",null);return;}
+  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON")closeOverlay();return;}
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
