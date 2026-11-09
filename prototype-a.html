@@ -592,7 +592,7 @@ function pickTab(){
 }
 function ck(on,attr){return '<button type="button" class="ck'+(on===true?' on':on==="part"?' part':'')+'" '+attr+' aria-pressed="'+(on===true)+'" aria-label="선택"></button>';}
 function who(a){
-  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.lv<0?'<span class="unrl">미열람</span>':'')+(ALL.inScope(a)?'<span class="unr" title="처리 필요" aria-label="처리 필요"></span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
+  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.lv<0?'<span class="unrl">미열람</span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
 }
 function edu(a){return '<div><span class="t15">'+a.edu[0]+'</span><span class="t14">'+a.edu[1]+'</span><span class="t14 g">'+a.edu[2]+'</span></div>';}
 function car(a){return '<div><span class="t15">'+a.car[0]+'</span><span class="t14 g">'+a.car[1]+'</span></div>';}
@@ -636,7 +636,7 @@ function renderList(){
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 '+I("info")+'</div><div>면접 일정</div></div>';
     rows.forEach(function(a){
       var wait=a.final?stBadge(a):(a.se>=3?'<span class="bdg gray">현재 단계 '+a.se+'일째</span>':'');
-      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':ALL.inScope(a)?' hot':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+='<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
   }

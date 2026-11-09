@@ -207,7 +207,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fwrap:has(.fmenu) .htip{display:none}
 .fmenu .hd .hdn{display:block;font-weight:400;color:var(--gray-400);margin-top:2px}
 /* 처리 필요 배너 (B안) */
-.nbanner{margin-top:16px;height:48px;display:flex;align-items:center;gap:8px;padding:0 8px 0 16px;border-radius:8px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:14px;line-height:20px;color:var(--gray-800)}
+.nbanner{margin-top:32px;height:48px;display:flex;align-items:center;gap:8px;padding:0 8px 0 16px;border-radius:8px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:14px;line-height:20px;color:var(--gray-800)}
 .nbanner.on{background:var(--red-50);border-color:var(--red-100);color:var(--gray-950)}
 .nbanner .l{display:inline-flex;align-items:center;gap:8px;font-weight:500;white-space:nowrap;min-width:0}
 .nbanner .l>.ic{font-size:18px;color:var(--red)}
@@ -223,7 +223,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nbanner .ba2 .ic{font-size:16px;color:var(--gray-600)}
 .nbanner .ba2:hover{background:rgba(19,22,24,.05)}
 .nbanner.on .ba2:hover{background:rgba(242,42,35,.06)}
-.nbanner+.fbar{margin-top:12px}
+.nbanner+.ptabs{margin-top:16px}
 /* 노션식 필터 바: [조건] | [정렬 pill][필터 pill…][+ 필터] ……… [초기화] */
 .fbar .fdiv{width:1px;height:20px;background:var(--gray-200);margin:0 4px}
 .fp{height:32px;display:inline-flex;align-items:center;gap:2px;border:1px solid var(--gray-200);border-radius:999px;background:var(--gray-50);color:var(--gray-800);font-size:13px;line-height:20px;white-space:nowrap}
@@ -305,8 +305,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .lr:hover{background:#fafbfc}
 .lr.sel{background:rgba(240,245,255,.4)}
 .lr.out{opacity:.35}
-.lr.hot{background:var(--red-50)}
-.lr.hot:hover{background:#ffeae8}
+.lr.need{box-shadow:inset 3px 0 0 var(--red)}
 .lr>div{padding:16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
 .pos{font-size:15px;font-weight:700;color:var(--gray-900)}
 .who{flex-direction:row!important;align-items:center;justify-content:flex-start!important;gap:12px}
@@ -495,6 +494,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
     <main>
       <div class="trow"><h2 class="h2">지원자 관리</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
+      <div class="nbanner" id="nbanner" hidden></div>
       <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
@@ -508,7 +508,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
         <span class="vdiv"></span>
         <button type="button" class="obtn" data-todo><span class="ic" data-i="edit"></span>채용 단계 편집</button>
       </div>
-      <div class="nbanner" id="nbanner" hidden></div>
       <div class="fbar" id="fbar"></div>
       <div class="tabs" id="tabs"></div>
       <div class="list" id="list"></div>
@@ -697,7 +696,7 @@ function pickTab(){
 }
 function ck(on,attr){return '<button type="button" class="ck'+(on===true?' on':on==="part"?' part':'')+'" '+attr+' aria-pressed="'+(on===true)+'" aria-label="선택"></button>';}
 function who(a){
-  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.lv<0?'<span class="unrl">미열람</span>':'')+(ALL.inScope(a)?'<span class="unr" title="처리 필요" aria-label="처리 필요"></span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
+  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.lv<0?'<span class="unrl">미열람</span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
 }
 function edu(a){return '<div><span class="t15">'+a.edu[0]+'</span><span class="t14">'+a.edu[1]+'</span><span class="t14 g">'+a.edu[2]+'</span></div>';}
 function car(a){return '<div><span class="t15">'+a.car[0]+'</span><span class="t14 g">'+a.car[1]+'</span></div>';}
@@ -730,7 +729,7 @@ function renderList(){
     rows.forEach(function(a,i){
       var inS=inList(c,a),ov=inS,el=c.el(a);
       var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):ov?'<span class="bdg red">'+el+'일 경과</span>':'<span class="bdg gray">'+el+'일 경과</span>';
-      h+='<div class="lr'+(S.sel[a.id]?' sel':ov?' hot':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length&&fActive()){h+='<div class="empty"><b>필터에 맞는 지원자가 없어요</b>조건 안에서 필터를 줄이거나 초기화해 보세요.<br><button type="button" class="rst" data-freset>필터 초기화</button></div>';}
     else if(!rows.length){
@@ -742,7 +741,7 @@ function renderList(){
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 '+I("info")+'</div><div>면접 일정</div></div>';
     rows.forEach(function(a){
       var wait=a.final?stBadge(a):(a.se>=3?'<span class="bdg gray">현재 단계 '+a.se+'일째</span>':'');
-      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ALL.inScope(a)?' need':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+=fActive()?'<div class="empty"><b>필터에 맞는 지원자가 없어요</b>필터를 줄이거나 초기화해 보세요.<br><button type="button" class="rst" data-freset>필터 초기화</button></div>':'<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
   }

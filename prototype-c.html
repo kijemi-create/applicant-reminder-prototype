@@ -136,7 +136,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .cban{margin-top:8px;display:flex;align-items:center;gap:12px;padding:8px 8px 8px 16px;background:var(--brand-50);border-radius:8px;color:var(--brand)}
 .cban .ic{font-size:20px}
 /* C안: 카카오톡 전체/안읽음 방식 보기 탭 */
+.shead{margin-top:48px}
+.shead .st{margin:0;font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
 .vtabs{margin-top:24px;display:flex;gap:8px}
+.shead+.vtabs{margin-top:16px}
 .vt{position:relative;height:36px;padding:0 14px;border-radius:999px;background:var(--gray-50);font-size:14px;line-height:20px;font-weight:500;color:var(--gray-800);display:inline-flex;align-items:center;gap:6px}
 .vt:hover{background:var(--gray-100)}
 .vt.on{background:var(--gray-800);color:#fff;font-weight:600}
@@ -386,6 +389,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
     <main>
       <div class="trow"><h2 class="h2">지원자 관리</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
+      <div class="shead"><h3 class="st">현재 공고 지원자</h3></div>
       <div class="vtabs" id="vtabs" role="tablist" aria-label="지원자 보기"></div>
       <div class="chead" id="chead" hidden></div>
       <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
