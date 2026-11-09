@@ -219,7 +219,12 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nbanner .l{gap:6px}
 .nbanner .bpri{height:32px;padding:0 12px;border-radius:6px;background:var(--red);color:#fff;font-size:13px;font-weight:600;white-space:nowrap;margin-right:4px}
 .nbanner .bpri:hover{background:var(--red-600)}
-.nbanner .bdv{width:1px;height:14px;background:var(--red-100)}
+.nbanner .lbtn{height:36px;padding:0 10px 0 6px;margin-left:-6px;border-radius:6px;color:inherit;font-size:14px}
+.nbanner .lbtn:hover{background:rgba(242,42,35,.06)}
+.nbanner .lbtn .cv{display:inline-grid;transform:rotate(90deg);margin-left:2px}
+.nbanner .lbtn .cv .ic{font-size:16px;color:var(--gray-600)}
+.nbanner .fwrap .fmenu{top:calc(100% + 6px)}
+.nbanner .fmenu .n{color:var(--red)!important;font-weight:600!important}
 .nbanner.ok{background:var(--ok-50);border-color:#bfe8cf;color:var(--ok)}
 .nbanner.ok .l>.ic{color:var(--ok)}
 .nbanner.ok .bmsg{font-weight:600}
@@ -313,7 +318,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .lr:hover{background:#fafbfc}
 .lr.sel{background:rgba(240,245,255,.4)}
 .lr.out{opacity:.35}
-.lr.need{box-shadow:inset 3px 0 0 var(--red)}
+.lr{position:relative}
+.lr.need::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:0 2px 2px 0;background:var(--red)}
 .lr>div{padding:16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
 .pos{font-size:15px;font-weight:700;color:var(--gray-900)}
 .who{flex-direction:row!important;align-items:center;justify-content:flex-start!important;gap:12px}
@@ -762,9 +768,10 @@ function renderFbar(){
   /* 처리 필요 배너: 한 자리에서 [처리 필요 지원자 N] ↔ [조건명 · 전체 조건 보기 · 조건 해제] */
   var tot=summary(S.pid).total,bn=$("nbanner"),bh="",cls="nbanner";
   if(c){
-    bh='<span class="l" title="처리 방법: '+esc(c.how)+'">'+I("alert")+'<span class="bmsg"><b>'+esc(c.t)+'</b>'+josa(c.t)+' 확인해주세요.</span></span><span class="sp"></span>'+
-       '<button type="button" class="ba2" data-sumpop>처리 필요 지원자 더보기</button><span class="bdv" aria-hidden="true"></span><button type="button" class="ba2" id="cclear">조건 해제</button>';cls+=" on";}
-  else if(tot){bh='<span class="l">'+I("bell")+'<span class="bmsg">처리를 기다리는 지원자가 <b class="nn">'+tot+'명</b> 있어요.</span></span><span class="sp"></span><button type="button" class="bpri" data-sumpop>처리 필요 지원자만 보기</button>';cls+=" on";}
+    var nn=overListP(c).length;
+    bh='<span class="fwrap"><button type="button" class="l lbtn" data-fmenu="cond" aria-haspopup="menu" title="처리 방법: '+esc(c.how)+'">'+I("alert")+'<span class="bmsg"><b>'+esc(c.t)+' '+nn+'명</b>'+josa(nn+'명')+' 확인해주세요.</span><span class="cv">'+I("chev")+'</span></button></span><span class="sp"></span>'+
+       '<button type="button" class="ba2" id="cclear">조건 해제</button>';cls+=" on";}
+  else if(tot){bh='<span class="l">'+I("bell")+'<span class="bmsg">처리를 기다리는 지원자가 <b class="nn">'+tot+'명</b> 있어요.</span></span><span class="sp"></span><button type="button" class="bpri" data-sumpop>처리 필요 지원자 보기</button>';cls+=" on";}
   else if(S.justDone===S.pid){bh='<span class="l">'+I("check")+'<span class="bmsg">모두 처리했어요</span></span>';cls+=" ok";}
   bn.hidden=!bh;bn.className=cls;bn.innerHTML=bh;
   var left="",rest="";
@@ -801,7 +808,7 @@ function openF(t){
   if(kind.indexOf("g:")===0){h=groupMenu(kind.slice(2));}
   else if(kind==="add"){h=addMenu();}
   else if(kind==="spill"){m.className+=" sortpop2";h='<div class="ehd"><span><b>정렬</b></span><button type="button" class="del" data-sdel>삭제</button></div><div class="row">'+sortPopHtml()+'</div>';}
-  else if(kind==="cond"){h='<div class="hd">'+(S.cond?'조건 바꾸기':'처리 필요 조건 선택')+'<span class="hdn">한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+[ALL].concat(CONDS).map(function(x){var on=x.id===S.cond,n=overListP(x).length,z=!n&&!on;return '<button type="button" '+(z?'class="zero" disabled':'data-fcond="'+x.id+'" class="'+(on?"on":"")+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):"")+'</button>';}).join("")+'<div class="ft"><button type="button" data-sumpop>요약 팝업으로 보기</button></div>';}
+  else if(kind==="cond"){h='<div class="hd">'+(S.cond?'조건 바꾸기':'처리 필요 조건 선택')+'<span class="hdn">한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length,z=!n&&!on;return '<button type="button" '+(z?'class="zero" disabled':'data-fcond="'+x.id+'" class="'+(on?"on":"")+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):"")+'</button>';}).join("")+'<div class="ft"><button type="button" data-sumpop>요약 팝업으로 보기</button></div>';}
   else if(kind==="view"){h='<div class="hd">보기</div>'+QV.map(function(x){var on=x.v===S.qv,out=x.v==="notice"&&!!S.cond;return '<button type="button" class="vopt'+(on?' on':'')+'" data-qv="'+(x.v||"")+'"'+(out?' disabled':'')+(x.d?' title="'+x.d+'"':'')+'><span>'+x.t+'</span>'+(out?'<small>조건 범위 밖</small>':on?I("check"):'')+'</button>';}).join("");}
   else if(kind==="done"){h='<div class="tip" role="status"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>다음에 들어올 때는 이 칩이 보이지 않아요. 새로 기준을 넘는 지원자가 생기면 다시 표시돼요.</span></div>';}
   else h=sortPopHtml();
