@@ -160,6 +160,14 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .cmenu .allb{border-bottom:1px solid var(--gray-100);border-radius:6px 6px 0 0;font-weight:600}
 .cmenu .ft{border-top:1px solid var(--gray-100);margin-top:6px;padding-top:6px}
 .cmenu .ft button{color:var(--gray-600);font-size:13px}
+/* 처리필요 탭 완료 화면 */
+.donep{margin-top:8px;padding:64px 24px;border-radius:12px;background:var(--gray-50);display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;animation:fade .3s ease-out}
+.donep .dic{width:56px;height:56px;border-radius:50%;background:var(--ok-50);display:grid;place-items:center;margin-bottom:8px}
+.donep .dic .ic{font-size:30px;color:var(--ok)}
+.donep b{font-size:20px;line-height:28px;font-weight:700;color:var(--gray-950)}
+.donep span{font-size:14px;line-height:22px;color:var(--gray-600)}
+.donep .dbt{margin-top:16px;display:flex;gap:8px}
+.donep .bt{height:44px}
 .cinfo{position:relative;display:inline-grid;cursor:help;outline:none}
 .htip{display:none;position:absolute;top:calc(100% + 10px);left:-8px;z-index:24;width:max-content;max-width:320px;padding:10px 12px;border-radius:8px;background:var(--gray-900);color:#fff;font-size:13px;line-height:20px;font-weight:400;white-space:normal;box-shadow:0 4px 12px rgba(0,0,0,.16)}
 .htip b{display:block;font-size:12px;font-weight:600;color:var(--gray-300);margin-bottom:2px}
@@ -560,7 +568,14 @@ function visibleRows(){
   if(S.cond){var c=cond(S.cond);var r=l.filter(function(a){return (inList(c,a)||S.leaving[a.id])&&a.stage===S.tab;});r.sort(function(x,y){var ox=c.inScope(x)&&c.over(x),oy=c.inScope(y)&&c.over(y);if(ox!==oy)return ox?-1:1;return c.el(y)-c.el(x);});return r;}
   return l.filter(function(a){return a.stage===S.tab;}).sort(function(x,y){return x.applied-y.applied;});
 }
+function doneHtml(){
+  var rest=summary(S.pid).total,c=cond(S.cond);
+  return '<div class="donep" role="status"><span class="dic">'+I("check")+'</span><b>'+(rest?esc(c.t)+'<br>지원자를 모두 처리했어요':'처리 필요 지원자를 모두 처리했어요')+'</b>'+
+    '<span>'+(rest?'다른 조건에 처리할 지원자가 '+rest+'명 남아 있어요.':'지원자들이 기다리던 결과를 받을 수 있게 됐어요. 잠시 후 전체 지원자 목록으로 이동해요.')+'</span>'+
+    '<div class="dbt">'+(rest?'<button type="button" class="bt pri" data-donego="rest">남은 '+rest+'명 보기</button>':'')+'<button type="button" class="bt '+(rest?'sec':'pri')+'" data-donego="all">전체 지원자 보기</button></div></div>';
+}
 function renderList(){
+  if(S.cond&&S.doneView){$("list").innerHTML=doneHtml();return;}
   var rows=visibleRows();
   var all=rows.length&&rows.every(function(a){return S.sel[a.id];}),some=rows.some(function(a){return S.sel[a.id];});
   var head=ck(all?true:some?"part":false,'data-all');
@@ -662,11 +677,15 @@ function openChat(id){
 var tt;
 function toast(m){var t=$("toast");t.innerHTML=I("ok")+'<span>'+esc(m)+'</span>';t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},2600);}
 function afterChange(ids){
-  if(S.lastTotal>0&&summary(S.pid).total===0)setTimeout(function(){toast("기준을 넘긴 지원자를 모두 처리했어요");},2700);
+  if(S.lastTotal>0&&summary(S.pid).total===0)setTimeout(function(){if(!S.doneView)toast("기준을 넘긴 지원자를 모두 처리했어요");},2700);
   if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!inList(c,a))S.leaving[a.id]=1;});}
   render();setTimeout(function(){S.leaving={};
     /* 조건의 지원자를 모두 처리하면 조건을 풀고 전체 지원자를 보여줌 */
-    if(S.cond&&!overList(S.pid,cond(S.cond)).length){S.cond=null;S.sort=null;S.sel={};toast("조건의 지원자를 모두 처리했어요. 전체 지원자를 보여드려요");}
+    if(S.cond&&!overList(S.pid,cond(S.cond)).length){
+      /* 처리필요 탭에서 완료 화면을 잠깐 보여준 뒤 전체 탭으로 */
+      S.doneView=true;S.sel={};clearTimeout(S.doneT);
+      if(!summary(S.pid).total)S.doneT=setTimeout(function(){if(S.doneView){S.doneView=false;S.cond=null;render();}},3500);
+    }
     else if(S.cond&&!visibleRows().length)pickTab();
     render();},Object.keys(S.leaving).length?1400:0);
 }
@@ -689,9 +708,10 @@ document.addEventListener("click",function(e){
   if(t.id==="reopen"){if(summary(S.pid).total)showSummary();else if(document.querySelector(".rpop"))closeR();else showDoneTip();return;}
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태예요");return;}
   if(d.apply){toast(cond(+d.apply).how);S.cond=+d.apply;S.sel={};pickTab();closeOverlay();render();return;}
-  if(d.vt){if(d.vt==="all"){S.cond=null;}else if(!S.cond){S.cond=99;toast(ALL.how);}S.sel={};pickTab();render();return;}
+  if(d.donego){clearTimeout(S.doneT);S.doneView=false;S.cond=d.donego==="rest"?99:null;S.sel={};pickTab();render();return;}
+  if(d.vt){S.doneView=false;clearTimeout(S.doneT);if(d.vt==="all"){S.cond=null;}else if(!S.cond){S.cond=99;toast(ALL.how);}S.sel={};pickTab();render();return;}
   if(d.cmenu!==undefined){if(document.querySelector(".cmenu"))closeCmenu();else openCmenu();return;}
-  if(d.pick){closeCmenu();S.cond=+d.pick;toast(cond(S.cond).how);S.sel={};pickTab();render();return;}
+  if(d.pick){S.doneView=false;clearTimeout(S.doneT);closeCmenu();S.cond=+d.pick;toast(cond(S.cond).how);S.sel={};pickTab();render();return;}
   if(d.sumpop!==undefined){closeCmenu();showSummary();return;}
   if(d.sel){S.sel[d.sel]=!S.sel[d.sel];render();return;}
   if(d.all!==undefined){var rows=visibleRows(),all=rows.every(function(a){return S.sel[a.id];});rows.forEach(function(a){S.sel[a.id]=!all;});render();return;}
@@ -721,7 +741,7 @@ document.addEventListener("click",function(e){
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeOverlay();closePops();closeCmenu();}});
 
 function enter(pid,c,fromMail){
-  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";pickTab();render();
+  S.doneView=false;clearTimeout(S.doneT);if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";pickTab();render();
   if(fromMail){S.seen[pid]=true;return;}
   if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total)showSummary();}
 }
