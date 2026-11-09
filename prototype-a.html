@@ -327,7 +327,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .lr.sel{background:rgba(240,245,255,.4)}
 .lr.out{opacity:.35}
 .lr{position:relative}
-.lr.need::before{content:"";position:absolute;left:0;top:50%;height:20px;transform:translateY(-50%);width:3px;border-radius:0 2px 2px 0;background:var(--red)}
+/* 경과일 기준을 넘긴 지원자: 체크박스 왼쪽 dot */
+.lr.need::before{content:"";position:absolute;left:6px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--red)}
 .lr>div{padding:16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
 .pos{font-size:15px;font-weight:700;color:var(--gray-900)}
 .who{flex-direction:row!important;align-items:center;justify-content:flex-start!important;gap:12px}
@@ -706,7 +707,7 @@ function renderTabs(){
   var l=S.db[S.pid].filter(posOK),c=S.cond?cond(S.cond):null;
   $("tabs").innerHTML=STAGES.map(function(s,i){
     var inSt=l.filter(function(a){return a.stage===i&&a.final!=="fail"&&passF(a);}),n=inSt.length,ov=0;
-    if(c){n=inSt.filter(function(a){return inList(c,a);}).length;ov=n;}
+    if(c){n=inSt.filter(function(a){return c.inScope(a);}).length;ov=inSt.filter(function(a){return inList(c,a);}).length;}
     return '<button type="button" class="tab'+(i===S.tab?' on':'')+'" data-tab="'+i+'">'+s+' <span class="n">'+n+'</span>'+(ov?'<span class="dot" title="기준 초과 '+ov+'명"></span>':'')+'</button>';
   }).join("");
 }
@@ -735,7 +736,7 @@ function stBadge(a){if(a.final==="fail")return '<span class="bdg gray">불합격
 
 function visibleRows(){
   var l=S.db[S.pid].filter(posOK);
-  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (c.inScope(a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}
   return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
 function renderList(){
@@ -749,7 +750,7 @@ function renderList(){
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>'+c.col+' '+I("sort")+'</div><div>면접 일정</div></div>';
     var nOver=rows.filter(function(a){return c.inScope(a)&&c.over(a);}).length;
     rows.forEach(function(a,i){
-      var inS=inList(c,a),ov=inS,el=c.el(a);
+      var inS=c.inScope(a),ov=inList(c,a),el=c.el(a);
       var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):ov?'<span class="bdg red">'+el+'일 경과</span>':'<span class="bdg gray">'+el+'일 경과</span>';
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
@@ -795,7 +796,7 @@ function renderFbar(){
   $("fbar").hidden=!h;$("fbar").innerHTML=h;
   var qv=QV.find(function(x){return x.v===S.qv;});$("qvBtn").innerHTML=qv.t+'<span class="cv">'+I("chev")+'</span>';$("qvBtn").classList.toggle("on",!!S.qv);
   $("tbFilter").classList.toggle("on",fCount(S.f)>0);
-  $("tbSort").classList.toggle("on",!!S.sort);
+  $("tbSort").classList.toggle("on",!!(S.sort||S.cond));/* 조건 적용 시 조건 정렬이 걸리므로 정렬 버튼도 적용 상태 */
 }
 function pillLabel(g){var vs=S.f[g.k]||[];if(!vs.length)return esc(g.t);var first=g.o.find(function(o){return o.v===vs[0];}).t;return esc(g.t)+': <b>'+esc(first)+(vs.length>1?' 외 '+(vs.length-1):'')+'</b>';}
 function addMenu(){
@@ -891,7 +892,7 @@ var tt;
 function toast(m){var t=$("toast");t.innerHTML=I("ok")+'<span>'+esc(m)+'</span>';t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},2600);}
 function afterChange(ids){
   if(S.lastTotal>0&&summary(S.pid).total===0){S.justDone=S.pid;clearTimeout(S.doneBT);S.doneBT=setTimeout(function(){S.justDone=null;render();},5000+(S.cond?1400:0));}
-  if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!inList(c,a))S.leaving[a.id]=1;});}
+  if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!c.inScope(a))S.leaving[a.id]=1;});}
   render();setTimeout(function(){S.leaving={};
     /* 조건의 지원자를 모두 처리하면 조건을 풀고 전체 지원자를 보여줌 */
     if(S.cond&&!overList(S.pid,cond(S.cond)).length){S.cond=null;S.sort=null;S.sel={};if(summary(S.pid).total)toast("조건의 지원자를 모두 처리했어요. 전체 지원자를 보여드려요");}
@@ -901,7 +902,7 @@ function afterChange(ids){
 function selected(){return Object.keys(S.sel).filter(function(k){return S.sel[k];});}
 function doMove(ids,st){ids.forEach(function(id){var a=findA(id);if(a.final)return;a.stage=st;a.se=0;if(st===3)a.final="pass";});}
 function doFinal(ids,r){ids.forEach(function(id){var a=findA(id);a.final=r;if(r==="pass")a.stage=3;});}
-function leaveNote(ids){if(!S.cond)return "";var c=cond(S.cond),n=ids.filter(function(id){return !inList(c,findA(id));}).length;return n?" 조건에서 "+n+"명이 빠졌어요.":"";}
+function leaveNote(ids){if(!S.cond)return "";var c=cond(S.cond),n=ids.filter(function(id){return !c.inScope(findA(id));}).length;return n?" 조건에서 "+n+"명이 빠졌어요.":"";}
 function closePops(){document.querySelectorAll(".bulk .pop").forEach(function(m){m.remove();});}
 
 document.addEventListener("click",function(e){
