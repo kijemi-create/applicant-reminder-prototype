@@ -89,6 +89,12 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .bdg.sm{height:20px;padding:0 6px;font-size:12px}
 
 /* 툴바 */
+/* 포지션 탭 (포지션 N개) */
+.ptabs{margin-top:24px;display:flex;gap:24px;border-bottom:1px solid var(--gray-100)}
+.ptab{height:44px;font-size:15px;line-height:22px;font-weight:500;color:var(--gray-600);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.ptab:hover{color:var(--gray-950)}
+.ptab.on{color:var(--gray-950);font-weight:700;border-color:var(--gray-950)}
+.ptabs+.tool{margin-top:16px}
 .tool{margin-top:24px;display:flex;align-items:center;gap:8px}
 .tool .sp{flex:1}
 .seg{display:inline-flex;padding:2px;background:var(--gray-50);border-radius:8px;gap:2px}
@@ -345,6 +351,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
     <main>
       <div class="trow"><h2 class="h2">지원자 목록</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
+      <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
         <span class="rwrap" id="reopenWrap" style="margin-left:8px"><button type="button" class="reopen" id="reopen"></button></span>
@@ -455,7 +462,8 @@ var SEED={
   C:[]
 };
 var POSTS=[{id:"A",name:"[이메일 지원] 테스트 공고 01",period:"26.10.01 ~ 26.11.30",open:true},{id:"B",name:"테스트컴퍼니 사무보조 채용",period:"26.10.25 ~ 26.11.24",open:true},{id:"C",name:"[합성시험] v2 PUT 확인 1104",period:"26.09.01 ~ 26.09.30",open:false}];
-function build(){var db={};Object.keys(SEED).forEach(function(k){db[k]=SEED[k].map(function(r,i){var v=r[9];var iv=v===0?{k:"none"}:v[0]==="p"?{k:"p"}:v[0]==="c"?{k:"c",d:v[1]}:v[0]==="r"?{k:"r",n:v[1]}:{k:"d",n:v[1]};return {id:k+i,name:r[0],age:r[1],g:r[2],edu:EDU[r[3]],car:CAR[r[4]],stage:r[5],applied:r[6],se:r[7],lv:r[8],iv:iv,final:r[10]||null,dup:i%4===1};});});return db;}
+var POS={A:["QA","인사관리자","그래픽 디자이너"],B:["사무보조","회계 사무"],C:["연구원"]};
+function build(){var db={};Object.keys(SEED).forEach(function(k){db[k]=SEED[k].map(function(r,i){var v=r[9];var iv=v===0?{k:"none"}:v[0]==="p"?{k:"p"}:v[0]==="c"?{k:"c",d:v[1]}:v[0]==="r"?{k:"r",n:v[1]}:{k:"d",n:v[1]};return {id:k+i,name:r[0],age:r[1],g:r[2],edu:EDU[r[3]],car:CAR[r[4]],stage:r[5],applied:r[6],se:r[7],lv:r[8],iv:iv,final:r[10]||null,dup:i%4===1,pos:POS[k][i%POS[k].length]};});});return db;}
 
 var CONDS=[
  {id:1,how:"최종합격 또는 불합격을 입력하면 목록에서 빠져요",n:16,t:"지원 후 16일 동안 최종 결과 미입력",col:"지원일",sort:"지원일 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=16;}},
@@ -497,16 +505,20 @@ function showDoneTip(){
   p.innerHTML='<b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>새로 기준을 넘는 지원자가 생기면 이 버튼에 인원이 다시 표시돼요.</span>';
   $("reopenWrap").appendChild(p);
 }
+function posOK(a){return !S.pos||a.pos===S.pos;}
+function overListP(c){return overList(S.pid,c).filter(posOK);}
+function renderPtabs(){var ps=POS[S.pid]||[],el=$("ptabs");if(ps.length<2){el.hidden=true;el.innerHTML="";return;}el.hidden=false;
+  el.innerHTML='<button type="button" class="ptab'+(!S.pos?' on':'')+'" role="tab" aria-selected="'+!S.pos+'" data-ptab="">포지션 전체</button>'+ps.map(function(p){var on=S.pos===p;return '<button type="button" class="ptab'+(on?' on':'')+'" role="tab" aria-selected="'+on+'" data-ptab="'+esc(p)+'">'+esc(p)+'</button>';}).join("");}
 function renderTabs(){
-  var l=S.db[S.pid],c=S.cond?cond(S.cond):null;
+  var l=S.db[S.pid].filter(posOK),c=S.cond?cond(S.cond):null;
   $("tabs").innerHTML=STAGES.map(function(s,i){
     var inSt=l.filter(function(a){return a.stage===i&&a.final!=="fail";}),n=inSt.length,ov=0;
-    if(c){n=inSt.filter(c.inScope).length;ov=0;}
-    return '<button type="button" class="tab'+(i===S.tab?' on':'')+'" data-tab="'+i+'">'+s+' <span class="n">'+n+'</span>'+'</button>';
+    if(c){n=inSt.filter(c.inScope).length;ov=inSt.filter(function(a){return c.inScope(a)&&c.over(a);}).length;}
+    return '<button type="button" class="tab'+(i===S.tab?' on':'')+'" data-tab="'+i+'">'+s+' <span class="n">'+n+'</span>'+(ov?'<span class="dot" title="기준 초과 '+ov+'명"></span>':'')+'</button>';
   }).join("");
 }
 function pickTab(){
-  if(!S.cond)return;var c=cond(S.cond),l=S.db[S.pid],i;
+  if(!S.cond)return;var c=cond(S.cond),l=S.db[S.pid].filter(posOK),i;
   for(i=0;i<STAGES.length;i++){if(l.some(function(a){return a.stage===i&&c.inScope(a)&&c.over(a);})){S.tab=i;return;}}
   for(i=0;i<STAGES.length;i++){if(l.some(function(a){return a.stage===i&&c.inScope(a);})){S.tab=i;return;}}
   S.tab=0;
@@ -529,7 +541,7 @@ function ivCell(a){
 function stBadge(a){if(a.final==="fail")return '<span class="bdg gray">불합격</span>';if(a.final==="pass")return '<span class="bdg ok">최종합격</span>';return '<span class="bdg line">'+STAGES[a.stage]+'</span>';}
 
 function visibleRows(){
-  var l=S.db[S.pid];
+  var l=S.db[S.pid].filter(posOK);
   if(S.cond){var c=cond(S.cond);var r=l.filter(function(a){return (c.inScope(a)||S.leaving[a.id])&&a.stage===S.tab;});r.sort(function(x,y){var ox=c.inScope(x)&&c.over(x),oy=c.inScope(y)&&c.over(y);if(ox!==oy)return ox?-1:1;return c.el(y)-c.el(x);});return r;}
   return l.filter(function(a){return a.stage===S.tab;}).sort(function(x,y){return x.applied-y.applied;});
 }
@@ -546,7 +558,7 @@ function renderList(){
     rows.forEach(function(a,i){
       var inS=c.inScope(a),ov=inS&&c.over(a),el=c.el(a);
       var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):ov?'<span class="bdg red">'+el+'일 경과</span>':'<span class="bdg gray">'+el+'일 경과</span>';
-      h+='<div class="lr'+(S.sel[a.id]?' sel':ov?' hot':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">QA</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':ov?' hot':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length){
       var left=S.db[S.pid].filter(c.inScope).length;
@@ -557,7 +569,7 @@ function renderList(){
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 '+I("info")+'</div><div>면접 일정</div></div>';
     rows.forEach(function(a){
       var wait=a.final?stBadge(a):(a.se>=3?'<span class="bdg gray">현재 단계 '+a.se+'일째</span>':'');
-      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">QA</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+='<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
   }
@@ -568,7 +580,7 @@ function renderBanner(){
   $("cban").hidden=!S.cond;if(!S.cond)return;
   var c=cond(S.cond);
   $("chow").innerHTML='<b>처리 방법</b>'+esc(c.how);
-  $("csel").innerHTML=[ALL].concat(CONDS).map(function(x){return '<option value="'+x.id+'"'+(x.id===S.cond?' selected':'')+'>'+x.t+' ('+overList(S.pid,x).length+'명)</option>';}).join("");
+  $("csel").innerHTML=[ALL].concat(CONDS).map(function(x){return '<option value="'+x.id+'"'+(x.id===S.cond?' selected':'')+'>'+x.t+' ('+overListP(x).length+'명)</option>';}).join("");
 
 }
 function renderNotice(){var b=$("noticeCb");if(!b)return;b.classList.toggle("dis",!!S.cond);b.setAttribute("aria-disabled",String(!!S.cond));}
@@ -577,7 +589,7 @@ function render(){
   $("appView").hidden=S.view!=="app";$("mailView").hidden=S.view!=="mail";
   document.querySelectorAll("[data-go]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.go===S.view));});
   if(S.view==="mail"){renderMail();return;}
-  renderPosts();renderReopen();renderTabs();renderBanner();renderList();renderBulk();renderNotice();
+  renderPosts();renderReopen();renderPtabs();renderTabs();renderBanner();renderList();renderBulk();renderNotice();
 }
 
 /* ---------- 오버레이 ---------- */
@@ -672,13 +684,14 @@ document.addEventListener("click",function(e){
   if(d.nextcond!==undefined){showSummary();return;}
   if(d.condx!==undefined){S.cond=null;S.sel={};render();return;}
   if(d.notice!==undefined){toast(S.cond?"처리 필요 조건과 함께 쓸 수 없어요":"프로토타입 범위 밖 기능이에요");return;}
+  if(d.ptab!==undefined){S.pos=d.ptab||null;S.sel={};pickTab();render();return;}
   if(d.todo!==undefined){toast("프로토타입 범위 밖 기능이에요");return;}
 });
 $("csel").addEventListener("change",function(){toast(cond(+this.value).how);S.cond=+this.value;S.sel={};pickTab();render();});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeOverlay();closePops();}});
 
 function enter(pid,c,fromMail){
-  S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";pickTab();render();
+  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";pickTab();render();
   if(fromMail){S.seen[pid]=true;return;}
   if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total)showSummary();}
 }
