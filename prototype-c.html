@@ -182,8 +182,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .lr:hover{background:#fafbfc}
 .lr.sel{background:rgba(240,245,255,.4)}
 .lr.out{opacity:.35}
-.lr.hot{background:transparent}
-.lr.hot:hover{background:#fafbfc}
+.lr.hot{background:var(--red-50)}
+.lr.hot:hover{background:#ffeae8}
 .lr>div{padding:16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
 .pos{font-size:15px;font-weight:700;color:var(--gray-900)}
 .who{flex-direction:row!important;align-items:center;justify-content:flex-start!important;gap:12px}
@@ -382,7 +382,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
         <button type="button" class="ibtn" data-todo aria-label="정렬"><span class="ic" data-i="sort"></span></button>
         <button type="button" class="ibtn" data-todo aria-label="즐겨찾기"><span class="ic" data-i="star"></span></button>
         <span class="vdiv"></span>
-        <button type="button" class="ibtn" data-todo aria-label="다운로드"><span class="ic" data-i="down"></span></button>
         <button type="button" class="obtn" data-todo><span class="ic" data-i="edit"></span>채용 단계 편집</button>
       </div>
       <div class="tabs" id="tabs"></div>
@@ -586,8 +585,7 @@ function renderView(){
     '<button type="button" class="vt'+(need?' on':'')+'" role="tab" aria-selected="'+need+'" data-vt="need">처리필요'+(tot?'<span class="dot" aria-label="처리할 지원자 있음"></span>':'')+(need?'':'<span class="htip" role="tooltip"><b>처리필요</b>기준 기간이 지나도록 처리되지 않은 지원자를 모아 보여줘요.'+(tot?' 지금 '+tot+'명이 있어요.':' 지금은 없어요.')+'</span>')+'</button>';
   $("chead").hidden=!need;if(!need){$("chead").innerHTML="";return;}
   var c=cond(S.cond),n=overList(S.pid,c).length,open=!!document.querySelector(".cmenu");
-  $("chead").innerHTML='<button type="button" class="ct" data-cmenu aria-haspopup="menu">'+esc(c.t)+' ('+n+'명)<span class="dd">'+I("chev")+'</span></button>'+
-    '<span class="cinfo" tabindex="0"><span class="ic" aria-hidden="true">'+I("info")+'</span><span class="htip" role="tooltip"><b>처리 방법</b>'+esc(c.how)+'</span></span>';
+  $("chead").innerHTML='<button type="button" class="ct" data-cmenu aria-haspopup="menu">'+esc(c.t)+' ('+n+'명)<span class="dd">'+I("chev")+'</span></button>';
   if(open)openCmenu();
 }
 function closeCmenu(){var m=document.querySelector(".cmenu");if(m)m.remove();}
