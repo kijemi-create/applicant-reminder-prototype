@@ -147,7 +147,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .vt .htip{top:calc(100% + 8px);left:0}
 .vt:hover .htip{display:block}
 .chead{margin-top:20px;display:flex;align-items:center;gap:8px;position:relative}
-.chead .ct{display:inline-flex;align-items:center;gap:8px;font-size:20px;line-height:28px;font-weight:700;color:var(--gray-950);letter-spacing:-.3px;text-align:left}
+.chead .ct{display:inline-flex;align-items:center;gap:8px;font-size:16px;line-height:24px;font-weight:700;color:var(--gray-950);letter-spacing:-.3px;text-align:left}
 .chead .ct .dd{width:32px;height:32px;border:1px solid var(--gray-200);border-radius:50%;display:grid;place-items:center;background:#fff;flex:none}
 .chead .ct .dd .ic{font-size:16px;transform:rotate(90deg);color:var(--gray-700)}
 .chead .ct:hover .dd{background:var(--gray-50)}
@@ -512,6 +512,8 @@ var TAGS={1:"결과 미입력",2:"단계 이동 없음",3:"미열람",4:"열람 
 var ALL={id:99,t:"처리 필요 지원자 전체",s:"처리 필요 지원자 전체",col:"지원일",sort:"지원일 오래된순",how:"지원자마다 표시된 조건을 처리하면 목록에서 빠져요",
  inScope:function(a){return CONDS.some(function(c){return inList(c,a);});},over:function(){return true;},el:function(a){return a.applied;}};
 function allTags(a){var m=CONDS.filter(function(c){return inList(c,a);});return '<span class="bdg red">'+TAGS[m[0].id]+' '+m[0].el(a)+'일</span>'+(m.length>1?'<span class="bdg gray sm" title="'+m.slice(1).map(function(c){return TAGS[c.id];}).join(", ")+'">외 '+(m.length-1)+'개 조건</span>':'');}
+/* 처리필요 탭 기본 조건: 지원자가 남아 있는 첫 조건 (PRD 조건 순서, 1번이 목표 지표인 최종 결과 입력) */
+function firstCond(){return CONDS.find(function(c){return overList(S.pid,c).length;})||CONDS[0];}
 function cond(id){return id===99?ALL:CONDS.find(function(c){return c.id===id;});}
 function overList(pid,c){return S.db[pid].filter(function(a){return c.inScope(a)&&c.over(a);});}
 function summary(pid){var rows=[],ids={};CONDS.forEach(function(c){var l=overList(pid,c);if(l.length){rows.push({c:c,n:l.length});l.forEach(function(a){ids[a.id]=1;});}});return {rows:rows,total:Object.keys(ids).length};}
@@ -624,7 +626,7 @@ function renderView(){
 function closeCmenu(){var m=document.querySelector(".cmenu");if(m)m.remove();}
 function openCmenu(){
   closeCmenu();var m=document.createElement("div");m.className="cmenu";m.setAttribute("role","menu");
-  m.innerHTML='<div class="hd">조건 선택<span>한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+[ALL].concat(CONDS).map(function(x){var n=overListP(x).length,on=x.id===S.cond,z=!n&&!on;return '<button type="button" class="'+(x.id===99?'allb ':'')+(on?'on':'')+'" '+(z?'disabled':'data-pick="'+x.id+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):'')+'</button>';}).join("")+'<div class="ft"><button type="button" data-sumpop>요약 팝업으로 보기</button></div>';
+  m.innerHTML='<div class="hd">조건 선택<span>한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+CONDS.map(function(x){var n=overListP(x).length,on=x.id===S.cond,z=!n&&!on;return '<button type="button" class="'+(x.id===99?'allb ':'')+(on?'on':'')+'" '+(z?'disabled':'data-pick="'+x.id+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):'')+'</button>';}).join("")+'<div class="ft"><button type="button" data-sumpop>요약 팝업으로 보기</button></div>';
   $("chead").appendChild(m);
 }
 function renderNotice(){var b=$("noticeCb");if(!b)return;b.classList.toggle("dis",!!S.cond);b.setAttribute("aria-disabled",String(!!S.cond));}
@@ -643,7 +645,7 @@ function showSummary(){
   if(!s.total){toast("지금은 처리가 필요한 지원자가 없어요");return;}
   $("overlay").innerHTML='<div class="backdrop" data-close></div><div class="dwrap" data-close><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dT">'+
     '<div class="hd"><span class="pn">'+esc(p.name)+'</span><h2 id="dT">처리를 기다리는 지원자가 <em>'+s.total+'명</em> 있어요</h2><p>지원자가 채용 진행 상황을 기다리고 있어요. 신속한 안내는 좋은 채용 경험과 기업에 대한 긍정적인 인상을 만들어요.</p></div>'+
-    '<ul class="crit" style="margin:0"><li class="allrow"><button type="button" data-apply="99"><span class="t">처리 필요 지원자 전체 보기</span><span class="n">'+s.total+'명</span>'+I("chev")+'</button></li>'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+r.c.t+'</span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
+    '<ul class="crit" style="margin:0">'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+r.c.t+'</span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
     '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있어요.<br>조건별 기준은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간이에요.</span></div>'+
     '<div class="btns"><button type="button" class="bt sec" data-close>닫기</button></div>'+
     '</div></div>';
@@ -714,8 +716,8 @@ document.addEventListener("click",function(e){
   if(t.id==="reopen"){if(summary(S.pid).total)showSummary();else if(document.querySelector(".rpop"))closeR();else showDoneTip();return;}
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태예요");return;}
   if(d.apply){toast(cond(+d.apply).how);S.cond=+d.apply;S.sel={};pickTab();closeOverlay();render();return;}
-  if(d.donego){clearTimeout(S.doneT);S.doneView=false;S.cond=d.donego==="rest"?99:null;S.sel={};pickTab();render();return;}
-  if(d.vt){S.doneView=false;clearTimeout(S.doneT);if(d.vt==="all"){S.cond=null;}else if(!S.cond){S.cond=99;toast(ALL.how);}S.sel={};pickTab();render();return;}
+  if(d.donego){clearTimeout(S.doneT);S.doneView=false;S.cond=d.donego==="rest"?firstCond().id:null;if(S.cond)toast(cond(S.cond).how);S.sel={};pickTab();render();return;}
+  if(d.vt){S.doneView=false;clearTimeout(S.doneT);if(d.vt==="all"){S.cond=null;}else if(!S.cond){S.cond=firstCond().id;toast(cond(S.cond).how);}S.sel={};pickTab();render();return;}
   if(d.cmenu!==undefined){if(document.querySelector(".cmenu"))closeCmenu();else openCmenu();return;}
   if(d.pick){S.doneView=false;clearTimeout(S.doneT);closeCmenu();S.cond=+d.pick;toast(cond(S.cond).how);S.sel={};pickTab();render();return;}
   if(d.sumpop!==undefined){closeCmenu();showSummary();return;}
