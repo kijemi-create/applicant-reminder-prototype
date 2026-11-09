@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>처리 유도 프로토타입 A안·B안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#f4f6f7;--card:#fff;--line:#e2e6e8;--fg:#131618;--muted:#6c767f;--brand:#1b55f6;--brand-50:#eef3ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:56px 20px}
+.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.eyebrow{font-size:13px;color:var(--muted)}
+h1{margin:6px 0 0;font-size:28px;letter-spacing:-.5px;line-height:1.3}
+p{margin:10px 0 0;color:var(--muted);line-height:1.7;max-width:64ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+a.card{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;text-decoration:none;color:inherit;transition:border-color .15s}
+a.card:hover{border-color:var(--brand)}
+.tag{align-self:flex-start;font-size:12px;font-weight:500;padding:2px 8px;border-radius:4px;background:var(--brand-50);color:var(--brand)}
+.card b{font-size:18px}
+.card span{font-size:14px;color:var(--muted);line-height:1.6}
+.go{margin-top:6px;font-size:14px;font-weight:600;color:var(--brand)}
+.foot{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="eyebrow">지원자 관리</div>
+    <h1>지원자 처리 지연·누락 방지</h1>
+    <p>지원자 관리에 들어온 담당자가 처리할 지원자를 바로 확인하고 처리하도록 돕는 기능의 디자인 시안입니다. 요약 팝업, 조건 적용 지원자 목록, 리마인드 메일로 구성됩니다.</p>
+  </div>
+  <div class="grid">
+    <a class="card" href="./prototype-a.html">
+      <span class="tag">A안</span>
+      <b>A안 · 조건 배너</b>
+      <span>툴바 왼쪽 ‘처리 필요 지원자’ 버튼으로 진입하고, 조건을 고르면 목록 위에 파란 배너로 ‘조건 적용 중’을 보여주는 버전입니다.</span>
+      <span class="go">열기 →</span>
+    </a>
+    <a class="card" href="./prototype-b.html">
+      <span class="tag">B안</span>
+      <b>B안 · 필터 칩</b>
+      <span>목록 위 ‘처리 필요 지원자’ 칩 하나로 진입하고, 조건을 고르면 같은 자리가 조건 칩으로 바뀌는 버전입니다. 사용자가 건 정렬·필터만 pill로 보여줍니다.</span>
+      <span class="go">열기 →</span>
+    </a>
+  </div>
+  <div class="foot">화면의 지원자와 수치는 모두 예시 데이터이며, 조건별 경과일(N일)은 가안입니다.</div>
+</div>
+</body>
+</html>
