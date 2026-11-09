@@ -2,5 +2,6 @@
 
 - [A안 · 배너형](./prototype-a.html)
 - [B안 · 칩형](./prototype-b.html)
+- [C안 · 그룹형](./prototype-c.html)
 
 화면의 지원자와 수치는 모두 예시 데이터입니다.
