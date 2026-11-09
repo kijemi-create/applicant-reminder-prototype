@@ -90,7 +90,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 
 /* 툴바 */
 /* 현재 공고 지원자 타이틀 + 처리 필요 버튼 (지역 필터 버튼 방식) */
-.shead{margin-top:32px;display:flex;align-items:center;gap:12px}
+.shead{margin-top:40px;display:flex;align-items:center;gap:12px}
 .shead .st{margin:0;font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.3px;color:var(--gray-950)}
 #needWrap{position:relative;display:inline-flex;align-items:center}
 .nb{height:32px;font-size:13px!important;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 14px;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font-size:14px;line-height:20px;font-weight:600;color:var(--gray-950);white-space:nowrap}
@@ -116,7 +116,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nmenu button:hover{background:var(--gray-50)}
 .nmenu button.on{color:var(--brand);font-weight:600}
 .nmenu button:disabled{color:var(--gray-300);background:none;cursor:default}
-.nmenu button .n{color:var(--gray-500);font-weight:400;font-size:13px}
+.nmenu button .n{color:var(--red);font-weight:600;font-size:13px}
 .nmenu .allb{border-bottom:1px solid var(--gray-100);border-radius:6px 6px 0 0;font-weight:600}
 .nmenu .ft{border-top:1px solid var(--gray-100);margin-top:6px;padding-top:6px}
 .nmenu .ft button{color:var(--gray-600);font-size:13px}
@@ -133,15 +133,16 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .splt .cnt{min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
 .splt .sdv{width:1px;height:14px;background:var(--gray-200);flex:none}
 .splt .sr{height:100%;display:inline-flex;align-items:center;gap:2px;padding:0 8px 0 12px;color:var(--gray-700);font-weight:600}
+.splt .sr .cv{display:inline-grid;transform:rotate(90deg)}
 .splt .sr .cv .ic{font-size:14px;color:var(--gray-500)}
-.splt.on{border-color:var(--brand);background:var(--brand-50)}
-.splt.on .sl{color:var(--brand);padding-right:4px}
-.splt.on .sl>.ic{color:var(--brand)}
+.splt.on{border-color:var(--red-100);background:var(--red-50)}
+.splt.on .sl{color:var(--red);padding-right:12px}
+.splt.on .sl>.ic{color:var(--red)}
 .splt.on .sl b{font-weight:700}
-.splt.on .sdv{background:rgba(27,85,246,.25)}
-.splt.on .sr{color:var(--brand)}
-.splt.on .sr:hover{background:rgba(27,85,246,.08)}
-.splt.on .sr .cv .ic{color:var(--brand)}
+.splt.on .sdv{background:var(--red-100)}
+.splt.on .sr{color:var(--gray-800)}
+.splt.on .sr:hover{background:rgba(242,42,35,.06)}
+.splt.on .sr .cv .ic{color:var(--gray-500)}
 .splt .sx{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:var(--brand);margin-left:2px}
 .splt .sx:hover{background:rgba(27,85,246,.12)}
 .splt .sx .ic{font-size:13px}
@@ -248,6 +249,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .nm{font-size:16px;line-height:24px;font-weight:600;color:var(--gray-900);text-align:left}
 .nm:hover{text-decoration:underline}
 .nmrow .star{color:var(--gray-300);font-size:16px;display:inline-grid}
+.unrl{display:inline-flex;align-items:center;gap:4px;font-size:13px;line-height:18px;font-weight:500;color:var(--info);white-space:nowrap}
+.unrl::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--info)}
 .unr{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block}
 .age{font-size:13px;line-height:19.5px;color:var(--gray-500)}
 .t15{font-size:15px;line-height:22.5px;font-weight:600;color:var(--gray-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -501,7 +504,7 @@ var P={
   move:'<path d="M9 12.6V5.4L6.6 7.7a.75.75 0 1 1-1.06-1.06L8.47 3.7a.75.75 0 0 1 1.06 0l2.93 2.94a.75.75 0 1 1-1.06 1.06L9 5.4M9 12.6a.75.75 0 0 1-1.5 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 11.4v7.2l2.4-2.3a.75.75 0 1 1 1.06 1.06l-2.93 2.94a.75.75 0 0 1-1.06 0l-2.93-2.94a.75.75 0 1 1 1.06-1.06L15 18.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
   list:'<path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
   board:'<rect x="4" y="4" width="6" height="16" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><rect x="14" y="4" width="6" height="16" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/>',
-  bell:'<path d="M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 2H4.5z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  alert:'<circle cx="12" cy="12" r="8.6" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 7.6v5.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="16.2" r="1.1" fill="currentColor"/>',bell:'<path d="M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 2H4.5z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
   chev:'<path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
   person:'<circle cx="18" cy="14" r="6" fill="currentColor"/><path d="M6 32c1.5-6.5 6.4-10 12-10s10.5 3.5 12 10z" fill="currentColor"/>',
   ok:'<path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20m4.2 6.8a.75.75 0 0 0-1.06 0l-4.3 4.3-1.98-1.98a.75.75 0 1 0-1.06 1.06l2.51 2.51a.75.75 0 0 0 1.06 0l4.83-4.83a.75.75 0 0 0 0-1.06" fill="currentColor"/>'
@@ -589,7 +592,7 @@ function pickTab(){
 }
 function ck(on,attr){return '<button type="button" class="ck'+(on===true?' on':on==="part"?' part':'')+'" '+attr+' aria-pressed="'+(on===true)+'" aria-label="선택"></button>';}
 function who(a){
-  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.lv<0?'<span class="unr" title="미열람"></span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
+  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.lv<0?'<span class="unrl">미열람</span>':'')+(ALL.inScope(a)?'<span class="unr" title="처리 필요" aria-label="처리 필요"></span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
 }
 function edu(a){return '<div><span class="t15">'+a.edu[0]+'</span><span class="t14">'+a.edu[1]+'</span><span class="t14 g">'+a.edu[2]+'</span></div>';}
 function car(a){return '<div><span class="t15">'+a.car[0]+'</span><span class="t14 g">'+a.car[1]+'</span></div>';}
@@ -642,18 +645,20 @@ function renderList(){
 }
 function renderNeed(){
   var tot=summary(S.pid).total,c=S.cond?cond(S.cond):null,w=$("needWrap"),open=!!w.querySelector(".nmenu");
-  var right='<span class="sdv" aria-hidden="true"></span><button type="button" class="sr" data-nopen aria-haspopup="dialog">전체 조건 보기<span class="cv">'+I("chev")+'</span></button>';
-  /* 진입점과 지금 상태를 한 버튼에: [상태 | 전체 조건 보기 >] */
-  if(c)w.innerHTML='<span class="splt on"><span class="sl" title="처리 방법: '+esc(c.how)+'">'+I("filter")+esc(c.t)+' <b>'+overListP(c).length+'명</b><button type="button" class="sx" data-nclear aria-label="조건 해제, 전체 지원자 보기" title="조건 해제">'+I("x")+'</button></span>'+right+'</span>';
-  else if(tot)w.innerHTML='<span class="splt"><button type="button" class="sl" data-nopen aria-haspopup="dialog">'+I("bell")+'처리 필요<span class="cnt">'+tot+'</span></button>'+right+'</span>';
+  var right='<span class="sdv" aria-hidden="true"></span><button type="button" class="sr" data-nmenu aria-haspopup="menu">전체 보기<span class="cv">'+I("chev")+'</span></button>';
+  /* [상태 | 전체 보기 ⌄] 한 버튼. 조건 선택 시 빨간 칩, 바꿀 때는 '전체 보기' 드롭다운에서 */
+  if(c)w.innerHTML='<span class="splt on"><span class="sl" title="처리 방법: '+esc(c.how)+'">'+I("bell")+esc(c.t)+' <b>'+overListP(c).length+'명</b></span>'+right+'</span>';
+  else if(tot)w.innerHTML='<span class="splt"><button type="button" class="sl" data-nmenu aria-haspopup="menu">'+I("bell")+'처리 필요<span class="cnt">'+tot+'</span></button>'+right+'</span>';
   else w.innerHTML='<button type="button" class="nb done" data-ntip aria-label="처리 완료, 안내 보기">'+I("check")+'<span class="lbl">처리 완료</span></button>';
-  if(open&&!tot)openNmenu();
+  if(open)openNmenu(!tot&&!c);
   $("ctitle").hidden=true;$("ctitle").innerHTML="";
 }
 function closeNmenu(){var m=document.querySelector(".nmenu");if(m)m.remove();}
-function openNmenu(){
-  closeNmenu();var m=document.createElement("div");m.className="nmenu";m.setAttribute("role","status");
-  m.innerHTML='<div class="tip"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>새로 기준을 넘는 지원자가 생기면 이 버튼에 인원이 다시 표시돼요.</span></div>';
+function openNmenu(tip){
+  closeNmenu();var m=document.createElement("div");m.className="nmenu";m.setAttribute("role",tip?"status":"menu");
+  if(tip)m.innerHTML='<div class="tip"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했어요</b><span>새로 기준을 넘는 지원자가 생기면 이 버튼에 인원이 다시 표시돼요.</span></div>';
+  else m.innerHTML='<div class="hd">처리 필요 조건<span>한 지원자가 여러 조건에 해당할 수 있어요</span></div>'+[ALL].concat(CONDS).map(function(x){var n=overListP(x).length,on=x.id===S.cond,z=!n&&!on;return '<button type="button" class="'+(x.id===99?'allb ':'')+(on?'on':'')+'" '+(z?'disabled':'data-npick="'+x.id+'"')+'><span>'+esc(x.t)+' <span class="n">'+n+'명</span></span>'+(on?I("check"):'')+'</button>';}).join("")+
+    '<div class="ft">'+(S.cond?'<button type="button" data-nclear>조건 해제 · 전체 지원자 보기</button>':'')+'<button type="button" data-sumpop>요약 팝업으로 보기</button></div>';
   $("needWrap").appendChild(m);
 }
 function renderNotice(){var b=$("noticeCb");if(!b)return;b.classList.toggle("dis",!!S.cond);b.setAttribute("aria-disabled",String(!!S.cond));}
@@ -763,8 +768,9 @@ document.addEventListener("click",function(e){
   if(d.condx!==undefined){S.cond=null;S.sel={};render();return;}
   if(d.notice!==undefined){toast(S.cond?"처리 필요 조건과 함께 쓸 수 없어요":"프로토타입 범위 밖 기능이에요");return;}
   if(d.ptab!==undefined){S.pos=d.ptab||null;S.sel={};pickTab();render();return;}
-  if(d.nopen!==undefined){closeNmenu();showSummary();return;}
-  if(d.ntip!==undefined){if(document.querySelector(".nmenu"))closeNmenu();else openNmenu();return;}
+  if(d.nmenu!==undefined){if(document.querySelector(".nmenu"))closeNmenu();else openNmenu(false);return;}
+  if(d.ntip!==undefined){if(document.querySelector(".nmenu"))closeNmenu();else openNmenu(true);return;}
+  if(d.npick){closeNmenu();S.cond=+d.npick;toast(cond(S.cond).how);S.sel={};pickTab();render();return;}
   if(d.nclear!==undefined){closeNmenu();S.cond=null;S.sel={};render();return;}
   if(d.sumpop!==undefined){closeNmenu();showSummary();return;}
   if(d.todo!==undefined){toast("프로토타입 범위 밖 기능이에요");return;}
