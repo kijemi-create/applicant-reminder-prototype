@@ -566,6 +566,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .ob.req{border-color:#d1d6da;color:#1b55f6;background:#fff;font-weight:500}
 .ob.req:hover{background:#eef3ff}
 .ob.req .ic{font-size:16px;color:#1b55f6}
+
+.sortpop .sreset{display:inline-flex;align-items:center;gap:4px;height:36px;padding:0 8px;font-size:13px;font-weight:500;color:#6c767f;white-space:nowrap;border-radius:6px}
+.sortpop .sreset:hover{background:#f4f6f7;color:#30363c}
+.sortpop .sreset .ic{font-size:16px}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
@@ -867,9 +871,7 @@ function renderFbar(){
   else if(tot){left='<span class="fwrap"><button type="button" class="chip need" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
   else if(S.justDone===S.pid){left='<span class="chip donec" role="status">'+I("ok")+'모두 처리 완료</span>';}
   else{left='<span class="chip need off" aria-disabled="true">'+I("lac")+'처리 대기 중인 지원자가 없습니다</span>';}
-  /* 2층: 사용자가 건 정렬·필터만 pill로 (노션 방식). 안 건 항목은 숨김 */
-  if(S.sort){var cs=sortCur(),bl=sortBys().find(function(x){return x.v===cs.by;}),ol=sortOrds(cs.by).find(function(x){return x.v===cs.ord;});
-    rest+='<span class="fwrap"><span class="fp"><button type="button" class="pb" data-fmenu="spill">'+I("sort")+'<b>'+esc(bl.t)+'</b> '+ol.t+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-sdel aria-label="정렬 삭제">'+I("x")+'</button></span></span>';}
+  /* 필터 줄에는 사용자가 건 필터만 pill로. 정렬은 pill 없이 툴바 정렬 버튼 selected 상태로만 표시 */
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
     rest+='<span class="fwrap"><span class="fp'+(vs.length?'':' novalue')+'"><button type="button" class="pb" data-fmenu="g:'+k+'">'+pillLabel(g)+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-fgx="'+k+'" aria-label="'+g.t+' 필터 삭제">'+I("x")+'</button></span></span>';});
   /* 필터 추가: 툴바 필터 버튼 대신 조건 칩 오른쪽에 항상 노출 (노션 필터 방식: 항목 선택 → pill 생성 → 값 선택) */
@@ -895,7 +897,7 @@ function groupMenu(k){/* 피그마 2뎁스: 항목명 + [필터삭제], 체크�
 }
 function closeF(){document.querySelectorAll(".fmenu").forEach(function(m){m.remove();});}
 function sortPopHtml(){var ph=!S.sort&&!!S.cond,cur=ph?{by:"applied",ord:""}:sortCur();/* 조건 적용 중 사용자가 정렬을 고르기 전에는 선택 없음으로 표시 */
-  return '<span class="selw"><select id="sBy" aria-label="정렬 기준">'+(ph?'<option value="" selected disabled>정렬 기준 선택</option>':'')+sortBys().map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.by?' selected':'')+'>'+esc(x.t)+'</option>';}).join("")+'</select></span><span class="selw"><select id="sOrd" aria-label="정렬 순서">'+(ph?'<option value="" selected disabled>순서 선택</option>':'')+sortOrds(cur.by).map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.ord?' selected':'')+'>'+x.t+'</option>';}).join("")+'</select></span>';}
+  return '<span class="selw"><select id="sBy" aria-label="정렬 기준">'+(ph?'<option value="" selected disabled>정렬 기준 선택</option>':'')+sortBys().map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.by?' selected':'')+'>'+esc(x.t)+'</option>';}).join("")+'</select></span><span class="selw"><select id="sOrd" aria-label="정렬 순서">'+(ph?'<option value="" selected disabled>순서 선택</option>':'')+sortOrds(cur.by).map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.ord?' selected':'')+'>'+x.t+'</option>';}).join("")+'</select></span>'+(S.sort?'<button type="button" class="sreset" data-sdel>'+I("reset")+'초기화</button>':'');}
 function openF(t){
   var kind=t.dataset.fmenu,wrap=t.closest(".fwrap"),had=wrap.querySelector(".fmenu");closeF();if(had)return;
   var m=document.createElement("div"),h="";m.className="fmenu"+(t.dataset.r?" r":"")+(kind==="sort"?" sortpop":"");
