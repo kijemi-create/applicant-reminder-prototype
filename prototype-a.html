@@ -598,6 +598,76 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fmenu .dd:hover{background:#e2e6e8}
 .fmenu .dd.sel{background:#131618!important;color:#fff!important;font-weight:600}
 .fmenu .dd:disabled{color:#c0c7cd!important;cursor:default;background:none}
+
+/* 지원자 상세 + 지원자에게 연락하기 (일정 변경 요청 확인) */
+.adim{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50}
+.adw{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1360px,calc(100vw - 80px));height:min(760px,calc(100vh - 80px));background:#fff;border-radius:12px;z-index:51;display:flex;flex-direction:column;overflow:hidden}
+.adtop{height:48px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #e2e6e8;position:relative;font-size:14px;color:#6c767f}
+.adtop .nav b{color:#30363c;margin:0 6px}
+.adtop .xbtn{position:absolute;right:12px;top:8px}
+.adbody{flex:1;display:grid;grid-template-columns:72px 1fr 360px;min-height:0}
+.adrail{border-right:1px solid #e2e6e8;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 0}
+.adrail button{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:#6c767f}
+.adrail .ic{font-size:20px;width:36px;height:36px;border-radius:50%;background:#f4f6f7;display:grid;place-items:center;color:#30363c}
+.addoc{overflow:auto;padding:20px 32px;background:#f4f6f7}
+.adhd{display:flex;gap:16px;align-items:center;font-size:14px;color:#30363c;padding-bottom:16px}
+.adhd span{display:inline-flex;align-items:center;gap:6px}
+.adcv{background:#fff;border-radius:12px;padding:28px 32px;display:flex;flex-direction:column;gap:12px}
+.adcv h3{margin:0;font-size:22px}.adcv .adn{margin:0 0 8px;color:#6c767f;font-size:14px}
+.adchat{border-left:1px solid #e2e6e8;display:flex;flex-direction:column;min-height:0;background:#fff}
+.chd{height:52px;display:flex;align-items:center;gap:6px;padding:0 20px;border-bottom:1px solid #e2e6e8;font-size:16px}
+.chd .back .ic{transform:rotate(180deg);font-size:18px}
+.cnote{margin:12px 16px 0;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 14px;border-radius:10px;background:#fff6f5;border:1px solid #ffd3d0}
+.cnote>.ic{font-size:18px;color:#f22a23;flex:none}
+.cnote div{flex:1;display:flex;flex-direction:column;font-size:12px;line-height:18px;color:#6c767f}.cnote b{font-size:13px;color:#131618}
+.bt.sm{height:32px;padding:0 12px;font-size:13px}
+.cbody{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.cday{align-self:center;font-size:12px;color:#6c767f;margin:6px 0}
+.cm{display:flex;flex-direction:column;gap:4px;max-width:86%}
+.cm.me{align-self:flex-end;align-items:flex-end}.cm.you{align-self:flex-start}
+.cm .bub{background:#f4f6f7;border-radius:10px;padding:10px 12px;font-size:13px;line-height:20px;color:#131618;display:flex;flex-direction:column;gap:8px}
+.cm.me .bub{background:#fff;border:1px solid #e2e6e8}
+.cm.hot .bub{background:#fff6f5;box-shadow:0 0 0 1px #f22a23}
+.cts{font-size:11px;color:#9ea8af}
+.cbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 8px 0 10px;border:1px solid #e2e6e8;border-radius:8px;background:#fff;font-size:13px;color:#131618;align-self:flex-start}
+.cbtn>.ic{font-size:16px;color:#f2a100}.cbtn .cv .ic{font-size:14px;color:#6c767f}
+.cbg{font-size:11px;padding:1px 6px;border-radius:4px;font-weight:600}.cbg.yel{background:#fffce8;color:#cc8800}.cbg.gray{background:#f4f6f7;color:#6c767f}.cbg.blue{background:#eef3ff;color:#1b55f6}
+.cft{border-top:1px solid #e2e6e8;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.ivchip{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:#f4f6f7;font-size:13px;font-weight:600;color:#30363c}
+.cin{display:flex;gap:8px}.cin input{flex:1;height:40px;border:1px solid #d1d6da;border-radius:8px;padding:0 12px;font:inherit;font-size:13px}
+.cin .send{width:40px;height:40px;border-radius:50%;background:#1b55f6;color:#fff;display:grid;place-items:center}.cin .send .ic{transform:rotate(-90deg)}
+.cft p{margin:0;font-size:11px;color:#9ea8af;display:flex;gap:4px;align-items:center}
+.cbody.pv{gap:16px}
+.reqbox{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:10px;background:#fff6f5;border:1px solid #ffd3d0;font-size:12px;color:#6c767f}
+.reqbox.gray{background:#f4f6f7;border-color:#e2e6e8}
+.reqbox b{display:flex;align-items:center;gap:6px;font-size:14px;color:#131618}.reqbox b .ic{color:#f22a23}.reqbox.gray b .ic{color:#6c767f}
+.reqbox q{margin-top:6px;padding:8px 10px;background:#fff;border-radius:6px;font-size:13px;color:#30363c;quotes:none}
+.pvl{display:grid;grid-template-columns:72px 1fr;gap:10px 8px;margin:0;font-size:13px;line-height:20px}.pvl dt{font-weight:600;color:#131618}.pvl dd{margin:0;color:#30363c}
+.pvt{font-size:13px;font-weight:600}.pvt small{font-weight:400;color:#9ea8af;margin-left:4px}
+.pvo{display:flex;flex-wrap:wrap;gap:6px}.pvo span{border:1px solid #d1d6da;border-radius:6px;padding:4px 8px;font-size:12px}.pvo span.x{color:#9ea8af;text-decoration:line-through}
+.pvn{margin:0;font-size:12px;color:#f22a23}
+.cft2{border-top:1px solid #e2e6e8;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ddim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55}
+.ivdr{position:fixed;top:0;right:0;bottom:0;width:min(720px,100vw);background:#fff;z-index:56;display:flex;flex-direction:column}
+.ivdr .dh{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 24px;border-bottom:1px solid #e2e6e8}.ivdr .dh h2{margin:0;font-size:20px}
+.ivdr .db{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:28px}
+.fld{display:flex;flex-direction:column;gap:8px}.fld>label{font-size:14px;font-weight:600;color:#131618}.fld>label i{color:#f22a23;font-style:normal}.fld>label small{font-weight:400;color:#6c767f;font-size:12px;margin-left:4px}
+.frow{display:grid;grid-template-columns:1fr 1fr 12px 1fr 40px;gap:8px;align-items:center}
+.fin{height:44px;border:1px solid #d1d6da;border-radius:8px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;font-size:14px;color:#131618}.fin .ic{color:#6c767f;font-size:18px}.fin.wide{justify-content:flex-start}
+.frow .tl{text-align:center;color:#6c767f}
+.ftr{width:40px;height:40px;border-radius:8px;background:#f4f6f7;display:grid;place-items:center;color:#9ea8af}
+.fadd2{align-self:flex-end;display:inline-flex;gap:4px;align-items:center;height:32px;padding:0 12px;border:1px solid #d1d6da;border-radius:8px;font-size:13px;color:#1b55f6}
+.rad{display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border:1px solid #e2e6e8;border-radius:8px;font-size:14px;font-weight:400!important}
+.rad span{width:20px;height:20px;border-radius:50%;border:1px solid #c0c7cd}.rad.on{border-color:#1b55f6}.rad.on span{border:6px solid #1b55f6}
+.ivdr .df{padding:16px 24px;display:flex;justify-content:flex-end;border-top:1px solid #e2e6e8}
+.bt.lg{height:48px;padding:0 20px;font-size:16px}
+.cdim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:60}
+.cdlg{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:400px;background:#fff;border-radius:16px;padding:24px 20px 20px;z-index:61;display:flex;flex-direction:column;gap:8px}
+.cdlg h3{margin:0;font-size:18px}.cdlg p{margin:0 0 16px;font-size:14px;color:#6c767f}.cdlg .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+.adrail .ic{width:36px!important;height:36px!important;padding:9px;box-sizing:border-box;border-radius:50%;background:#f4f6f7;color:#30363c}
+.cnote .ic,.reqbox .ic{width:18px;height:18px}
+.cnote{margin-bottom:4px}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
@@ -605,6 +675,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
   <b>시나리오</b>
   <button type="button" class="pbtn" data-go="app" aria-pressed="true">지원자 관리 진입 (주간 첫 방문)</button>
   <button type="button" class="pbtn" data-go="mail" aria-pressed="false">월요일 리마인드 메일</button>
+  <button type="button" class="pbtn" data-scn="cond">조건 완료 직전</button>
+  <button type="button" class="pbtn" data-scn="all">전체 완료 직전</button>
   <button type="button" class="pbtn" id="doneBtn">모두 처리한 상태</button>
   <button type="button" class="pbtn" id="resetBtn">처음부터 다시</button>
   <span class="sp"></span>
@@ -1006,6 +1078,62 @@ function openApplicant(id){
     '<select class="ssel" id="dStage" aria-label="이동할 단계">'+STAGES.map(function(s,i){return '<option value="'+i+'"'+(i===Math.min(a.stage+1,3)?' selected':'')+(i===a.stage?' disabled':'')+'>'+s+(i===a.stage?' (현재 단계)':'')+'</option>';}).join("")+'</select><button type="button" class="bt line" data-dmove="'+a.id+'">단계 이동</button><span style="flex:1"></span><button type="button" class="bt dng" data-dfinal="fail" data-id="'+a.id+'">불합격</button><button type="button" class="bt pri" data-dfinal="pass" data-id="'+a.id+'">최종합격</button>');
   if(first)afterChange([a.id]);
 }
+/* ---------- 지원자 상세 + 지원자에게 연락하기(채팅) : 일정 변경 요청 확인 / 면접 제안 확정 전 ---------- */
+function openAD(id){var a=findA(id),req=a.iv.k==="r",rn=req?a.iv.n:0;S.ad={id:id,view:"chat",drawer:false,confirm:false,log:[],wasReq:req,rn0:rn,sent:dOff(-(req?rn+2:2)),reqd:dOff(-rn)};renderAD();}
+function renderAD(){
+  var a=findA(S.ad.id),k=a.iv.k,req=k==="r",pend=k==="p",rn=req?a.iv.n:0;
+  var sent=S.ad.sent,reqd=S.ad.reqd;
+  var opts=[dOff(3),dOff(4),dOff(5)];
+  function bubbleBtn(badge,cls){return '<button type="button" class="cbtn" data-adprev>'+I("cal")+'<b>면접 제안</b>'+(badge?'<span class="cbg '+cls+'">'+badge+'</span>':'')+'<span class="cv">'+I("chev")+'</span></button>';}
+  var hist='<span class="cday">'+fmt(sent).replace(/\((.)\)/," $1요일")+'</span>'+
+    '<div class="cm me"><div class="bub">면접 제안이 발송되었습니다.'+bubbleBtn(S.ad.log.length?"":(req?"변경요청":(pend?"응답 대기":"")),req?"yel":"gray")+'</div><span class="cts">Bot · 오전 11:22</span></div>';
+  if(req||S.ad.log.indexOf("chg")>=0||S.ad.log.indexOf("cancel")>=0&&a.iv.k==="none"&&S.ad.wasReq){}
+  if(S.ad.wasReq===undefined)S.ad.wasReq=req;
+  if(S.ad.wasReq){hist+='<div class="cm you"><div class="bub">가능한 일정이 없어서 변경 요청하려는데 괜찮나요?</div><span class="cts">오전 11:22</span></div>'+
+    '<div class="cm me"><div class="bub">네, 변경 요청해 주세요.</div><span class="cts">오전 11:22</span></div>'+
+    '<span class="cday">'+fmt(reqd).replace(/\((.)\)/," $1요일")+'</span>'+
+    '<div class="cm you'+(req?' hot':'')+'"><div class="bub">면접 일정 변경을 요청했습니다.</div><span class="cts">Bot · 오후 3:10</span></div>';}
+  S.ad.log.forEach(function(l){hist+='<span class="cday">'+fmt(TODAY).replace(/\((.)\)/," $1요일")+'</span>'+(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","blue")+'</div><span class="cts">Bot · 방금</span></div>');});
+  var chat;
+  if(S.ad.view==="prev"){
+    chat='<div class="chd"><button type="button" class="back" data-adchat aria-label="채팅으로">'+I("chev")+'</button><b>면접 제안 미리보기</b></div><div class="cbody pv">'+
+      (req?'<div class="reqbox"><b>'+I("alert")+'지원자가 일정 변경을 요청했습니다</b><span>'+fmt(reqd)+' 요청 · '+rn+'일째 응답 없음</span><q>가능한 일정이 없어서 변경 요청하려는데 괜찮나요?</q></div>':'')+
+      (pend?'<div class="reqbox gray"><b>'+I("info")+'지원자의 응답을 기다리고 있습니다</b><span>'+fmt(sent)+' 발송 · 답변 기한 '+fmt(dOff(1))+'</span></div>':'')+
+      '<dl class="pvl"><dt>면접 유형</dt><dd>대면 면접</dd><dt>면접 장소</dt><dd>서울시 서초구 서초대로 301 동익성봉빌딩 18층</dd><dt>안내 사항</dt><dd>18층 입구에서 인사 담당자 김잡코(010-1234-5678)에게 연락 주세요.</dd></dl>'+
+      '<div class="pvt">면접 제안일 <small>한국 표준시(KST) 기준</small></div><div class="pvo">'+opts.map(function(d){return '<span'+(req?' class="x"':'')+'>'+fmt(d)+' 오전 10:00</span>';}).join("")+'</div>'+
+      (req?'<p class="pvn">지원자가 위 일정에 참석이 어렵다고 요청했습니다. 새 일정으로 변경하거나 면접을 취소해 주세요.</p>':'')+
+      '</div>'+(k==="none"?'':'<div class="cft2"><button type="button" class="bt sec" data-adconfirm>'+(req?'면접 취소':'제안 취소')+'</button><button type="button" class="bt pri" data-addrawer>면접 제안 변경</button></div>');
+  }else{
+    chat='<div class="chd"><b>지원자에게 연락하기</b></div>'+
+      (req?'<div class="cnote">'+I("alert")+'<div><b>일정 변경 요청이 '+rn+'일째 기다리고 있습니다</b><span>새 일정으로 변경하거나 면접을 취소해 주세요.</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
+      '<div class="cbody">'+hist+'</div>'+
+      '<div class="cft"><button type="button" class="ivchip" data-addrawer>'+I("cal")+'면접 제안하기</button><div class="cin"><input placeholder="지원자에게 연락해 보세요." aria-label="메시지"><button type="button" class="send" data-todo aria-label="보내기">'+I("chev")+'</button></div><p>'+I("info")+'주민등록번호 등 민감한 개인정보 입력에 주의해 주세요.</p></div>';
+  }
+  var rail=[["move","단계 이동"],["check","최종 합격"],["x","불합격"],["edit","내 메모"],["down","다운로드"],["more","더보기"]].map(function(r){return '<button type="button" data-todo>'+I(r[0])+'<span>'+r[1]+'</span></button>';}).join("");
+  var doc='<div class="adhd"><span class="bdg line">'+STAGES[a.stage]+'</span><span>'+esc(a.pos)+'</span><span>'+I("mail")+'applicant@email.com</span><span>010-1234-5678</span></div>'+
+    '<div class="adcv"><h3>'+esc(a.name)+' 지원서</h3><p class="adn">'+esc(a.name)+' · '+a.g+', 만 '+a.age+'세</p>'+
+    '<div class="sec-t"><b>경력</b></div><div class="paper"><div class="ph" style="width:46%"></div><div class="ph" style="width:92%"></div><div class="ph" style="width:84%"></div><div class="ph" style="width:70%"></div></div>'+
+    '<div class="sec-t"><b>학력</b></div><div class="paper"><div class="ph" style="width:56%"></div><div class="ph" style="width:80%"></div></div></div>';
+  var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안 변경"><div class="dh"><h2>면접 제안 변경</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
+     (req?'<div class="ibox">'+I("info")+'<div>지원자가 요청한 일정 변경입니다. 가능한 일정을 다시 골라 보내 주세요.</div></div>':'')+
+     '<div class="fld"><label>면접 제안일 <i>*</i> <small>현재 기준 3시간 이후부터 선택 가능 · 한국 표준시(KST) 기준</small></label>'+
+     [dOff(7),dOff(8)].map(function(d,i){return '<div class="frow"><span class="fin">'+dfmt(d)+I("cal")+'</span><span class="fin sel">오전 '+(i?"10":"09")+':00</span><span class="tl">~</span><span class="fin sel">오전 '+(i?"11":"10")+':00</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div>';}).join("")+
+     '<button type="button" class="fadd2" data-todo>'+I("plus")+'제안일 추가</button></div>'+
+     '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===2?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
+     '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label><label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
+     '<div class="fld"><label>면접 장소</label><span class="fin wide">서울시 서초구 서초대로 301 동익성봉빌딩 18층</span></div>'+
+     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+' 님에게 변경 내용 보내기</button></div></aside>':'';
+  var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠습니까?':'면접 제안을 취소하시겠습니까?')+'</h3><p>지원자에게 취소 안내가 발송되며, 되돌릴 수 없습니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
+  $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
+  var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
+}
+function scenario(k){init();S.seen={A:true,B:true,C:true};S.view="app";closeOverlay();
+  var l=S.db.A;
+  if(k==="cond"){var best=null;CONDS.forEach(function(c){var n=overList("A",c).length;if(n&&(!best||n<best.n))best={c:c,n:n};});enter("A",best.c.id);toast("이 조건의 남은 "+best.n+"명을 처리하면 조건이 완료됩니다");return;}
+  var keep=null;CONDS.forEach(function(c){overList("A",c).forEach(function(a){if(!keep&&c.id===6)keep=a;});});
+  if(!keep)keep=overList("A",CONDS[0])[0];
+  l.forEach(function(a){if(a===keep)return;if(CONDS.some(function(c){return inList(c,a);})){a.final="fail";}});
+  var kc=CONDS.find(function(c){return inList(c,keep);});enter("A",kc.id);S.lastTotal=summary("A").total;toast("남은 1명을 처리하면 처리 대기 지원자가 모두 처리됩니다");}
 function openChat(id){
   var a=findA(id);
   if(a.iv.k==="r"){
@@ -1084,7 +1212,17 @@ document.addEventListener("click",function(e){
   if(d.sel){S.sel[d.sel]=!S.sel[d.sel];render();return;}
   if(d.all!==undefined){var rows=visibleRows(),all=rows.every(function(a){return S.sel[a.id];});rows.forEach(function(a){S.sel[a.id]=!all;});render();return;}
   if(d.open){openApplicant(d.open);return;}
-  if(d.chat){openChat(d.chat);return;}
+  if(d.chat){openAD(d.chat);return;}
+  if(d.adclose!==undefined){closeOverlay();S.ad=null;return;}
+  if(d.adprev!==undefined){S.ad.view="prev";renderAD();return;}
+  if(d.adchat!==undefined){S.ad.view="chat";renderAD();return;}
+  if(d.addrawer!==undefined){S.ad.drawer=true;renderAD();return;}
+  if(d.addrawerx!==undefined){S.ad.drawer=false;renderAD();return;}
+  if(d.adconfirm!==undefined){S.ad.confirm=true;renderAD();return;}
+  if(d.adconfirmx!==undefined){S.ad.confirm=false;renderAD();return;}
+  if(d.adsend!==undefined){var a1=findA(S.ad.id),was=a1.iv.k;a1.iv={k:"p"};S.ad.log.push(was==="r"?"chg":"chg2");S.ad.drawer=false;S.ad.view="chat";var n1=leaveNote([a1.id]);afterChange([a1.id]);renderAD();toast("면접 제안을 변경했습니다."+n1);return;}
+  if(d.adcancel!==undefined){var a2=findA(S.ad.id);a2.iv={k:"none"};S.ad.log.push("cancel");S.ad.confirm=false;S.ad.view="chat";var n2=leaveNote([a2.id]);afterChange([a2.id]);renderAD();toast("면접을 취소했습니다."+n2);return;}
+  if(d.scn){scenario(d.scn);return;}
   if(d.menu){
     var had=t.querySelector(".pop");closePops();if(had)return;
     var m=document.createElement("div");m.className="pop";
