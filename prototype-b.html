@@ -729,7 +729,7 @@ function fActive(){return !!S.qv||fCount(S.f)>0;}
 var QV=[{v:null,t:"전체 지원자"},{v:"unread",t:"미열람 지원자"},{v:"notice",t:"결과 안내 전 지원자",d:"합불은 정했지만 결과를 안내하지 않은 지원자"}];
 function isOut(g,v){return !!(S.cond&&g.out&&g.out.indexOf(v)>=0);}
 /* 정렬: 실서비스와 같은 기준 + 순서 2단 선택. 조건 적용 중에는 조건 기준일이 기준 목록 맨 앞에 추가됨 */
-function sortBys(){var l=[{v:"applied",t:"지원일"},{v:"name",t:"이름"},{v:"age",t:"나이"},{v:"edu",t:"학력"},{v:"car",t:"경력"}];if(S.cond){var c=cond(S.cond);if(c.col==="지원일")l.shift();l.unshift({v:"cond",t:c.col});}return l;}
+function sortBys(){return [{v:"applied",t:"지원일"},{v:"name",t:"이름"},{v:"age",t:"나이"},{v:"edu",t:"학력"},{v:"car",t:"경력"}];}
 function sortOrds(by){return (by==="applied"||by==="cond")?[{v:"new",t:"최신순"},{v:"old",t:"오래된 순"}]:[{v:"asc",t:"오름차순"},{v:"desc",t:"내림차순"}];}
 function sortDef(){return S.cond?{by:"cond",ord:"old"}:{by:"applied",ord:"new"};}
 function sortCur(){return S.sort||sortDef();}
@@ -871,7 +871,7 @@ function renderFbar(){
   $("fbar").hidden=!h;$("fbar").innerHTML=h;
   var qv=QV.find(function(x){return x.v===S.qv;});$("qvBtn").innerHTML=qv.t+'<span class="cv">'+I("chev")+'</span>';$("qvBtn").classList.toggle("on",!!S.qv);
   $("tbFilter").classList.toggle("on",fCount(S.f)>0);
-  $("tbSort").classList.toggle("on",!!(S.sort||S.cond));/* 조건 적용 시 조건 정렬이 걸리므로 정렬 버튼도 적용 상태 */
+  $("tbSort").classList.toggle("on",!!S.sort);/* 정렬 규칙: 조건의 기본 순서는 알리지 않음. 사용자가 직접 고른 정렬만 활성 표시 */
 }
 function pillLabel(g){var vs=S.f[g.k]||[];if(!vs.length)return esc(g.t);var first=g.o.find(function(o){return o.v===vs[0];}).t;return esc(g.t)+': <b>'+esc(first)+(vs.length>1?' 외 '+(vs.length-1):'')+'</b>';}
 function addMenu(){
@@ -885,7 +885,8 @@ function groupMenu(k){
   return hd+g.o.map(function(o){var on=(S.f[k]||[]).indexOf(o.v)>=0,out=isOut(g,o.v);return '<button type="button" class="opt" data-fco="'+k+'" data-v="'+o.v+'"'+(out?' disabled':'')+'><span class="ck'+(on&&!out?' on':'')+'"></span>'+o.t+(out?'<small>조건 범위 밖</small>':'')+'</button>';}).join("");
 }
 function closeF(){document.querySelectorAll(".fmenu").forEach(function(m){m.remove();});}
-function sortPopHtml(){var cur=sortCur();return '<span class="selw"><select id="sBy" aria-label="정렬 기준">'+sortBys().map(function(x){return '<option value="'+x.v+'"'+(x.v===cur.by?' selected':'')+'>'+esc(x.t)+'</option>';}).join("")+'</select></span><span class="selw"><select id="sOrd" aria-label="정렬 순서">'+sortOrds(cur.by).map(function(x){return '<option value="'+x.v+'"'+(x.v===cur.ord?' selected':'')+'>'+x.t+'</option>';}).join("")+'</select></span>';}
+function sortPopHtml(){var ph=!S.sort&&!!S.cond,cur=ph?{by:"applied",ord:""}:sortCur();/* 조건 적용 중 사용자가 정렬을 고르기 전에는 선택 없음으로 표시 */
+  return '<span class="selw"><select id="sBy" aria-label="정렬 기준">'+(ph?'<option value="" selected disabled>정렬 기준 선택</option>':'')+sortBys().map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.by?' selected':'')+'>'+esc(x.t)+'</option>';}).join("")+'</select></span><span class="selw"><select id="sOrd" aria-label="정렬 순서">'+(ph?'<option value="" selected disabled>순서 선택</option>':'')+sortOrds(cur.by).map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.ord?' selected':'')+'>'+x.t+'</option>';}).join("")+'</select></span>';}
 function openF(t){
   var kind=t.dataset.fmenu,wrap=t.closest(".fwrap"),had=wrap.querySelector(".fmenu");closeF();if(had)return;
   var m=document.createElement("div"),h="";m.className="fmenu"+(t.dataset.r?" r":"")+(kind==="sort"?" sortpop":"");
@@ -1040,8 +1041,8 @@ document.addEventListener("click",function(e){
   if(d.todo!==undefined){toast("프로토타입 범위 밖 기능입니다");return;}
 });
 document.addEventListener("change",function(e){
-  if(e.target.id==="sBy"){var by=e.target.value;S.sort={by:by,ord:sortOrds(by)[by==="cond"?1:0].v};}
-  else if(e.target.id==="sOrd"){var c0=sortCur();S.sort={by:c0.by,ord:e.target.value};}
+  if(e.target.id==="sBy"){var by=e.target.value;S.sort={by:by,ord:sortOrds(by)[0].v};}
+  else if(e.target.id==="sOrd"){var c0=S.sort||{by:"applied"};S.sort={by:c0.by,ord:e.target.value};}
   else return;
   var d0=sortDef();if(S.sort.by===d0.by&&S.sort.ord===d0.ord)S.sort=null;
   var fromPill=!!e.target.closest(".sortpop2");render();
