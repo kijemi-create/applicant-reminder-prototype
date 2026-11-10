@@ -570,6 +570,34 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .sortpop .sreset{display:inline-flex;align-items:center;gap:4px;height:36px;padding:0 8px;font-size:13px;font-weight:500;color:#6c767f;white-space:nowrap;border-radius:6px}
 .sortpop .sreset:hover{background:#f4f6f7;color:#30363c}
 .sortpop .sreset .ic{font-size:16px}
+
+/* 지원일 필터: 시작일 ~ 종료일 입력(Select datepicker) + 2개월 범위 달력(BZDatePickerRange) */
+.fmenu.fl.dr{width:380px;overflow:visible;max-height:none}
+.fmenu .drange{display:flex;align-items:center;gap:8px;padding:4px 12px 12px}
+.fmenu .drange .tl{color:#6c767f;font-size:14px}
+.fmenu .dinp{flex:1;height:40px;border:1px solid #d1d6da;border-radius:8px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;font-size:14px;line-height:20px;color:#30363c;background:#fff;white-space:nowrap}
+.fmenu .dinp:hover{background:#fff;border-color:#9ea8af}
+.fmenu .dinp.ph{color:#9ea8af}
+.fmenu .dinp.on{border-color:#131618;color:#30363c;font-weight:400}
+.fmenu .dinp .ic{font-size:18px;color:#6c767f}
+.fmenu .dcal{position:absolute;left:20px;top:calc(100% - 14px);z-index:30;display:flex;gap:24px;padding:16px 16px 20px;background:#fff;border:1px solid #e2e6e8;border-radius:10px;box-shadow:0 0 4px rgba(0,0,0,.04),0 8px 16px rgba(0,0,0,.08)}
+.fmenu .dm{width:287px}
+.fmenu .dmh{height:48px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.fmenu .dmh b{font-size:18px;line-height:28px;font-weight:700;color:#131618}
+.fmenu .dnav{width:32px;height:32px;padding:0!important;display:grid!important;place-items:center;border-radius:6px}
+.fmenu .dnav .ic{font-size:16px;color:#30363c;transform:rotate(180deg)}
+.fmenu .dnav.nx .ic{transform:none}
+.fmenu .dnav:disabled .ic{color:#c0c7cd}
+.fmenu .dw,.fmenu .dg{display:grid;grid-template-columns:repeat(7,41px)}
+.fmenu .dw span{height:28px;display:grid;place-items:center;font-size:13px;color:#30363c}
+.fmenu .dc{height:32px;margin:2px 0;display:grid;place-items:center}
+.fmenu .dc.band{background:#f4f6f7}
+.fmenu .dc.band.bs{border-radius:16px 0 0 16px}.fmenu .dc.band.be{border-radius:0 16px 16px 0}.fmenu .dc.band.bs.be{border-radius:16px}
+.fmenu .dd{width:32px;height:32px;padding:0!important;display:grid!important;place-items:center;border-radius:50%!important;font-size:14px;color:#131618;justify-content:center!important}
+.fmenu .dd.sun{color:#f22a23}.fmenu .dd.sat{color:#1b55f6}
+.fmenu .dd:hover{background:#e2e6e8}
+.fmenu .dd.sel{background:#131618!important;color:#fff!important;font-weight:600}
+.fmenu .dd:disabled{color:#c0c7cd!important;cursor:default;background:none}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
@@ -735,7 +763,7 @@ var FCATS=[
   {k:"st",t:"지원자 상태",o:[{v:"ing",t:"진행중"},{v:"fail",t:"불합격"},{v:"pass",t:"최종합격"}],f:function(a,v){return v==="ing"?!a.final:a.final===v;},out:["fail","pass"]},
   {k:"iv",t:"면접 상태",o:[{v:"adj",t:"조율중"},{v:"conf",t:"면접 확정"},{v:"done",t:"면접 완료"}],f:function(a,v){return v==="adj"?(a.iv.k==="p"||a.iv.k==="r"):v==="conf"?a.iv.k==="c":a.iv.k==="d";}}]},
  {t:"지원 정보",g:[
-  {k:"date",t:"지원일",single:true,o:[{v:7,t:"최근 7일"},{v:14,t:"최근 14일"},{v:30,t:"최근 30일"},{v:31,t:"30일 이전"}],f:function(a,v){return v===31?a.applied>30:a.applied<=v;}},
+  {k:"date",t:"지원일",range:true,date:true,f:function(a,v){var ad=dOff(-a.applied);return ad>=v.s&&ad<=v.e;}},/* 피그마: 시작일 ~ 종료일 입력 + 2개월 범위 달력 */
   {k:"dup",t:"중복 지원",o:[{v:1,t:"지원 이력 있음"},{v:0,t:"지원 이력 없음"}],f:function(a,v){return !!a.dup===!!v;}},
   {k:"photo",t:"지원자 구분",o:[{v:1,t:"사진등록 지원자"}],f:function(){return false;}}]},
  {t:"인적 정보",g:[
@@ -884,24 +912,44 @@ function renderFbar(){
   var qv=QV.find(function(x){return x.v===S.qv;});$("qvBtn").innerHTML=qv.t+'<span class="cv">'+I("chev")+'</span>';$("qvBtn").classList.toggle("on",!!S.qv);
   $("tbSort").classList.toggle("on",!!S.sort);/* 정렬 규칙: 조건의 기본 순서는 알리지 않음. 사용자가 직접 고른 정렬만 활성 표시 */
 }
-function pillLabel(g){var vs=S.f[g.k]||[];if(!vs.length)return esc(g.t);var first=g.o.find(function(o){return o.v===vs[0];}).t;return esc(g.t)+' : '+esc(first)+(vs.length>1?' 외 '+(vs.length-1):'');}
+function dfmt(d){return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}
+function pillLabel(g){var vs=S.f[g.k]||[];if(!vs.length)return esc(g.t);if(g.range)return esc(g.t)+' : '+dfmt(vs[0].s)+' ~ '+dfmt(vs[0].e);var first=g.o.find(function(o){return o.v===vs[0];}).t;return esc(g.t)+' : '+esc(first)+(vs.length>1?' 외 '+(vs.length-1):'');}
 function addMenu(){/* 피그마 1뎁스: 그룹·검색 없는 단순 목록 (BZDropdown xxs) */
   return FCATS.map(function(cat){return cat.g.map(function(g){var on=!!S.f[g.k];return '<button type="button" class="li" data-fadd="'+g.k+'"'+(on?' disabled':'')+'>'+g.t+'</button>';}).join("");}).join("");
 }
 function groupMenu(k){/* 피그마 2뎁스: 항목명 + [필터삭제], 체크박스 복수 선택 (지원일은 단일 선택) */
   var g=FG[k];
   var hd='<div class="fhd"><b>'+g.t+'</b><button type="button" class="fdel" data-fgx="'+k+'">'+I("trash")+'필터삭제</button></div>';
+  if(g.range)return hd+dateRangeHtml(k);
   return hd+g.o.map(function(o){var on=(S.f[k]||[]).indexOf(o.v)>=0,out=isOut(g,o.v);
     if(g.single)return '<button type="button" class="opt one'+(on?' on':'')+'" data-fco="'+k+'" data-v="'+o.v+'">'+o.t+(on?I("check"):'')+'</button>';
     return '<button type="button" class="opt" data-fco="'+k+'" data-v="'+o.v+'"'+(out?' disabled':'')+'><span class="ck'+(on&&!out?' on':'')+'"></span>'+o.t+'</button>';}).join("");
 }
+function dateRangeHtml(k){
+  var v=(S.f[k]||[])[0],p=S.dp&&S.dp.k===k?S.dp:null,sv=p?p.s:(v?v.s:null),ev=p?p.e:(v?v.e:null);
+  function inp(w,val,ph){return '<button type="button" class="dinp'+(val?'':' ph')+(p&&p.which===w?' on':'')+'" data-dinp="'+w+'">'+(val?dfmt(val):ph)+I("cal")+'</button>';}
+  var h='<div class="drange">'+inp("s",sv,"시작일")+'<span class="tl">~</span>'+inp("e",ev,"종료일")+'</div>';
+  if(p)h+=calHtml(p);
+  return h;}
+function calHtml(p){
+  var lastM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
+  function month(b,idx){var y=b.getFullYear(),m=b.getMonth(),first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),cells="";
+    for(var i=0;i<first;i++)cells+='<span class="dc e"></span>';
+    for(var d=1;d<=n;d++){var dt=new Date(y,m,d),wd=dt.getDay(),fut=dt>TODAY,isS=p.s&&+dt===+p.s,isE=p.e&&+dt===+p.e,inr=p.s&&p.e&&dt>p.s&&dt<p.e;
+      var band=(p.s&&p.e&&(isS||isE||inr))?' band'+(isS?' bs':'')+(isE?' be':''):'';
+      cells+='<span class="dc'+band+'"><button type="button" class="dd'+(isS||isE?' sel':'')+(wd===0?' sun':wd===6?' sat':'')+'" data-dday="'+y+'-'+m+'-'+d+'"'+(fut?' disabled':'')+'>'+d+'</button></span>';}
+    var prevOn=idx===0,nextOn=idx===1&&+b<+lastM;
+    return '<div class="dm"><div class="dmh">'+(idx===0?'<button type="button" class="dnav" data-dnav="-1" aria-label="이전 달">'+I("chev")+'</button>':'<span class="dnav"></span>')+'<b>'+y+'년 '+(m+1)+'월</b>'+(idx===1?'<button type="button" class="dnav nx" data-dnav="1" aria-label="다음 달"'+(nextOn?'':' disabled')+'>'+I("chev")+'</button>':'<span class="dnav"></span>')+'</div><div class="dw">'+WD.map(function(w){return '<span>'+w+'</span>';}).join("")+'</div><div class="dg">'+cells+'</div></div>';}
+  var r=new Date(p.base.getFullYear(),p.base.getMonth()+1,1);
+  return '<div class="dcal">'+month(p.base,0)+month(r,1)+'</div>';}
+function reopenDate(){render();var tr=document.querySelector('[data-fmenu="g:date"]');if(tr)openF(tr);}
 function closeF(){document.querySelectorAll(".fmenu").forEach(function(m){m.remove();});}
 function sortPopHtml(){var ph=!S.sort&&!!S.cond,cur=ph?{by:"applied",ord:""}:sortCur();/* 조건 적용 중 사용자가 정렬을 고르기 전에는 선택 없음으로 표시 */
   return '<span class="selw"><select id="sBy" aria-label="정렬 기준">'+(ph?'<option value="" selected disabled>정렬 기준 선택</option>':'')+sortBys().map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.by?' selected':'')+'>'+esc(x.t)+'</option>';}).join("")+'</select></span><span class="selw"><select id="sOrd" aria-label="정렬 순서">'+(ph?'<option value="" selected disabled>순서 선택</option>':'')+sortOrds(cur.by).map(function(x){return '<option value="'+x.v+'"'+(!ph&&x.v===cur.ord?' selected':'')+'>'+x.t+'</option>';}).join("")+'</select></span>'+(S.sort?'<button type="button" class="sreset" data-sdel>'+I("reset")+'초기화</button>':'');}
 function openF(t){
   var kind=t.dataset.fmenu,wrap=t.closest(".fwrap"),had=wrap.querySelector(".fmenu");closeF();if(had)return;
   var m=document.createElement("div"),h="";m.className="fmenu"+(t.dataset.r?" r":"")+(kind==="sort"?" sortpop":"");
-  if(kind.indexOf("g:")===0){m.className+=" fl";h=groupMenu(kind.slice(2));}
+  if(kind.indexOf("g:")===0){m.className+=" fl"+(FG[kind.slice(2)].range?" dr":"");h=groupMenu(kind.slice(2));}
   else if(kind==="add"){m.className+=" fl";h=addMenu();}
   else if(kind==="spill"){m.className+=" sortpop2";h='<div class="ehd"><span><b>정렬</b></span><button type="button" class="del" data-sdel>삭제</button></div><div class="row">'+sortPopHtml()+'</div>';}
   else if(kind==="cond"){m.className+=" vdd";h=CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length;if(!n&&!on)return "";return '<button type="button" class="vrow'+(on?' on':'')+'" data-fcond="'+x.id+'"><span class="vt"><b>'+esc(x.t)+'</b><small>'+esc(x.sub)+'</small></span><span class="vn">'+n+'명</span></button>';}).join("");}/* 피그마 VODropdown: 타이틀 · 서브 · N명 배지, 0명 조건 숨김 */
@@ -995,7 +1043,7 @@ function closePops(){document.querySelectorAll(".bulk .pop").forEach(function(m)
 document.addEventListener("click",function(e){
   if(!e.target.closest(".ba[data-menu]")||e.target.closest(".pop"))closePops();
   if(!e.target.closest("#reopen"))closeR();
-  if(!e.target.closest(".fwrap"))closeF();
+  if(!e.target.closest(".fwrap")){closeF();S.dp=null;}
   var ps=e.target.closest("[data-psum]");
   if(ps){var pid=ps.dataset.psum;if(pid!==S.pid){S.seen[pid]=true;enter(pid,null);}showSummary();return;}
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
@@ -1013,6 +1061,14 @@ document.addEventListener("click",function(e){
   if(d.freset!==undefined){S.f={};S.qv=null;S.sel={};render();return;}
   if(d.qv!==undefined){S.qv=d.qv||null;S.sel={};closeF();render();return;}
   if(d.fsheet!==undefined){openFilterSheet();return;}
+  if(d.dinp){var cv=(S.f.date||[])[0],base=S.dp?S.dp.base:new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1);S.dp={k:"date",which:d.dinp,s:S.dp?S.dp.s:(cv?cv.s:null),e:S.dp?S.dp.e:(cv?cv.e:null),base:base};reopenDate();return;}
+  if(d.dnav){S.dp.base=new Date(S.dp.base.getFullYear(),S.dp.base.getMonth()+(+d.dnav),1);reopenDate();return;}
+  if(d.dday){var pp=d.dday.split("-"),D=new Date(+pp[0],+pp[1],+pp[2]),q=S.dp;
+    if(q.which==="s"){q.s=D;if(q.e&&D>q.e)q.e=null;q.which="e";}
+    else{if(!q.s||D<q.s){q.s=D;}else{q.e=D;}}
+    if(q.s&&q.e){S.f.date=[{s:q.s,e:q.e}];S.sel={};S.dp=null;}
+    reopenDate();return;}
+  if(d.fgx&&d.fgx==="date")S.dp=null;
   if(d.fco){var g2=FG[d.fco],v2=g2.o.find(function(o){return String(o.v)===d.v;}).v,arr2=S.f[d.fco]||(S.f[d.fco]=[]),ix2=arr2.indexOf(v2);if(g2.single){S.f[d.fco]=ix2>=0?[]:[v2];}else if(ix2>=0)arr2.splice(ix2,1);else arr2.push(v2);S.sel={};render();var tr=document.querySelector('[data-fmenu="g:'+d.fco+'"]');if(tr)openF(tr);return;}
   if(d.fgx){delete S.f[d.fgx];S.sel={};closeF();render();return;}
   if(d.fadd){if(!S.f[d.fadd])S.f[d.fadd]=[];closeF();render();var tr2=document.querySelector('[data-fmenu="g:'+d.fadd+'"]');if(tr2)openF(tr2);return;}
