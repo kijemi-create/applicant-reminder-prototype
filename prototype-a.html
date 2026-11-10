@@ -558,6 +558,14 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fmenu.vdd .vrow.on .vt b{color:#1b55f6}
 .fmenu.vdd .vt small{font-size:12px;line-height:18px;color:#6c767f}
 .fmenu.vdd .vn{flex:none;height:24px;padding:0 8px;border-radius:6px;background:#eef3ff;color:#1b55f6;font-size:12px;font-weight:600;display:grid;place-items:center}
+
+/* 면접 상태 버튼 (피그마 처리필요 지원자 목록): 확정 전 = tertiary 회색, 일정 변경 요청 확인 = outlineSecondary 파랑 + 일정 아이콘 */
+.bdg.yel{background:#fffce8;color:#cc8800}
+.ob.pend{color:#30363c;background:#f4f6f7;border-color:#f4f6f7;font-weight:500}
+.ob.pend:hover{background:#e2e6e8;border-color:#e2e6e8}
+.ob.req{border-color:#d1d6da;color:#1b55f6;background:#fff;font-weight:500}
+.ob.req:hover{background:#eef3ff}
+.ob.req .ic{font-size:16px;color:#1b55f6}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
@@ -642,6 +650,7 @@ var P={
   search:'<path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 3a7.5 7.5 0 0 1 5.806 12.245l4.174 4.174a.751.751 0 0 1-1.061 1.061l-4.174-4.174A7.5 7.5 0 1 1 10.5 3m0 1.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12" fill="currentColor"/>',
   reset:'<path d="M12 4.75a7.25 7.25 0 1 0 7.25 7.25.75.75 0 0 1 1.5 0A8.75 8.75 0 1 1 12 3.25c2.4 0 4.58.97 6.16 2.53V3.5a.75.75 0 0 1 1.5 0v4.25a.75.75 0 0 1-.75.75h-4.25a.75.75 0 0 1 0-1.5h2.53A7.22 7.22 0 0 0 12 4.75" fill="currentColor"/>',
   trash:'<path d="M9.75 3.25h4.5a.75.75 0 0 1 .75.75v.75H19a.75.75 0 0 1 0 1.5h-.31l-.85 12.06a2.25 2.25 0 0 1-2.24 2.09H8.4a2.25 2.25 0 0 1-2.24-2.09L5.31 6.25H5a.75.75 0 0 1 0-1.5h4V4a.75.75 0 0 1 .75-.75m-2.93 3 .83 11.95a.75.75 0 0 0 .75.7h7.2a.75.75 0 0 0 .75-.7l.83-11.95z" fill="currentColor"/>',
+  cal:'<path d="M8 2.25a.75.75 0 0 1 .75.75v.75h6.5V3a.75.75 0 0 1 1.5 0v.75h1A2.25 2.25 0 0 1 20 6v12a2.25 2.25 0 0 1-2.25 2.25H6.25A2.25 2.25 0 0 1 4 18V6a2.25 2.25 0 0 1 2.25-2.25h1V3A.75.75 0 0 1 8 2.25M5.5 9.75V18c0 .41.34.75.75.75h11.5c.41 0 .75-.34.75-.75V9.75zm0-1.5h13V6a.75.75 0 0 0-.75-.75H6.25A.75.75 0 0 0 5.5 6zM8 12h2v2H8zm3 0h2v2h-2zm3 0h2v2h-2zM8 15h2v2H8zm3 0h2v2h-2z" fill="currentColor"/>',
   plus:'<path d="M12 4.25a.75.75 0 0 1 .75.75v6.25H19a.75.75 0 0 1 0 1.5h-6.25V19a.75.75 0 0 1-1.5 0v-6.25H5a.75.75 0 0 1 0-1.5h6.25V5a.75.75 0 0 1 .75-.75" fill="currentColor"/>',
   filter:'<path fill-rule="evenodd" clip-rule="evenodd" d="M14.999 15.25c1.258 0 2.317.846 2.644 2h3.356a.75.75 0 0 1 0 1.5h-3.356a2.749 2.749 0 0 1-5.288 0H3a.75.75 0 0 1 0-1.5h9.356a2.75 2.75 0 0 1 2.643-2m0 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5M6.999 9.25c1.259 0 2.317.846 2.644 2h11.356a.75.75 0 0 1 0 1.5H9.643a2.749 2.749 0 0 1-5.288 0H3a.75.75 0 0 1 0-1.5h1.355A2.75 2.75 0 0 1 7 9.25m0 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5M17 3.25c1.259 0 2.317.846 2.644 2H21a.75.75 0 0 1 0 1.5h-1.356a2.749 2.749 0 0 1-5.288 0H3a.75.75 0 0 1 0-1.5h11.356a2.75 2.75 0 0 1 2.644-2m0 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5" fill="currentColor"/>',
   sort:'<path d="M17 6.25a.75.75 0 0 1 .75.75v12.19l2.962-2.963a.751.751 0 0 1 1.061 1.061L17.53 21.53a.75.75 0 0 1-1.06 0l-4.243-4.243a.75.75 0 0 1 1.061-1.06l2.962 2.961V7a.75.75 0 0 1 .75-.75M7 2.25a.75.75 0 0 1 .53.22l4.243 4.242a.75.75 0 0 1-1.06 1.06L7.75 4.811V17a.75.75 0 0 1-1.5 0V4.81L3.288 7.773a.75.75 0 1 1-1.06-1.06L6.47 2.47A.75.75 0 0 1 7 2.25" fill="currentColor"/>',
@@ -794,8 +803,8 @@ function edu(a){return '<div><span class="t15">'+a.edu[0]+'</span><span class="t
 function car(a){return '<div><span class="t15">'+a.car[0]+'</span><span class="t14 g">'+a.car[1]+'</span></div>';}
 function ivCell(a){
   switch(a.iv.k){
-    case "p":return '<div><button type="button" class="ob pend" data-chat="'+a.id+'">면접제안 확정 전</button></div>';
-    case "r":return '<div><button type="button" class="ob req" data-chat="'+a.id+'"><i></i>일정변경요청 확인</button></div>';
+    case "p":return '<div><button type="button" class="ob pend" data-chat="'+a.id+'">면접 제안 확정 전</button></div>';
+    case "r":return '<div><button type="button" class="ob req" data-chat="'+a.id+'">'+I("cal")+'일정 변경 요청 확인</button></div>';
     case "c":return '<div><span class="ivd">'+fmt(dOff(a.iv.d))+'<small>오후 2:00</small></span></div>';
     case "d":return '<div><span class="ivd">'+fmt(dOff(-a.iv.n))+'<small>면접 완료</small></span></div>';
     default:return '<div><button type="button" class="ob" data-todo>면접 제안하기</button></div>';
@@ -820,7 +829,7 @@ function renderList(){
     var nOver=rows.filter(function(a){return c.inScope(a)&&c.over(a);}).length;
     rows.forEach(function(a,i){
       var inS=c.inScope(a),ov=inList(c,a),el=c.el(a);
-      var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):ov?'<span class="bdg red">'+el+'일 경과</span>':'<span class="bdg gray">'+el+'일 경과</span>';
+      var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):ov?'<span class="bdg yel">'+el+'일 경과</span>':'<span class="bdg gray">'+el+'일 경과</span>';/* 기준일을 넘기면 노랑(BZBadge yellow) + 빨간 dot, 아직 전이면 회색 */
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length&&fActive()){h+='<div class="empty"><b>필터에 맞는 지원자가 없어요</b>조건 안에서 필터를 줄이거나 초기화해 보세요.<br><button type="button" class="rst" data-freset>필터 초기화</button></div>';}
