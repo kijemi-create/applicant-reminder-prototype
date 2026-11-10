@@ -272,8 +272,9 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fp .cx .ic{font-size:14px}
 .fp.novalue .pb{color:var(--gray-500)}
 .fp:hover{border-color:var(--gray-300)}
-.fadd{height:32px;display:inline-flex;align-items:center;gap:4px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:500;color:var(--gray-600)}
-.fadd:hover{background:var(--gray-50);color:var(--gray-950)}
+.fadd{height:32px;display:inline-flex;align-items:center;gap:4px;padding:0 12px 0 10px;border-radius:999px;font-size:13px;line-height:20px;font-weight:500;background:var(--gray-50);color:var(--gray-600);white-space:nowrap}
+.fadd:hover{background:var(--gray-100);color:var(--gray-950)}
+.fadd[aria-expanded="true"],.fwrap:has(.fmenu)>.fadd{background:var(--gray-100);color:var(--gray-950)}
 .fadd .ic{font-size:16px}
 .fall{height:32px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--gray-600)}
 .fall:hover{background:var(--gray-50);color:var(--gray-950)}
@@ -555,7 +556,6 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
         <span class="fwrap"><button type="button" class="vsel" id="qvBtn" data-fmenu="view" data-r="1" aria-haspopup="menu"></button></span>
         <span class="vdiv"></span>
         <button type="button" class="ibtn" data-todo aria-label="검색"><span class="ic" data-i="search"></span></button>
-        <span class="fwrap"><button type="button" class="ibtn" id="tbFilter" data-fmenu="add" data-r="1" aria-label="필터"><span class="ic" data-i="filter"></span></button></span>
         <span class="fwrap"><button type="button" class="ibtn" id="tbSort" data-fmenu="sort" data-r="1" aria-label="정렬"><span class="ic" data-i="sort"></span></button></span>
         <button type="button" class="ibtn" data-todo aria-label="즐겨찾기"><span class="ic" data-i="star"></span></button>
         <span class="vdiv"></span>
@@ -607,6 +607,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 /* ---------- 실서비스 아이콘 ---------- */
 var P={
   search:'<path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 3a7.5 7.5 0 0 1 5.806 12.245l4.174 4.174a.751.751 0 0 1-1.061 1.061l-4.174-4.174A7.5 7.5 0 1 1 10.5 3m0 1.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12" fill="currentColor"/>',
+  plus:'<path d="M12 4.25a.75.75 0 0 1 .75.75v6.25H19a.75.75 0 0 1 0 1.5h-6.25V19a.75.75 0 0 1-1.5 0v-6.25H5a.75.75 0 0 1 0-1.5h6.25V5a.75.75 0 0 1 .75-.75" fill="currentColor"/>',
   filter:'<path fill-rule="evenodd" clip-rule="evenodd" d="M14.999 15.25c1.258 0 2.317.846 2.644 2h3.356a.75.75 0 0 1 0 1.5h-3.356a2.749 2.749 0 0 1-5.288 0H3a.75.75 0 0 1 0-1.5h9.356a2.75 2.75 0 0 1 2.643-2m0 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5M6.999 9.25c1.259 0 2.317.846 2.644 2h11.356a.75.75 0 0 1 0 1.5H9.643a2.749 2.749 0 0 1-5.288 0H3a.75.75 0 0 1 0-1.5h1.355A2.75 2.75 0 0 1 7 9.25m0 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5M17 3.25c1.259 0 2.317.846 2.644 2H21a.75.75 0 0 1 0 1.5h-1.356a2.749 2.749 0 0 1-5.288 0H3a.75.75 0 0 1 0-1.5h11.356a2.75 2.75 0 0 1 2.644-2m0 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5" fill="currentColor"/>',
   sort:'<path d="M17 6.25a.75.75 0 0 1 .75.75v12.19l2.962-2.963a.751.751 0 0 1 1.061 1.061L17.53 21.53a.75.75 0 0 1-1.06 0l-4.243-4.243a.75.75 0 0 1 1.061-1.06l2.962 2.961V7a.75.75 0 0 1 .75-.75M7 2.25a.75.75 0 0 1 .53.22l4.243 4.242a.75.75 0 0 1-1.06 1.06L7.75 4.811V17a.75.75 0 0 1-1.5 0V4.81L3.288 7.773a.75.75 0 1 1-1.06-1.06L6.47 2.47A.75.75 0 0 1 7 2.25" fill="currentColor"/>',
   star:'<path fill-rule="evenodd" clip-rule="evenodd" d="M11.934 2c.26 0 .5.135.646.356l.056.1 2.695 5.985 5.995.802a.79.79 0 0 1 .636.561.85.85 0 0 1-.2.843l-4.32 4.355 1.254 6.032a.84.84 0 0 1-.31.807.75.75 0 0 1-.823.065l-5.716-2.978-5.663 2.98a.75.75 0 0 1-.824-.066.84.84 0 0 1-.31-.804l1.616-6.038-4.426-4.35a.85.85 0 0 1-.202-.846.8.8 0 0 1 .634-.56L8.6 8.442l2.63-5.985A.78.78 0 0 1 11.934 2m-2.11 7.559a.79.79 0 0 1-.591.45l-4.748.624 3.572 3.49a.85.85 0 0 1 .228.743l-1.39 4.8 4.592-2.394a.75.75 0 0 1 .721 0l4.664 2.405-1.045-4.819a.85.85 0 0 1 .227-.735l3.464-3.49-4.815-.627a.79.79 0 0 1-.59-.448L11.935 4.68z" fill="currentColor"/>',
@@ -816,7 +817,7 @@ function renderFbar(){
   /* A안 · 필터형: 배너 대신 목록 위 필터 줄에 처리 대기중 칩(노션 필터 방식) */
   bn.hidden=true;bn.innerHTML="";
   var left="",rest="";
-  if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span><span class="fhint"><span aria-hidden="true">💡</span>'+esc(c.hint)+'</span>';}
+  if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
   else if(tot){left='<span class="fwrap"><button type="button" class="chip need" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
   else if(S.justDone===S.pid){left='<span class="chip donec" role="status">'+I("ok")+'모두 처리 완료</span>';}
   else{left='<span class="chip need off" aria-disabled="true">'+I("lac")+'처리 대기중인 지원자가 없습니다</span>';}
@@ -825,13 +826,15 @@ function renderFbar(){
     rest+='<span class="fwrap"><span class="fp"><button type="button" class="pb" data-fmenu="spill">'+I("sort")+'<b>'+esc(bl.t)+'</b> '+ol.t+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-sdel aria-label="정렬 삭제">'+I("x")+'</button></span></span>';}
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
     rest+='<span class="fwrap"><span class="fp'+(vs.length?'':' novalue')+'"><button type="button" class="pb" data-fmenu="g:'+k+'">'+pillLabel(g)+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-fgx="'+k+'" aria-label="'+g.t+' 필터 삭제">'+I("x")+'</button></span></span>';});
-  if(Object.keys(S.f).length)rest+='<span class="fwrap"><button type="button" class="fadd" data-fmenu="add">'+I("filter")+'필터 추가</button></span>';
-  if(rest)rest+='<span class="sp"></span><button type="button" class="fall" data-fall>초기화</button>';
-  h=left+(left&&rest?'<span class="fdiv" aria-hidden="true"></span>':'')+rest;
+  /* 필터 추가: 툴바 필터 버튼 대신 조건 칩 오른쪽에 항상 노출 (노션 필터 방식: 항목 선택 → pill 생성 → 값 선택) */
+  var used=!!rest;
+  rest+='<span class="fwrap"><button type="button" class="fadd" data-fmenu="add" aria-haspopup="menu">'+I("plus")+'필터 추가</button></span>';
+  if(c)rest+='<span class="fhint"><span aria-hidden="true">💡</span>'+esc(c.hint)+'</span>';
+  if(used)rest+='<span class="sp"></span><button type="button" class="fall" data-fall>초기화</button>';
+  h=left+(left&&used?'<span class="fdiv" aria-hidden="true"></span>':'')+rest;
   /* 처리할 지원자도, 건 정렬·필터도 없으면 줄 전체를 숨겨 실서비스 화면과 같게 */
   $("fbar").hidden=!h;$("fbar").innerHTML=h;
   var qv=QV.find(function(x){return x.v===S.qv;});$("qvBtn").innerHTML=qv.t+'<span class="cv">'+I("chev")+'</span>';$("qvBtn").classList.toggle("on",!!S.qv);
-  $("tbFilter").classList.toggle("on",fCount(S.f)>0);
   $("tbSort").classList.toggle("on",!!S.sort);/* 정렬 규칙: 조건의 기본 순서는 알리지 않음. 사용자가 직접 고른 정렬만 활성 표시 */
 }
 function pillLabel(g){var vs=S.f[g.k]||[];if(!vs.length)return esc(g.t);var first=g.o.find(function(o){return o.v===vs[0];}).t;return esc(g.t)+': <b>'+esc(first)+(vs.length>1?' 외 '+(vs.length-1):'')+'</b>';}
