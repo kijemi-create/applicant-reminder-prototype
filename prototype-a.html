@@ -694,6 +694,14 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fempty>b{font-size:16px;line-height:24px;font-weight:600;color:#131618}
 .fempty .rst2{margin-top:12px;height:36px;padding:0 14px;display:inline-flex;align-items:center;gap:4px;border:1px solid #d1d6da;border-radius:8px;background:#fff;font-size:14px;font-weight:500;color:#30363c}
 .fempty .rst2:hover{background:#f4f6f7}.fempty .rst2 .ic{width:16px;height:16px}
+
+.bt.dngf{background:#f22a23;color:#fff}.bt.dngf:hover{background:#d61f19}
+.cdlg h3{line-height:26px}.cdlg p{line-height:20px}
+#alertHost .cdim{z-index:80}#alertHost .cdlg{z-index:81;width:326px;padding:24px 20px 20px}
+.toast.act{flex-direction:column;align-items:stretch;gap:10px;padding:14px 16px 12px;width:420px;max-width:calc(100vw - 40px)}
+.toast.act .tw{display:flex;gap:8px;align-items:flex-start}
+.toast.act .ta{display:flex;justify-content:flex-end;gap:12px}
+.toast.act .ta button{color:#c0c7cd;font-size:13px;font-weight:600}.toast.act .ta button+button{color:#fff}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
@@ -916,7 +924,7 @@ function renderTabs(){
   var l=S.db[S.pid].filter(posOK),c=S.cond?cond(S.cond):null;
   $("tabs").innerHTML=STAGES.map(function(s,i){
     var inSt=l.filter(function(a){return a.stage===i&&a.final!=="fail"&&passF(a);}),n=inSt.length,ov=0;
-    if(c){n=inSt.filter(function(a){return c.inScope(a);}).length;ov=inSt.filter(function(a){return inList(c,a);}).length;}
+    if(c){n=inSt.filter(function(a){return inList(c,a);}).length;ov=n;}
     return '<button type="button" class="tab'+(i===S.tab?' on':'')+'" data-tab="'+i+'">'+s+' <span class="n">'+n+'</span>'+(ov?'<span class="dot" title="기준 초과 '+ov+'명"></span>':'')+'</button>';
   }).join("");
 }
@@ -945,14 +953,14 @@ function stBadge(a){if(a.final==="fail")return '<span class="bdg gray">불합격
 
 function visibleRows(){
   var l=S.db[S.pid].filter(posOK);
-  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (c.inScope(a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}/* 조건 목록에는 조건에 해당하는(기준일을 넘긴) 지원자만 */
   return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
 /* 완료 empty: 조건 이름 대신 끝낸 행동으로 말하고, '처리' 반복을 피함. 조건 완료 시 남은 조건 중 인원이 가장 많은 1개만 이어서 제안 */
 var DONE_T={1:"최종합격 · 불합격 심사를 모두 마쳤습니다",2:"현재 단계에 머물던 지원자를 모두 정리했습니다",3:"지원서를 모두 열람했습니다",4:"열람한 지원자의 다음 단계를 모두 정했습니다",6:"일정 변경 요청에 모두 답했습니다",7:"면접 결과를 모두 반영했습니다"};
 var WAIT_T={1:"최종합격 · 불합격을",2:"단계 이동이나 심사를",3:"지원서 열람을",4:"다음 단계 결정을",6:"일정 변경 답변을",7:"면접 결과 반영을"};
 /* 필터 결과가 모든 단계에서 0명이면 단계 탭도 숨김 (피그마 '필터 적용 시 결과 없음') */
-function noneAnyStage(){if(!fActive())return false;var c=S.cond?cond(S.cond):null;return !S.db[S.pid].filter(posOK).some(function(a){return (!c||c.inScope(a))&&passF(a)&&a.final!=="fail";});}
+function noneAnyStage(){if(!fActive())return false;var c=S.cond?cond(S.cond):null;return !S.db[S.pid].filter(posOK).some(function(a){return (!c||inList(c,a))&&passF(a)&&a.final!=="fail";});}
 function doneHtml(){
   if(S.done==="all")return '<div class="dempty">'+I("ok")+'<b>기다리던 지원자를 모두 처리했습니다</b><span>처리 대기 중인 지원자가 생기면 다시 알려드릴게요.</span><div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div></div>';
   var rest=CONDS.map(function(c,i){return {c:c,n:overListP(c).length,i:i};}).filter(function(x){return x.n;}).sort(function(a,b){return b.n-a.n||a.i-b.i;}),nx=rest[0];
@@ -1152,7 +1160,7 @@ function renderAD(){
     '<div class="adcv"><h3>'+esc(a.name)+' 지원서</h3><p class="adn">'+esc(a.name)+' · '+a.g+', 만 '+a.age+'세</p>'+
     '<div class="sec-t"><b>경력</b></div><div class="paper"><div class="ph" style="width:46%"></div><div class="ph" style="width:92%"></div><div class="ph" style="width:84%"></div><div class="ph" style="width:70%"></div></div>'+
     '<div class="sec-t"><b>학력</b></div><div class="paper"><div class="ph" style="width:56%"></div><div class="ph" style="width:80%"></div></div></div>';
-  var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안 변경"><div class="dh"><h2>면접 제안 변경</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
+  var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안"><div class="dh"><h2>'+(S.ad.newProp?'면접 제안하기':'면접 제안 변경')+'</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
      (req?'<div class="ibox">'+I("info")+'<div>지원자가 요청한 일정 변경입니다. 가능한 일정을 다시 골라 보내 주세요.</div></div>':'')+
      '<div class="fld"><label>면접 제안일 <i>*</i> <small>현재 기준 3시간 이후부터 선택 가능 · 한국 표준시(KST) 기준</small></label>'+
      [dOff(7),dOff(8)].map(function(d,i){return '<div class="frow"><span class="fin">'+dfmt(d)+I("cal")+'</span><span class="fin sel">오전 '+(i?"10":"09")+':00</span><span class="tl">~</span><span class="fin sel">오전 '+(i?"11":"10")+':00</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div>';}).join("")+
@@ -1160,7 +1168,7 @@ function renderAD(){
      '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===2?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
      '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label><label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
      '<div class="fld"><label>면접 장소</label><span class="fin wide">서울시 서초구 서초대로 301 동익성봉빌딩 18층</span></div>'+
-     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+' 님에게 변경 내용 보내기</button></div></aside>':'';
+     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':' 님에게 변경 내용 보내기')+'</button></div></aside>':'';
   var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠습니까?':'면접 제안을 취소하시겠습니까?')+'</h3><p>지원자에게 취소 안내가 발송되며, 되돌릴 수 없습니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
   $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
   var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
@@ -1190,7 +1198,13 @@ function openChat(id){
 
 /* ---------- 액션 ---------- */
 var tt;
-function toast(m){var t=$("toast");t.innerHTML=I("ok")+'<span>'+esc(m)+'</span>';t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},2600);}
+/* 공통 얼럿 (XDS Alert): 단계 이동 시 면접 제안 여부, 심사 확인 */
+var ALERT_CB=null;
+function alertDlg(title,desc,b1,b2,ok,cancel,danger){ALERT_CB={ok:ok,cancel:cancel};var host=document.createElement("div");host.id="alertHost";host.innerHTML='<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+title+'</h3><p>'+desc+'</p><div class="btns"><button type="button" class="bt sec" data-alx="0">'+b1+'</button><button type="button" class="bt '+(danger?'dngf':'pri')+'" data-alx="1">'+b2+'</button></div></div>';document.body.appendChild(host);}
+function closeAlert(){var h=$("alertHost");if(h)h.remove();}
+/* 액션 토스트 (BZToast success + 하단 버튼) */
+function toastAct(m,acts){var t=$("toast");t.innerHTML='<div class="tw">'+I("ok")+'<span>'+esc(m)+'</span></div><div class="ta">'+acts.map(function(a,i){return '<button type="button" data-tact="'+i+'">'+a+'</button>';}).join("")+'</div>';t.classList.add("act");t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;t.classList.remove("act");},6000);}
+function toast(m){$("toast").classList.remove("act");var t=$("toast");t.innerHTML=I("ok")+'<span>'+esc(m)+'</span>';t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},2600);}
 function afterChange(ids){
   if(!S.cond&&S.lastTotal>0&&summary(S.pid).total===0){S.done="all";}
   if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!c.inScope(a))S.leaving[a.id]=1;});}
@@ -1200,6 +1214,11 @@ function afterChange(ids){
     else if(S.cond&&!visibleRows().length)pickTab();
     render();},Object.keys(S.leaving).length?1400:0);
 }
+function moveWithAlert(ids,st){var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
+  function go(){doMove(ids,st);var n=leaveNote(ids);S.sel={};afterChange(ids);toast(ids.length+"명을 "+STAGES[st]+"(으)로 이동했습니다."+n);}
+  alertDlg(who+'에게<br>면접을 제안할까요?','건너뛰면 나중에 지원자 상세에서<br>제안할 수 있습니다.','건너뛰기','면접 제안하기',function(){go();openAD(ids[0]);S.ad.drawer=true;S.ad.newProp=true;renderAD();},go);}
+function judgeWithAlert(ids,r){var nm=r==="pass"?"최종 합격":"불합격";
+  alertDlg(nm+' 처리할까요?','지원자에게 알림이 자동 발송되지 않습니다.<br>필요한 경우 별도로 안내해 주세요.','취소',nm,function(){doFinal(ids,r);S.sel={};afterChange(ids);toastAct(nm+" 처리했습니다. 지원자에게 결과를 안내할까요?",["나중에","지금 안내하기"]);},null,r!=="pass");}
 function selected(){return Object.keys(S.sel).filter(function(k){return S.sel[k];});}
 function doMove(ids,st){ids.forEach(function(id){var a=findA(id);if(a.final)return;a.stage=st;a.se=0;if(st===3)a.final="pass";});}
 function doFinal(ids,r){ids.forEach(function(id){var a=findA(id);a.final=r;if(r==="pass")a.stage=3;});}
@@ -1259,7 +1278,7 @@ document.addEventListener("click",function(e){
   if(d.addrawerx!==undefined){S.ad.drawer=false;renderAD();return;}
   if(d.adconfirm!==undefined){S.ad.confirm=true;renderAD();return;}
   if(d.adconfirmx!==undefined){S.ad.confirm=false;renderAD();return;}
-  if(d.adsend!==undefined){var a1=findA(S.ad.id),was=a1.iv.k;a1.iv={k:"p"};S.ad.log.push(was==="r"?"chg":"chg2");S.ad.drawer=false;S.ad.view="chat";var n1=leaveNote([a1.id]);afterChange([a1.id]);renderAD();toast("면접 제안을 변경했습니다."+n1);return;}
+  if(d.adsend!==undefined){var a1=findA(S.ad.id),was=a1.iv.k;a1.iv={k:"p"};if(S.ad.newProp){S.ad.newProp=false;S.ad.drawer=false;S.ad.view="chat";afterChange([a1.id]);renderAD();toast("면접 제안을 보냈습니다.");return;}S.ad.log.push(was==="r"?"chg":"chg2");S.ad.drawer=false;S.ad.view="chat";var n1=leaveNote([a1.id]);afterChange([a1.id]);renderAD();toast("면접 제안을 변경했습니다."+n1);return;}
   if(d.adcancel!==undefined){var a2=findA(S.ad.id);a2.iv={k:"none"};S.ad.log.push("cancel");S.ad.confirm=false;S.ad.view="chat";var n2=leaveNote([a2.id]);afterChange([a2.id]);renderAD();toast("면접을 취소했습니다."+n2);return;}
   if(d.scn){scenario(d.scn);return;}
   if(d.menu){
@@ -1269,11 +1288,13 @@ document.addEventListener("click",function(e){
     else m.innerHTML='<button type="button" data-bfinal="pass">최종합격</button><button type="button" data-bfinal="fail">불합격</button>';
     t.appendChild(m);return;
   }
-  if(d.bmove){var ids=selected();doMove(ids,+d.bmove);var n1=leaveNote(ids);S.sel={};afterChange(ids);toast(ids.length+"명을 "+STAGES[+d.bmove]+" 단계로 이동했습니다."+n1);return;}
-  if(d.bfinal){var ids2=selected();doFinal(ids2,d.bfinal);var n2=leaveNote(ids2);S.sel={};afterChange(ids2);toast(ids2.length+"명을 "+(d.bfinal==="pass"?"최종합격":"불합격")+" 처리했습니다."+n2);return;}
-  if(t.id==="bView"){var ids3=selected();ids3.forEach(function(id){var a=findA(id);if(a.lv<0)a.lv=0;});var n3=leaveNote(ids3);S.sel={};afterChange(ids3);toast(ids3.length+"명을 열람 처리했습니다."+n3);return;}
-  if(d.dmove){var st=+$("dStage").value;doMove([d.dmove],st);var n4=leaveNote([d.dmove]);closeOverlay();afterChange([d.dmove]);toast(STAGES[st]+" 단계로 이동했습니다."+n4);return;}
-  if(d.dfinal){doFinal([d.id],d.dfinal);var n5=leaveNote([d.id]);closeOverlay();afterChange([d.id]);toast((d.dfinal==="pass"?"최종합격":"불합격")+" 처리했습니다."+n5);return;}
+  if(d.bmove){var ids=selected(),st0=+d.bmove;closePops();moveWithAlert(ids,st0);return;}
+  if(d.bfinal){var ids2=selected(),r2=d.bfinal;closePops();judgeWithAlert(ids2,r2);return;}
+  if(d.alx!==undefined){var cb=ALERT_CB;closeAlert();ALERT_CB=null;if(cb){if(d.alx==="1"&&cb.ok)cb.ok();if(d.alx==="0"&&cb.cancel)cb.cancel();}return;}
+  if(d.tact!==undefined){$("toast").hidden=true;if(d.tact==="1")toast("결과 안내 화면은 프로토타입 범위 밖입니다");return;}
+  if(t.id==="bView"){var ids3=selected();ids3.forEach(function(id){var a=findA(id);if(a.lv<0)a.lv=0;});S.sel={};afterChange(ids3);return;}/* 열람 처리: '미열람' 배지만 사라짐, 토스트 없음 */
+  if(d.dmove){var st=+$("dStage").value;closeOverlay();moveWithAlert([d.dmove],st);return;}
+  if(d.dfinal){var r5=d.dfinal,id5=d.id;closeOverlay();judgeWithAlert([id5],r5);return;}
   if(d.ivact){var a=findA(d.id);a.iv=d.ivact==="repropose"?{k:"p"}:{k:"none"};var n6=leaveNote([d.id]);closeOverlay();afterChange([d.id]);toast((d.ivact==="repropose"?"수정한 일정으로 다시 제안했습니다.":"면접을 취소했습니다.")+n6);return;}
   if(d.mgo){closeOverlay();enter(d.mgo,d.mcond?+d.mcond:null,true);if(d.mcond)toast(cond(+d.mcond).how);return;}
   if(t.id==="mCta"){closeOverlay();enter("A",null,true);return;}
