@@ -940,12 +940,14 @@ function visibleRows(){
   if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (c.inScope(a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}
   return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
+/* 완료 empty: 조건 이름 대신 끝낸 행동으로 말하고, '처리' 반복을 피함. 조건 완료 시 남은 조건 중 인원이 가장 많은 1개만 이어서 제안 */
+var DONE_T={1:"최종합격 · 불합격 심사를 모두 마쳤습니다",2:"현재 단계에 머물던 지원자를 모두 정리했습니다",3:"지원서를 모두 열람했습니다",4:"열람한 지원자의 다음 단계를 모두 정했습니다",6:"일정 변경 요청에 모두 답했습니다",7:"면접 결과를 모두 반영했습니다"};
+var WAIT_T={1:"최종합격 · 불합격을",2:"단계 이동이나 심사를",3:"지원서 열람을",4:"다음 단계 결정을",6:"일정 변경 답변을",7:"면접 결과 반영을"};
 function doneHtml(){
-  if(S.done==="all")return '<div class="dempty">'+I("ok")+'<b>처리 대기 중인 지원자를 모두 처리했습니다</b><span>지원자가 결과를 기다리지 않도록 끝까지 챙겨 주셨습니다.<br>새로 기준일을 넘긴 지원자가 생기면 다시 알려 드립니다.</span><div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체 보기</button></div></div>';
-  var dc=cond(S.doneCond),rest=CONDS.map(function(c){return {c:c,n:overListP(c).length};}).filter(function(x){return x.n;}).sort(function(a,b){return b.n-a.n;}),nx=rest[0];
-  return '<div class="dempty">'+I("ok")+'<b>‘'+esc(dc.t)+'’ 조건의 지원자를 모두 처리했습니다</b><span>처리 대기 중인 조건이 '+rest.length+'개 남아 있습니다.</span>'+
-    '<ul class="drest">'+rest.map(function(x){return '<li><button type="button" data-fcond="'+x.c.id+'"><span class="t">'+esc(x.c.t)+'<small>'+esc(x.c.sub)+'</small></span><span class="n">'+x.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
-    '<p class="dq">‘'+esc(nx.c.t)+'’ 조건도 지금 처리할까요?</p><div class="dbtns"><button type="button" class="bt sec" data-dall>지원자 전체 보기</button><button type="button" class="bt pri" data-fcond="'+nx.c.id+'">지금 하기</button></div></div>';}
+  if(S.done==="all")return '<div class="dempty">'+I("ok")+'<b>기다리던 지원자를 모두 처리했습니다</b><span>새로 기준일을 넘긴 지원자가 생기면 다시 알려 드립니다.</span><div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div></div>';
+  var rest=CONDS.map(function(c,i){return {c:c,n:overListP(c).length,i:i};}).filter(function(x){return x.n;}).sort(function(a,b){return b.n-a.n||a.i-b.i;}),nx=rest[0];
+  return '<div class="dempty">'+I("ok")+'<b>'+DONE_T[S.doneCond]+'</b>'+
+    (nx?'<span>'+WAIT_T[nx.c.id]+' 기다리는 지원자가 '+nx.n+'명 남아 있습니다.</span><div class="dbtns"><button type="button" class="bt sec" data-dall>지원자 전체보기</button><button type="button" class="bt pri" data-fcond="'+nx.c.id+'">이어서 하기</button></div>':'<div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div>')+'</div>';}
 function renderList(){
   if(S.done){$("list").innerHTML=doneHtml();$("list").style.gridTemplateColumns="";return;}
   var rows=visibleRows();
