@@ -637,12 +637,18 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .cin{display:flex;gap:8px}.cin input{flex:1;height:40px;border:1px solid #d1d6da;border-radius:8px;padding:0 12px;font:inherit;font-size:13px}
 .cin .send{width:40px;height:40px;border-radius:50%;background:#1b55f6;color:#fff;display:grid;place-items:center}.cin .send .ic{transform:rotate(-90deg)}
 .cft p{margin:0;font-size:11px;color:#9ea8af;display:flex;gap:4px;align-items:center}
-.cbody.pv{gap:16px}
+.cbody.pv{gap:20px;padding:0 0 16px}
+.cbody.pv>:not(.pvbar){margin:0 24px}
+.pvbar{background:#eef3ff;color:#1b55f6;font-size:13px;line-height:20px;text-align:center;padding:12px 16px;margin:0}
+.cban{margin:12px 16px 0;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 14px;border-radius:10px;background:#fff;border:1px solid #e2e6e8;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.cban div{flex:1;display:flex;flex-direction:column;font-size:12px;line-height:18px;color:#6c767f}.cban b{font-size:13px;color:#1b55f6;font-weight:600}
+.cbtn.off{background:#f4f6f7;border-color:#f4f6f7;color:#9ea8af;font-weight:600}.cbtn.off .ic{color:#9ea8af}
+.cbg.red{background:#ffecec;color:#f22a23}
 .reqbox{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:10px;background:#fff6f5;border:1px solid #ffd3d0;font-size:12px;color:#6c767f}
 .reqbox.gray{background:#f4f6f7;border-color:#e2e6e8}
 .reqbox b{display:flex;align-items:center;gap:6px;font-size:14px;color:#131618}.reqbox b .ic{color:#f22a23}.reqbox.gray b .ic{color:#6c767f}
 .reqbox q{margin-top:6px;padding:8px 10px;background:#fff;border-radius:6px;font-size:13px;color:#30363c;quotes:none}
-.pvl{display:grid;grid-template-columns:72px 1fr;gap:10px 8px;margin:0;font-size:13px;line-height:20px}.pvl dt{font-weight:600;color:#131618}.pvl dd{margin:0;color:#30363c}
+.pvl{display:flex;flex-direction:column;gap:4px;margin:0;font-size:13px;line-height:20px}.pvl dt{font-weight:600;color:#131618;margin-top:12px}.pvl dt:first-child{margin-top:0}.pvl dd{margin:0;color:#30363c}
 .pvt{font-size:13px;font-weight:600}.pvt small{font-weight:400;color:#9ea8af;margin-left:4px}
 .pvo{display:flex;flex-wrap:wrap;gap:6px}.pvo span{border:1px solid #d1d6da;border-radius:6px;padding:4px 8px;font-size:12px}.pvo span.x{color:#9ea8af;text-decoration:line-through}
 .pvn{margin:0;font-size:12px;color:#f22a23}
@@ -1147,29 +1153,26 @@ function renderAD(){
   var sent=S.ad.sent,reqd=S.ad.reqd;
   var opts=[dOff(3),dOff(4),dOff(5)];
   function bubbleBtn(badge,cls){return '<button type="button" class="cbtn" data-adprev>'+I("cal")+'<b>면접 제안</b>'+(badge?'<span class="cbg '+cls+'">'+badge+'</span>':'')+'<span class="cv">'+I("chev")+'</span></button>';}
+  var chg=S.ad.log.indexOf("chg")>=0,cxl=S.ad.log.indexOf("cancel")>=0;
+  var firstBtn=cxl?bubbleBtn("취소","red"):(chg?'<span class="cbtn off">'+I("x")+'면접 제안</span>':bubbleBtn(req?"변경요청":(pend?"응답 대기":""),req?"yel":"gray"));
   var hist='<span class="cday">'+fmt(sent).replace(/\((.)\)/," $1요일")+'</span>'+
-    '<div class="cm me"><div class="bub">면접 제안이 발송되었습니다.'+bubbleBtn(S.ad.log.length?"":(req?"변경요청":(pend?"응답 대기":"")),req?"yel":"gray")+'</div><span class="cts">Bot · 오전 11:22</span></div>';
-  if(req||S.ad.log.indexOf("chg")>=0||S.ad.log.indexOf("cancel")>=0&&a.iv.k==="none"&&S.ad.wasReq){}
-  if(S.ad.wasReq===undefined)S.ad.wasReq=req;
-  if(S.ad.wasReq){hist+='<div class="cm you"><div class="bub">가능한 일정이 없어서 변경 요청하려는데 괜찮나요?</div><span class="cts">오전 11:22</span></div>'+
-    '<div class="cm me"><div class="bub">네, 변경 요청해 주세요.</div><span class="cts">오전 11:22</span></div>'+
-    '<span class="cday">'+fmt(reqd).replace(/\((.)\)/," $1요일")+'</span>'+
-    '<div class="cm you'+(req?' hot':'')+'"><div class="bub">면접 일정 변경을 요청했습니다.</div><span class="cts">Bot · 오후 3:10</span></div>';}
+    '<div class="cm me"><div class="bub">'+(cxl?'면접 취소되었습니다.':'면접 제안이 발송되었습니다.')+firstBtn+'</div><span class="cts">Bot · 오전 11:22</span></div>';
+  if(S.ad.wasReq){hist+='<span class="cday">'+fmt(reqd).replace(/\((.)\)/," $1요일")+'</span>'+
+    '<div class="cm you"><div class="bub">면접 일정 변경을 요청했습니다.</div><span class="cts">Bot · 오후 3:10</span></div>';}
   S.ad.log.forEach(function(l){hist+='<span class="cday">'+fmt(TODAY).replace(/\((.)\)/," $1요일")+'</span>'+(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","blue")+'</div><span class="cts">Bot · 방금</span></div>');});
   var chat;
   if(S.ad.view==="prev"){
     chat='<div class="chd"><button type="button" class="back" data-adchat aria-label="채팅으로">'+I("chev")+'</button><b>면접 제안 미리보기</b></div><div class="cbody pv">'+
-      (req?'<div class="reqbox"><b>'+I("alert")+'지원자가 일정 변경을 요청했습니다</b><span>'+fmt(reqd)+' 요청 · '+rn+'일째 응답 없음</span><q>가능한 일정이 없어서 변경 요청하려는데 괜찮나요?</q></div>':'')+
+      (req?'<div class="pvbar">새 일정으로 변경하거나 면접을 취소해 주세요.</div>':'')+
       (pend?'<div class="reqbox gray"><b>'+I("info")+'지원자의 응답을 기다리고 있습니다</b><span>'+fmt(sent)+' 발송 · 답변 기한 '+fmt(dOff(1))+'</span></div>':'')+
       '<dl class="pvl"><dt>면접 유형</dt><dd>대면 면접</dd><dt>면접 장소</dt><dd>서울시 서초구 서초대로 301 동익성봉빌딩 18층</dd><dt>안내 사항</dt><dd>18층 입구에서 인사 담당자 김잡코(010-1234-5678)에게 연락 주세요.</dd></dl>'+
-      '<div class="pvt">면접 제안일 <small>한국 표준시(KST) 기준</small></div><div class="pvo">'+opts.map(function(d){return '<span'+(req?' class="x"':'')+'>'+fmt(d)+' 오전 10:00</span>';}).join("")+'</div>'+
-      (req?'<p class="pvn">지원자가 위 일정에 참석이 어렵다고 요청했습니다. 새 일정으로 변경하거나 면접을 취소해 주세요.</p>':'')+
+      '<div class="pvt">면접 제안일 <small>한국 표준시(KST) 기준</small></div><div class="pvo">'+opts.map(function(d){return '<span>'+fmt(d)+' 오전 10:00</span>';}).join("")+'</div>'+
       '</div>'+(k==="none"?'':'<div class="cft2"><button type="button" class="bt sec" data-adconfirm>'+(req?'면접 취소':'제안 취소')+'</button><button type="button" class="bt pri" data-addrawer>면접 제안 변경</button></div>');
   }else{
     chat='<div class="chd"><b>지원자에게 연락하기</b></div>'+
-      (req?'<div class="cnote">'+I("alert")+'<div><b>일정 변경 요청이 '+rn+'일째 기다리고 있습니다</b><span>새 일정으로 변경하거나 면접을 취소해 주세요.</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
+      (req?'<div class="cban"><div><b>일정 변경 요청이 왔습니다</b><span>요청 후 '+rn+'일 경과</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
       '<div class="cbody">'+hist+'</div>'+
-      '<div class="cft"><button type="button" class="ivchip" data-addrawer>'+I("cal")+'면접 제안하기</button><div class="cin"><input placeholder="지원자에게 연락해 보세요." aria-label="메시지"><button type="button" class="send" data-todo aria-label="보내기">'+I("chev")+'</button></div><p>'+I("info")+'주민등록번호 등 민감한 개인정보 입력에 주의해 주세요.</p></div>';
+      '<div class="cft">'+(req?'':'<button type="button" class="ivchip" data-addrawer>'+I("cal")+'면접 제안하기</button>')+'<div class="cin"><input placeholder="지원자에게 연락해 보세요." aria-label="메시지"><button type="button" class="send" data-todo aria-label="보내기">'+I("chev")+'</button></div><p>'+I("info")+'주민등록번호 등 민감한 개인정보 입력에 주의해 주세요.</p></div>';
   }
   var rail=[["move","단계 이동"],["check","최종 합격"],["x","불합격"],["edit","내 메모"],["down","다운로드"],["more","더보기"]].map(function(r){return '<button type="button" data-todo>'+I(r[0])+'<span>'+r[1]+'</span></button>';}).join("");
   var doc='<div class="adhd"><span class="bdg line">'+STAGES[a.stage]+'</span><span>'+esc(a.pos)+'</span><span>'+I("mail")+'applicant@email.com</span><span>010-1234-5678</span></div>'+
@@ -1185,7 +1188,7 @@ function renderAD(){
      '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label><label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
      '<div class="fld"><label>면접 장소</label><span class="fin wide">서울시 서초구 서초대로 301 동익성봉빌딩 18층</span></div>'+
      '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':' 님에게 변경 내용 보내기')+'</button></div></aside>':'';
-  var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠습니까?':'면접 제안을 취소하시겠습니까?')+'</h3><p>지원자에게 취소 안내가 발송되며, 되돌릴 수 없습니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
+  var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠어요?':'면접 제안을 취소하시겠어요?')+'</h3><p>취소 후 복구할 수 없으며, 지원자에게 면접 취소 안내가 발송됩니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
   $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
   var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
 }
