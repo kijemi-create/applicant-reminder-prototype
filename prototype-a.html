@@ -1139,7 +1139,7 @@ function sheet(title,body,foot){
 function openApplicant(id){
   var a=findA(id),first=a.lv<0;if(first)a.lv=0;
   sheet(esc(a.name)+' 지원서',
-    (first?'<div class="ibox">'+I("info")+'<div>이력서를 열어 열람 처리되었습니다. ‘미열람’ 조건에서 제외됩니다.</div></div>':'')+
+    (first?'<div class="ibox">'+I("info")+'<div>이력서를 열어 열람 처리되었습니다.</div></div>':'')+
     '<div><div class="sec-t"><b>지원 정보</b><span>(만 '+a.age+'세, '+a.g+')</span></div><dl class="kv" style="margin:0"><dt>현재 단계</dt><dd>'+stBadge(a)+'</dd><dt>지원일</dt><dd>'+fmt(dOff(-a.applied))+'</dd><dt>단계 진입일</dt><dd>'+fmt(dOff(-a.se))+' · '+a.se+'일째</dd><dt>학력</dt><dd>'+a.edu[0]+' · '+a.edu[1]+' '+a.edu[2]+'</dd><dt>경력</dt><dd>'+a.car[0]+' · '+a.car[1]+'</dd></dl></div>'+
     '<div><div class="sec-t"><b>이력서</b></div><div class="paper"><div class="ph" style="width:46%"></div><div class="ph" style="width:92%"></div><div class="ph" style="width:84%"></div><div class="ph" style="width:70%"></div><div class="ph" style="width:88%"></div><div class="ph" style="width:60%"></div></div></div>',
     a.final?'<span style="font-size:14px;color:var(--gray-600)">최종 결과가 입력된 지원자입니다</span>':
