@@ -702,6 +702,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .toast.act .tw{display:flex;gap:8px;align-items:flex-start}
 .toast.act .ta{display:flex;justify-content:flex-end;gap:12px}
 .toast.act .ta button{color:#c0c7cd;font-size:13px;font-weight:600}.toast.act .ta button+button{color:#fff}
+
+.qck{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 6px;font-size:14px;color:#30363c;white-space:nowrap}
+.qck .ck{width:20px;height:20px;pointer-events:none}
+.qck:disabled{color:#c0c7cd;cursor:not-allowed}.qck:disabled .ck{background:#f4f6f7;border-color:#e2e6e8}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
@@ -732,7 +736,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
       <div class="tool">
         <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
         <span class="sp"></span>
-        <span class="fwrap"><button type="button" class="vsel" id="qvBtn" data-fmenu="view" data-r="1" aria-haspopup="menu"></button></span>
+        <button type="button" class="qck" id="qvU" data-qck="u"><span class="ck"></span>미열람 지원자만 보기</button>
+        <button type="button" class="qck" id="qvN" data-qck="n" title="합불은 정했지만 결과를 안내하지 않은 지원자"><span class="ck"></span>안내 전 지원자만 보기</button>
         <span class="vdiv"></span>
         <button type="button" class="ibtn" data-todo aria-label="검색"><span class="ic" data-i="search"></span></button>
         <span class="fwrap"><button type="button" class="ibtn" id="tbSort" data-fmenu="sort" data-r="1" aria-label="정렬"><span class="ic" data-i="sort"></span></button></span>
@@ -884,8 +889,8 @@ var FCATS=[
 var FG={};FCATS.forEach(function(c){c.g.forEach(function(g){FG[g.k]=g;});});
 var FTOTAL=FCATS.reduce(function(s,c){return s+c.g.reduce(function(t,g){return t+(g.o?g.o.length:0);},0);},0);
 function fCount(f){return Object.keys(f).reduce(function(s,k){return s+f[k].length;},0);}
-function passF(a){if(S.qv==="unread"&&!(a.lv<0))return false;if(S.qv==="notice"&&!(a.final&&!a.noticed))return false;return Object.keys(S.f).every(function(k){var vs=S.f[k];return !vs.length||vs.some(function(v){return FG[k].f(a,v);});});}
-function fActive(){return !!S.qv||fCount(S.f)>0;}
+function passF(a){if(S.qvU&&!(a.lv<0))return false;if(S.qvN&&!(a.final&&!a.noticed))return false;return Object.keys(S.f).every(function(k){var vs=S.f[k];return !vs.length||vs.some(function(v){return FG[k].f(a,v);});});}
+function fActive(){return !!(S.qvU||S.qvN)||fCount(S.f)>0;}
 var QV=[{v:null,t:"전체 지원자"},{v:"unread",t:"미열람 지원자"},{v:"notice",t:"결과 안내 전 지원자",d:"합불은 정했지만 결과를 안내하지 않은 지원자"}];
 /* 조건을 바꿔도 사용자가 건 필터는 유지. 새 조건 범위 밖 값만 빼고, 칩은 남김 */
 function pruneF(){Object.keys(S.f).forEach(function(k){var g=FG[k];if(g&&g.o)S.f[k]=S.f[k].filter(function(v){return !isOut(g,v);});});}
@@ -1027,7 +1032,8 @@ function renderFbar(){
   h=left+(left?'<span class="fdiv" aria-hidden="true"></span>':'')+rest;/* 조건 칩과 필터 사이 세로 구분선 (피그마) */
   /* 처리할 지원자도, 건 정렬·필터도 없으면 줄 전체를 숨겨 실서비스 화면과 같게 */
   $("fbar").hidden=!h;$("fbar").innerHTML=h;
-  var qv=QV.find(function(x){return x.v===S.qv;});$("qvBtn").innerHTML=qv.t+'<span class="cv">'+I("chev")+'</span>';$("qvBtn").classList.toggle("on",!!S.qv);
+  /* 피그마: '전체 지원자' 셀렉트 대신 체크 필터 2개. 조건 목록(최종 결과 전 지원자)에서는 '안내 전'은 비활성 */
+  $("qvU").querySelector(".ck").classList.toggle("on",!!S.qvU);$("qvN").querySelector(".ck").classList.toggle("on",!!S.qvN);$("qvN").disabled=!!S.cond;
   $("tbSort").classList.toggle("on",!!S.sort);/* 정렬 규칙: 조건의 기본 순서는 알리지 않음. 사용자가 직접 고른 정렬만 활성 표시 */
 }
 function dfmt(d){return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}
@@ -1215,8 +1221,15 @@ function afterChange(ids){
     render();},Object.keys(S.leaving).length?1400:0);
 }
 function moveWithAlert(ids,st){var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
-  function go(){doMove(ids,st);var n=leaveNote(ids);S.sel={};afterChange(ids);toast(ids.length+"명을 "+STAGES[st]+"(으)로 이동했습니다."+n);}
-  alertDlg(who+'에게<br>면접을 제안할까요?','건너뛰면 나중에 지원자 상세에서<br>제안할 수 있습니다.','건너뛰기','면접 제안하기',function(){go();openAD(ids[0]);S.ad.drawer=true;S.ad.newProp=true;renderAD();},go);}
+  function go(){doMove(ids,st);S.sel={};afterChange(ids);toast(ids.length+"명의 지원자를 다른 단계로 이동했습니다.");}
+  alertDlg(who+'에게<br>면접을 제안할까요?','건너뛰면 나중에 지원자 상세에서<br>제안할 수 있습니다.','건너뛰기','면접 제안하기',function(){go();openPropDrawer(ids);},go);}
+/* 면접 제안하기 드로어 단독 (지원자 상세로 이동하지 않음) */
+function openPropDrawer(ids){var a=findA(ids[0]),who=esc(a.name)+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
+  $("overlay").innerHTML='<button type="button" class="ddim" data-close aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안하기"><div class="dh"><h2>면접 제안하기</h2><button type="button" class="xbtn" data-close aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
+   '<div class="fld"><label>면접 제안일 <i>*</i> <small>현재 기준 3시간 이후부터 선택 가능 · 한국 표준시(KST) 기준</small></label><div class="frow"><span class="fin">'+dfmt(dOff(7))+I("cal")+'</span><span class="fin sel">오전 09:00</span><span class="tl">~</span><span class="fin sel">오전 10:00</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div><button type="button" class="fadd2" data-todo>'+I("plus")+'제안일 추가</button></div>'+
+   '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===0?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
+   '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label><label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
+   '</div><div class="df"><button type="button" class="bt pri lg" data-propsend="'+ids.join(",")+'">'+who+' 님에게 보내기</button></div></aside>';}
 function judgeWithAlert(ids,r){var nm=r==="pass"?"최종 합격":"불합격";
   alertDlg(nm+' 처리할까요?','지원자에게 알림이 자동 발송되지 않습니다.<br>필요한 경우 별도로 안내해 주세요.','취소',nm,function(){doFinal(ids,r);S.sel={};afterChange(ids);toastAct(nm+" 처리했습니다. 지원자에게 결과를 안내할까요?",["나중에","지금 안내하기"]);},null,r!=="pass");}
 function selected(){return Object.keys(S.sel).filter(function(k){return S.sel[k];});}
@@ -1238,14 +1251,14 @@ document.addEventListener("click",function(e){
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
-  if(d.apply){S.done=null;toast(cond(+d.apply).how);if(S.qv==="notice")S.qv=null;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
+  if(d.apply){S.done=null;toast(cond(+d.apply).how);S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
   if(t.id==="cclear"){S.done=null;S.cond=null;S.sel={};S.sort=null;render();return;}
   if(d.fmenu){openF(t);return;}
   if(d.dall!==undefined){S.done=null;S.cond=null;S.sort=null;S.sel={};pickTab();closeF();render();return;}
-  if(d.fcond){S.done=null;toast(cond(+d.fcond).how);if(S.qv==="notice")S.qv=null;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
+  if(d.fcond){S.done=null;toast(cond(+d.fcond).how);S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.sug){toast(cond(+d.sug).how);S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
-  if(d.freset!==undefined){S.f={};S.qv=null;S.sort=null;S.sel={};render();return;}
-  if(d.qv!==undefined){S.qv=d.qv||null;S.sel={};closeF();render();return;}
+  if(d.freset!==undefined){S.f={};S.qvU=S.qvN=false;S.sort=null;S.sel={};render();return;}
+  if(d.qck){if(d.qck==="u")S.qvU=!S.qvU;else S.qvN=!S.qvN;S.sel={};closeF();render();return;}
   if(d.fsheet!==undefined){openFilterSheet();return;}
   if(d.dinp){var cv=(S.f.date||[])[0],base=S.dp?S.dp.base:new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1);S.dp={k:"date",which:d.dinp,s:S.dp?S.dp.s:(cv?cv.s:null),e:S.dp?S.dp.e:(cv?cv.e:null),base:base};reopenDate();return;}
   if(d.dnav){S.dp.base=new Date(S.dp.base.getFullYear(),S.dp.base.getMonth()+(+d.dnav),1);reopenDate();return;}
@@ -1290,9 +1303,10 @@ document.addEventListener("click",function(e){
   }
   if(d.bmove){var ids=selected(),st0=+d.bmove;closePops();moveWithAlert(ids,st0);return;}
   if(d.bfinal){var ids2=selected(),r2=d.bfinal;closePops();judgeWithAlert(ids2,r2);return;}
+  if(d.propsend){var pids=d.propsend.split(",");pids.forEach(function(id){findA(id).iv={k:"p"};});closeOverlay();afterChange(pids);toast("면접 제안을 보냈습니다.");return;}
   if(d.alx!==undefined){var cb=ALERT_CB;closeAlert();ALERT_CB=null;if(cb){if(d.alx==="1"&&cb.ok)cb.ok();if(d.alx==="0"&&cb.cancel)cb.cancel();}return;}
   if(d.tact!==undefined){$("toast").hidden=true;if(d.tact==="1")toast("결과 안내 화면은 프로토타입 범위 밖입니다");return;}
-  if(t.id==="bView"){var ids3=selected();ids3.forEach(function(id){var a=findA(id);if(a.lv<0)a.lv=0;});S.sel={};afterChange(ids3);return;}/* 열람 처리: '미열람' 배지만 사라짐, 토스트 없음 */
+  if(t.id==="bView"){var ids3=selected();ids3.forEach(function(id){var a=findA(id);if(a.lv<0)a.lv=0;});S.sel={};afterChange(ids3);toast("열람했습니다");return;}/* 열람 처리: '미열람' 배지가 사라지고 토스트 '열람했습니다' (단건 · 다건 동일) */
   if(d.dmove){var st=+$("dStage").value;closeOverlay();moveWithAlert([d.dmove],st);return;}
   if(d.dfinal){var r5=d.dfinal,id5=d.id;closeOverlay();judgeWithAlert([id5],r5);return;}
   if(d.ivact){var a=findA(d.id);a.iv=d.ivact==="repropose"?{k:"p"}:{k:"none"};var n6=leaveNote([d.id]);closeOverlay();afterChange([d.id]);toast((d.ivact==="repropose"?"수정한 일정으로 다시 제안했습니다.":"면접을 취소했습니다.")+n6);return;}
@@ -1314,7 +1328,7 @@ document.addEventListener("input",function(e){if(e.target.id!=="faddq")return;va
 document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.psum){e.preventDefault();e.target.click();return;}if(e.key==="Escape"){closeOverlay();closePops();closeF();}});
 
 function enter(pid,c,fromMail){
-  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qv=null;S.justDone=null;S.done=null;S.from=fromMail?"mail":"popup";pickTab();render();
+  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qvU=S.qvN=false;S.justDone=null;S.done=null;S.from=fromMail?"mail":"popup";pickTab();render();
   if(fromMail){S.seen[pid]=true;return;}
   if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total)showSummary();}
 }
