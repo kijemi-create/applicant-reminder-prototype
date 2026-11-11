@@ -706,6 +706,14 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .qck{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 6px;font-size:14px;color:#30363c;white-space:nowrap}
 .qck .ck{width:20px;height:20px;pointer-events:none}
 .qck:disabled{color:#c0c7cd;cursor:not-allowed}.qck:disabled .ck{background:#f4f6f7;border-color:#e2e6e8}
+
+/* 테이블 헤더 툴팁 · 심사 후 행 (기존 정책) */
+.htip2{position:relative;display:inline-grid;vertical-align:middle;cursor:help}
+.htip2 .ic{width:16px;height:16px}
+.htip2:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#30363c;color:#fff;font-size:13px;font-weight:500;line-height:20px;padding:8px 12px;border-radius:8px;white-space:nowrap;z-index:20;box-shadow:0 4px 8px rgba(0,0,0,.12)}
+.lr.jfail>div:not(:last-child){opacity:.45}
+.fmk{display:inline-flex;align-items:center;gap:4px;margin-left:6px;font-size:12px;font-weight:600;color:#30363c}.fmk::before{content:"";width:4px;height:4px;border-radius:50%;background:#30363c}
+.ntd{align-self:flex-start;width:fit-content;display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;border-radius:999px;background:#e9f8ef;color:#02b160;font-size:12px;font-weight:600}.ntd::before{content:"";width:6px;height:6px;border-radius:50%;background:#02b160}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
@@ -908,7 +916,7 @@ function sortRows(r,c){var s=sortCur();
   return r;}
 var S;
 var S;
-function init(){S={db:build(),pid:"A",tab:0,cond:null,sel:{},seen:{},view:"app",leaving:{},sort:null,f:{},qv:null,justDone:null,from:"popup"};S.mailSnap={A:summary("A"),B:summary("B"),C:summary("C")};}
+function init(){S={db:build(),pid:"A",tab:0,cond:null,sel:{},seen:{},view:"app",leaving:{},kept:{},sort:null,f:{},qv:null,justDone:null,from:"popup"};S.mailSnap={A:summary("A"),B:summary("B"),C:summary("C")};}
 init();
 
 /* ---------- 렌더 ---------- */
@@ -941,11 +949,12 @@ function pickTab(){
 }
 function ck(on,attr){return '<button type="button" class="ck'+(on===true?' on':on==="part"?' part':'')+'" '+attr+' aria-pressed="'+(on===true)+'" aria-label="선택"></button>';}
 function who(a){
-  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.lv<0?'<span class="unrl">미열람</span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
+  return '<div class="who"><span class="av"><svg viewBox="0 0 36 36" aria-hidden="true">'+P.person+'</svg></span><div><div class="nmrow"><button type="button" class="nm" data-open="'+a.id+'">'+esc(a.name)+'</button><span class="star">'+I("star")+'</span>'+(a.final==="fail"?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'')+'</div><div class="age">(만 '+a.age+'세, '+a.g+')</div>'+(a.dup?'<span class="bdg gray sm" style="border:1px solid var(--gray-100);margin-top:4px">중복 지원자</span>':'')+'</div></div>';
 }
 function edu(a){return '<div><span class="t15">'+a.edu[0]+'</span><span class="t14">'+a.edu[1]+'</span><span class="t14 g">'+a.edu[2]+'</span></div>';}
 function car(a){return '<div><span class="t15">'+a.car[0]+'</span><span class="t14 g">'+a.car[1]+'</span></div>';}
 function ivCell(a){
+  if(a.final)return a.noticed?'<div><span class="ntd">결과 안내 완료</span></div>':'<div><button type="button" class="ob" data-notice="'+a.id+'">결과 안내하기</button></div>';/* 기존 정책: 심사 후 [결과 안내하기] → 안내 후 '결과 안내 완료' */
   switch(a.iv.k){
     case "p":return '<div><button type="button" class="ob pend" data-chat="'+a.id+'">면접 제안 확정 전</button></div>';
     case "r":return '<div><button type="button" class="ob req" data-chat="'+a.id+'">'+I("cal")+'일정 변경 요청 확인</button></div>';
@@ -958,7 +967,7 @@ function stBadge(a){if(a.final==="fail")return '<span class="bdg gray">불합격
 
 function visibleRows(){
   var l=S.db[S.pid].filter(posOK);
-  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id])&&a.stage===S.tab&&passF(a);}),c);}/* 조건 목록에는 조건에 해당하는(기준일을 넘긴) 지원자만 */
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id]||S.kept[a.id])&&a.stage===S.tab&&passF(a);}),c);}/* 조건 목록에는 조건에 해당하는(기준일을 넘긴) 지원자만 */
   return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
 /* 완료 empty: 조건 이름 대신 끝낸 행동으로 말하고, '처리' 반복을 피함. 조건 완료 시 남은 조건 중 인원이 가장 많은 1개만 이어서 제안 */
@@ -981,12 +990,13 @@ function renderList(){
   if(S.cond){
     var c=cond(S.cond);
     cols="60px 158px 260px 230px 230px 200px 1fr";
-    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>'+c.col+' '+I("sort")+'</div><div>면접 일정</div></div>';
+    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 현재 채용 단계에 머문 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     var nOver=rows.filter(function(a){return c.inScope(a)&&c.over(a);}).length;
     rows.forEach(function(a,i){
       var inS=c.inScope(a),ov=inList(c,a),el=c.el(a);
-      var chip=!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg yel">'+el+'일 경과</span>';/* 조건 목록의 경과일 배지는 모두 노랑(BZBadge outline yellow). 기준일을 넘긴 지원자만 빨간 dot */
-      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS?' out':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+(inS?fmt(dOff(-el)):'-')+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
+      var fin=!!a.final&&!!S.kept[a.id];
+      var chip=fin?'':!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg yel">'+el+'일 경과</span>';/* 조건 목록의 경과일 배지는 모두 노랑(BZBadge outline yellow). 기준일을 넘긴 지원자만 빨간 dot */
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS&&!fin?' out':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length&&fActive()){h+='<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>';}
     else if(!rows.length){
@@ -995,10 +1005,10 @@ function renderList(){
     }
   }else{
     cols="60px 158px 260px 230px 230px 200px 1fr";
-    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 '+I("info")+'</div><div>면접 일정</div></div>';
+    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 현재 채용 단계에 머문 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     rows.forEach(function(a){
-      var wait=a.final?stBadge(a):(a.se>=3?'<span class="bdg gray">현재 단계 '+a.se+'일째</span>':'');
-      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ALL.inScope(a)?' need':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
+      var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg gray">'+a.se+'일 경과</span>':'');
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ALL.inScope(a)?' need':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+=fActive()?'<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>':'<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
   }
@@ -1230,8 +1240,10 @@ function openPropDrawer(ids){var a=findA(ids[0]),who=esc(a.name)+(ids.length>1?'
    '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===0?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
    '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label><label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
    '</div><div class="df"><button type="button" class="bt pri lg" data-propsend="'+ids.join(",")+'">'+who+' 님에게 보내기</button></div></aside>';}
+function noticeWithAlert(ids){if(!ids.length)return;var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
+  alertDlg(who+'에게<br>결과를 안내할까요?','결과 안내 메시지가 지원자에게 발송됩니다.','취소','안내하기',function(){ids.forEach(function(id){findA(id).noticed=true;});render();toast("결과를 안내했습니다.");});}
 function judgeWithAlert(ids,r){var nm=r==="pass"?"최종 합격":"불합격";
-  alertDlg(nm+' 처리할까요?','지원자에게 알림이 자동 발송되지 않습니다.<br>필요한 경우 별도로 안내해 주세요.','취소',nm,function(){doFinal(ids,r);S.sel={};afterChange(ids);toastAct(nm+" 처리했습니다. 지원자에게 결과를 안내할까요?",["나중에","지금 안내하기"]);},null,r!=="pass");}
+  alertDlg(nm+' 처리할까요?','지원자에게 알림이 자동 발송되지 않습니다.<br>필요한 경우 별도로 안내해 주세요.','취소',nm,function(){doFinal(ids,r);if(S.cond)ids.forEach(function(id){S.kept[id]=1;});S.lastJ=ids;S.sel={};afterChange(ids);toastAct(nm+" 처리했습니다. 지원자에게 결과를 안내할까요?",["나중에","지금 안내하기"]);},null,r!=="pass");}
 function selected(){return Object.keys(S.sel).filter(function(k){return S.sel[k];});}
 function doMove(ids,st){ids.forEach(function(id){var a=findA(id);if(a.final)return;a.stage=st;a.se=0;if(st===3)a.final="pass";});}
 function doFinal(ids,r){ids.forEach(function(id){var a=findA(id);a.final=r;if(r==="pass")a.stage=3;});}
@@ -1251,11 +1263,11 @@ document.addEventListener("click",function(e){
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
-  if(d.apply){S.done=null;toast(cond(+d.apply).how);S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
-  if(t.id==="cclear"){S.done=null;S.cond=null;S.sel={};S.sort=null;render();return;}
+  if(d.apply){S.done=null;S.kept={};toast(cond(+d.apply).how);S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
+  if(t.id==="cclear"){S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;render();return;}
   if(d.fmenu){openF(t);return;}
-  if(d.dall!==undefined){S.done=null;S.cond=null;S.sort=null;S.sel={};pickTab();closeF();render();return;}
-  if(d.fcond){S.done=null;toast(cond(+d.fcond).how);S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
+  if(d.dall!==undefined){S.done=null;S.cond=null;S.kept={};S.sort=null;S.sel={};pickTab();closeF();render();return;}
+  if(d.fcond){S.done=null;S.kept={};toast(cond(+d.fcond).how);S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.sug){toast(cond(+d.sug).how);S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
   if(d.freset!==undefined){S.f={};S.qvU=S.qvN=false;S.sort=null;S.sel={};render();return;}
   if(d.qck){if(d.qck==="u")S.qvU=!S.qvU;else S.qvN=!S.qvN;S.sel={};closeF();render();return;}
@@ -1305,7 +1317,8 @@ document.addEventListener("click",function(e){
   if(d.bfinal){var ids2=selected(),r2=d.bfinal;closePops();judgeWithAlert(ids2,r2);return;}
   if(d.propsend){var pids=d.propsend.split(",");pids.forEach(function(id){findA(id).iv={k:"p"};});closeOverlay();afterChange(pids);toast("면접 제안을 보냈습니다.");return;}
   if(d.alx!==undefined){var cb=ALERT_CB;closeAlert();ALERT_CB=null;if(cb){if(d.alx==="1"&&cb.ok)cb.ok();if(d.alx==="0"&&cb.cancel)cb.cancel();}return;}
-  if(d.tact!==undefined){$("toast").hidden=true;if(d.tact==="1")toast("결과 안내 화면은 프로토타입 범위 밖입니다");return;}
+  if(d.tact!==undefined){$("toast").hidden=true;if(d.tact==="1")noticeWithAlert(S.lastJ||[]);return;}
+  if(d.notice){noticeWithAlert([d.notice]);return;}
   if(t.id==="bView"){var ids3=selected();ids3.forEach(function(id){var a=findA(id);if(a.lv<0)a.lv=0;});S.sel={};afterChange(ids3);toast("열람했습니다");return;}/* 열람 처리: '미열람' 배지가 사라지고 토스트 '열람했습니다' (단건 · 다건 동일) */
   if(d.dmove){var st=+$("dStage").value;closeOverlay();moveWithAlert([d.dmove],st);return;}
   if(d.dfinal){var r5=d.dfinal,id5=d.id;closeOverlay();judgeWithAlert([id5],r5);return;}
@@ -1328,7 +1341,7 @@ document.addEventListener("input",function(e){if(e.target.id!=="faddq")return;va
 document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.psum){e.preventDefault();e.target.click();return;}if(e.key==="Escape"){closeOverlay();closePops();closeF();}});
 
 function enter(pid,c,fromMail){
-  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qvU=S.qvN=false;S.justDone=null;S.done=null;S.from=fromMail?"mail":"popup";pickTab();render();
+  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qvU=S.qvN=false;S.justDone=null;S.done=null;S.kept={};S.from=fromMail?"mail":"popup";pickTab();render();
   if(fromMail){S.seen[pid]=true;return;}
   if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total)showSummary();}
 }
