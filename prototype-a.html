@@ -1005,7 +1005,7 @@ function renderList(){
     }
   }else{
     cols="60px 158px 260px 230px 230px 200px 1fr";
-    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 현재 채용 단계에 머문 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
+    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 처리를 기다린 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     rows.forEach(function(a){
       var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg gray">'+a.se+'일 경과</span>':'');
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ALL.inScope(a)?' need':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
