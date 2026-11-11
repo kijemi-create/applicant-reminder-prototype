@@ -990,7 +990,7 @@ function renderList(){
   if(S.cond){
     var c=cond(S.cond);
     cols="60px 158px 260px 230px 230px 200px 1fr";
-    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 현재 채용 단계에 머문 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
+    h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 처리를 기다린 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     var nOver=rows.filter(function(a){return c.inScope(a)&&c.over(a);}).length;
     rows.forEach(function(a,i){
       var inS=c.inScope(a),ov=inList(c,a),el=c.el(a);
