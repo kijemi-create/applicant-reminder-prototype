@@ -959,7 +959,7 @@ function ivCell(a){
     case "p":return '<div><button type="button" class="ob pend" data-chat="'+a.id+'">면접 제안 확정 전</button></div>';
     case "r":return '<div><button type="button" class="ob req" data-chat="'+a.id+'">'+I("cal")+'일정 변경 요청 확인</button></div>';
     case "c":return '<div><span class="ivd">'+fmt(dOff(a.iv.d))+'<small>오후 2:00</small></span></div>';
-    case "d":return '<div><span class="ivd">'+fmt(dOff(-a.iv.n))+'<small>면접 완료</small></span></div>';
+    case "d":return '<div><span class="ivd">'+fmt(dOff(-a.iv.n))+'<small>오전 10:00</small></span></div>';/* 일정 · 알림에 '면접 완료' 상태는 노출하지 않음 */
     default:return '<div><button type="button" class="ob" data-todo>면접 제안하기</button></div>';
   }
 }
