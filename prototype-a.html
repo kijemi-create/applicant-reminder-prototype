@@ -40,9 +40,9 @@ svg{flex:none}
 .gbtn .new{font-size:10px;font-weight:700;color:#1b55f6;background:#eef3ff;border-radius:4px;padding:1px 5px;letter-spacing:.02em}
 .gstack{position:fixed;right:24px;bottom:24px;z-index:45;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-height:calc(100vh - 48px)}
 .guide{position:relative;width:260px;overflow:auto;background:#fff;border:1px solid #e2e6e8;border-radius:12px;box-shadow:0 8px 24px rgba(19,22,24,.14);z-index:45;font-size:13px;overflow:hidden}
-.guide.min .gs,.guide.min .gf{display:none}.guide.min .gh{border-bottom:0;cursor:pointer}.guide.min{width:240px}
+.guide.min .gs,.guide.min .gf{display:none}.guide.min .gh{border-bottom:0;cursor:pointer}.guide.min{width:260px}
 .gmin .ex{display:none}.guide.min .gmin .ex{display:block}.guide.min .gmin .co{display:none}
-.gh{display:flex;align-items:center;justify-content:space-between;height:42px;padding:0 10px 0 14px;border-bottom:1px solid #eef0f2}.gh b{font-size:13px;font-weight:600}
+.gh{display:flex;align-items:center;justify-content:space-between;gap:8px;height:42px;padding:0 10px 0 14px;border-bottom:1px solid #eef0f2}.gh b{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gh .gmin{flex:none}
 .gmin{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;color:#6c767f}.gmin:hover{background:#f4f6f7}
 .gs{border-bottom:1px solid #eef0f2}
 .gt{width:100%;display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;font-size:13px;color:#131618;text-align:left}
@@ -74,16 +74,15 @@ svg{flex:none}
 
 .pbr{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
 .gbtn.sub{height:26px;font-size:12px;font-weight:500;color:#6c767f;padding:0 8px}.gbtn.sub:hover,.gbtn.sub[aria-expanded="true"]{color:#131618}
-.guide.drop{width:260px}.guide.drop.min{width:240px}
+.guide.drop{width:260px}.guide.drop.min{width:260px}
 .drs{margin:0 0 6px;padding:10px 12px;background:#f4f6f7;border-radius:6px;font-size:12px;line-height:18px;color:#30363c}
 .gi.dlink{text-decoration:none;color:#1b55f6;font-weight:600}.gi.dlink::before{background:#1b55f6}.gi.dlink span{margin-left:2px}
 
 /* 탈락 시안 뷰어: 지금 화면 위에서 B·C·D안을 열고, 그 위에 탈락 사유 */
 .rejv{position:fixed;inset:0;z-index:90;background:#e2e6e8;display:flex;flex-direction:column}
-.rjbar{height:52px;flex:none;display:flex;align-items:center;gap:12px;padding:0 20px;background:#202326;color:#fff}
-.rjtag{font-size:11px;font-weight:700;color:#ffb3b0;border:1px solid #6b3a38;border-radius:4px;padding:2px 6px}
-.rjtabs{display:flex;gap:4px}.rjtabs button{height:30px;padding:0 12px;border-radius:6px;font-size:13px;color:#adb5bd}.rjtabs button:hover{color:#fff}.rjtabs button.on{background:#3a3f44;color:#fff;font-weight:600}
-.rjbar .sp{flex:1}.rjback{height:36px;padding:0 16px 0 12px;border-radius:8px;background:#1b55f6;color:#fff;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:6px;box-shadow:0 0 0 3px rgba(27,85,246,.35)}.rjback:hover{background:#1446d4}.rjback svg{flex:none}
+.rjstack{z-index:91}.rjstack .gh{cursor:default}
+.rjback{height:30px;padding:0 12px 0 10px;border-radius:6px;background:#1b55f6;color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}.rjback:hover{background:#1446d4}
+.gi.cur{color:#131618;font-weight:600;background:#f4f6f7}.gi.cur::before{background:#1b55f6}
 .rjbody{position:relative;flex:1;min-height:0}.rjbody iframe{width:100%;height:100%;border:0;background:#fff;display:block}
 .rjwhy{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));background:#202326;color:#fff;border-radius:12px;padding:16px 18px 14px;box-shadow:0 10px 30px rgba(0,0,0,.28);font-size:13px;line-height:20px}
 .rjwhy b{display:block;font-size:14px;margin-bottom:4px;color:#ffb3b0}.rjwhy p{margin:0;color:#e3e7ea}
@@ -93,7 +92,6 @@ svg{flex:none}
 /* 시나리오 가이드 강조 · 탈락 시안은 보조 */
 #guide{border-color:#1b55f6;box-shadow:0 10px 28px rgba(27,85,246,.22)}
 #guide .gh{background:#1b55f6;border-bottom-color:#1b55f6}#guide .gh b{color:#fff;font-weight:700;font-size:14px}
-#guide .gh b::before{content:"NEW";font-size:10px;font-weight:700;color:#1b55f6;background:#fff;border-radius:4px;padding:1px 5px;margin-right:6px;vertical-align:1px}
 #guide .gmin{color:#fff}#guide .gmin:hover{background:rgba(255,255,255,.16)}
 .guide.drop{box-shadow:0 4px 12px rgba(19,22,24,.08)}.guide.drop .gh b{font-weight:500;color:#6c767f;font-size:12px}
 /* 팝업 닫기 · 조건 해제 직후 처리 대기 칩 어포던스 (피그마 100-19490) */
@@ -1390,8 +1388,10 @@ var REJ={b:{t:"B안 · 칩형",r:"'처리 대기중 지원자 12명' 칩이 처�
  c:{t:"C안 · 그룹형",r:"조건별 그룹마다 같은 지원자가 중복으로 보이는 구조라, 사용자 입장에서 혼란스러울 것 같아 탈락했습니다."},
  d:{t:"D안 · 배너형",r:"기존 띠 배너와 함께 노출되어 주목도가 떨어지고, 배너 내용이 지원자 목록과 연결되어 보이지 않아 탈락했습니다. 배너 조건으로 목록이 정렬되었다는 것도 알아차리기 어렵습니다."}};
 function openRej(k){var v=REJ[k];cmClear();var w=$("rejv");if(!w){w=document.createElement("div");w.id="rejv";w.className="rejv";document.body.appendChild(w);}
-  w.innerHTML='<div class="rjbar"><span class="rjtag">탈락한 시안</span><div class="rjtabs">'+["b","c","d"].map(function(x){return '<button type="button" data-rej="'+x+'"'+(x===k?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+REJ[x].t+'</button>';}).join("")+'</div><span class="sp"></span><button type="button" class="rjback" data-rejx><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>A안으로 돌아가기</button></div>'+
-   '<div class="rjbody"><iframe src="prototype-'+k+'.html" title="'+v.t+' 프로토타입"></iframe><div class="rjwhy" role="note"><b>'+v.t+' · 탈락 사유</b><p>'+v.r+'</p><button type="button" class="rjmin" data-rejmin aria-label="탈락 사유 접기">접기</button></div></div>';
+  w.innerHTML='<div class="rjbody"><iframe src="prototype-'+k+'.html" title="'+v.t+' 프로토타입"></iframe><div class="rjwhy" role="note"><b>'+v.t+' · 탈락 사유</b><p>'+v.r+'</p><button type="button" class="rjmin" data-rejmin aria-label="탈락 사유 접기">접기</button></div></div>'+
+   '<div class="gstack rjstack"><aside class="guide drop" aria-label="탈락한 시안"><div class="gh" data-ghead><b>탈락한 시안</b></div>'+
+   ["b","c","d"].map(function(x){var on=x===k;return '<div class="gs'+(on?' open':'')+'"><button type="button" class="gt" data-dstep="'+x.toUpperCase()+'" aria-expanded="'+on+'"><span class="gn">'+x.toUpperCase()+'</span>'+REJ[x].t+'<span class="gc"></span></button><div class="gsub">'+(on?'<span class="gi cur" aria-current="true">지금 보는 중</span>':'<button type="button" class="gi dlink" data-rej="'+x+'">'+REJ[x].t.split(" · ")[0]+' 프로토타입 보기</button>')+'</div></div>';}).join("")+
+   '<div class="gf"><button type="button" class="rjback" data-rejx><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>A안으로 돌아가기</button></div></aside></div>';
   document.documentElement.style.overflow="hidden";}
 function closeRej(){var w=$("rejv");if(w)w.remove();document.documentElement.style.overflow="";coachSoon();}
 function gPanel(pn,open){pn.classList.toggle("min",!open);if(open)document.querySelectorAll("#gstack .guide").forEach(function(o){if(o!==pn)o.classList.add("min");});}/* 우측 하단 가이드 · 탈락 시안: 하나를 펼치면 다른 하나는 접힘 */
@@ -1490,7 +1490,7 @@ document.addEventListener("click",function(e){
   if(d.fopt){var g=FG[d.fopt],v=g.o.find(function(o){return String(o.v)===d.v;}).v,arr=S.fd[d.fopt]||(S.fd[d.fopt]=[]),ix=arr.indexOf(v);if(ix>=0)arr.splice(ix,1);else arr.push(v);t.classList.toggle("on",ix<0);updFcnt();return;}
   if(d.fclear!==undefined){S.fd={};document.querySelectorAll(".pill.on").forEach(function(b){b.classList.remove("on");});updFcnt();return;}
   if(d.fapply!==undefined){Object.keys(S.fd).forEach(function(k){if(!S.fd[k].length)delete S.fd[k];});S.f=S.fd;S.sel={};closeOverlay();render();toast(fCount(S.f)?"필터를 적용했습니다. 이 단계에 "+visibleRows().length+"명이 보입니다.":"필터를 해제했습니다.");return;}
-  if(d.dstep){var g2=t.closest(".gs"),w2=g2.classList.contains("open");document.querySelectorAll("#drop .gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!w2){g2.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
+  if(d.dstep){var g2=t.closest(".gs"),w2=g2.classList.contains("open");t.closest(".guide").querySelectorAll(".gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!w2){g2.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
   if(d.gstep){var g=t.closest(".gs"),was=g.classList.contains("open");document.querySelectorAll("#guide .gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!was){g.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
   if(d.gmin!==undefined){var pn2=t.closest(".guide");gPanel(pn2,pn2.classList.contains("min"));t.blur();return;}
   if(d.rej){openRej(d.rej);return;}
