@@ -1376,7 +1376,7 @@ function openPropDrawer(ids){var a=findA(ids[0]),who=esc(a.name)+(ids.length>1?'
 function noticeWithAlert(ids){if(!ids.length)return;var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
   alertDlg(who+'에게<br>결과를 안내할까요?','결과 안내 메시지가 지원자에게 발송됩니다.','취소','안내하기',function(){ids.forEach(function(id){findA(id).noticed=true;});render();toast("결과를 안내했습니다.");});}
 function judgeWithAlert(ids,r){var nm=r==="pass"?"최종 합격":"불합격";
-  alertDlg(nm+' 처리할까요?','지원자에게 알림이 자동 발송되지 않습니다.<br>필요한 경우 별도로 안내해 주세요.','취소',nm,function(){doFinal(ids,r);if(S.cond)ids.forEach(function(id){S.kept[id]=1;});S.lastJ=ids;S.sel={};afterChange(ids);toastAct(nm+" 처리했습니다. 지원자에게 결과를 안내할까요?",["나중에","지금 안내하기"]);},null,r!=="pass");}
+  alertDlg(nm+' 처리할까요?','지원자에게 알림이 자동 발송되지 않습니다.<br>필요한 경우 별도로 안내해 주세요.','취소',nm,function(){doFinal(ids,r);/* 조건을 처리한 지원자는 조건 목록에서 바로 빠짐 (전체 지원자 목록에서는 그대로 보임) */S.lastJ=ids;S.sel={};afterChange(ids);toastAct(nm+" 처리했습니다. 지원자에게 결과를 안내할까요?",["나중에","지금 안내하기"]);},null,r!=="pass");}
 function selected(){return Object.keys(S.sel).filter(function(k){return S.sel[k];});}
 function doMove(ids,st){ids.forEach(function(id){var a=findA(id);if(a.final)return;a.stage=st;a.se=0;if(st===3)a.final="pass";});}
 function doFinal(ids,r){ids.forEach(function(id){var a=findA(id);a.final=r;if(r==="pass")a.stage=3;});}
