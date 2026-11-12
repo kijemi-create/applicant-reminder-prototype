@@ -745,6 +745,14 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .pvo{display:flex;flex-wrap:wrap;gap:6px}.pvo span{border:1px solid #d1d6da;border-radius:6px;padding:4px 8px;font-size:12px}.pvo span.x{color:#9ea8af;text-decoration:line-through}
 .pvn{margin:0;font-size:12px;color:#f22a23}
 .cft2{border-top:1px solid #e2e6e8;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+.frm{display:flex;align-items:center;justify-content:space-between}.frm>label{font-size:14px;font-weight:600;color:#131618}.frm>label i{color:#f22a23;font-style:normal}
+.tgl{width:44px;height:24px;border-radius:999px;background:#c0c7cd;position:relative;flex:none}.tgl::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}.tgl.on{background:#1b55f6}.tgl.on::after{left:22px}
+.gnote{background:#f4f6f7;border-radius:8px;padding:12px 16px;font-size:13px;color:#6c767f}
+.addr{display:flex;flex-direction:column;gap:8px;padding:4px 0 8px 32px}.arow{display:flex;gap:8px}.arow .fin{flex:1}
+.fin.ph{color:#9ea8af}.abtn{height:44px;padding:0 16px;border:1px solid #d1d6da;border-radius:8px;font-size:14px;font-weight:600;color:#30363c;flex:none}
+.ackl{display:flex;align-items:center;gap:8px;font-size:13px;color:#30363c}
+.fta{min-height:96px;border:1px solid #d1d6da;border-radius:8px;padding:12px 14px;font-size:14px;color:#9ea8af}
 .ddim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55}
 .ivdr{position:fixed;top:0;right:0;bottom:0;width:min(720px,100vw);background:#fff;z-index:56;display:flex;flex-direction:column}
 .ivdr .dh{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 24px;border-bottom:1px solid #e2e6e8}.ivdr .dh h2{margin:0;font-size:20px}
@@ -1334,15 +1342,10 @@ function renderAD(){
     '<div class="adcv"><h3>'+esc(a.name)+' 지원서</h3><p class="adn">'+esc(a.name)+' · '+a.g+', 만 '+a.age+'세</p>'+
     '<div class="sec-t"><b>경력</b></div><div class="paper"><div class="ph" style="width:46%"></div><div class="ph" style="width:92%"></div><div class="ph" style="width:84%"></div><div class="ph" style="width:70%"></div></div>'+
     '<div class="sec-t"><b>학력</b></div><div class="paper"><div class="ph" style="width:56%"></div><div class="ph" style="width:80%"></div></div></div>';
-  var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안"><div class="dh"><h2>'+(S.ad.newProp?'면접 제안하기':'면접 제안 변경')+'</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
-     (req?'<div class="ibox">'+I("info")+'<div>지원자가 요청한 일정 변경입니다. 가능한 일정을 다시 골라 보내 주세요.</div></div>':'')+
-     '<div class="fld"><label>면접 제안일 <i>*</i> <small>현재 기준 3시간 이후부터 선택 가능 · 한국 표준시(KST) 기준</small></label>'+
-     [dOff(7),dOff(8)].map(function(d,i){return '<div class="frow"><span class="fin">'+dfmt(d)+I("cal")+'</span><span class="fin sel">오전 '+(i?"10":"09")+':00</span><span class="tl">~</span><span class="fin sel">오전 '+(i?"11":"10")+':00</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div>';}).join("")+
-     '<button type="button" class="fadd2" data-todo>'+I("plus")+'제안일 추가</button></div>'+
-     '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===2?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
-     '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label><label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
-     '<div class="fld"><label>면접 장소</label><span class="fin wide">서울시 서초구 서초대로 301 동익성봉빌딩 18층</span></div>'+
-     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':' 님에게 변경 내용 보내기')+'</button></div></aside>':'';
+  var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안"><div class="dh"><h2>'+(S.ad.newProp?'면접 제안하기':'면접 제안 변경하기')+'</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
+     (S.ad.newProp?'':'<div class="ibox">'+I("info")+'<div>일정을 변경한 후 다시 보내주세요.</div></div>')+
+     ivFields([dOff(7),dOff(8)],S.ad.newProp?0:2)+
+     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
   var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠어요?':'면접 제안을 취소하시겠어요?')+'</h3><p>취소 후 복구할 수 없으며, 지원자에게 면접 취소 안내가 발송됩니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
   $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
   var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
@@ -1392,11 +1395,19 @@ function moveWithAlert(ids,st){var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.le
   function go(){doMove(ids,st);S.sel={};afterChange(ids);toast(ids.length+"명의 지원자를 다른 단계로 이동했습니다.");}
   alertDlg(who+'에게<br>면접을 제안할까요?','건너뛰면 나중에 지원자 상세에서<br>제안할 수 있습니다.','건너뛰기','면접 제안하기',function(){go();openPropDrawer(ids);},go);}
 /* 면접 제안하기 드로어 단독 (지원자 상세로 이동하지 않음) */
+function ivFields(dates,dl){/* 피그마 면접 제안 드로어 입력 항목: 제안일 · 답변 기한 · 리마인드 알림 · 면접 유형 · 면접 장소 · 안내 사항 */
+  return '<div class="fld"><label>면접 제안일 <i>*</i> <small>현재 기준 3시간 이후부터 선택 가능 · 한국 표준시(KST) 기준</small></label>'+
+   dates.map(function(d,i){return '<div class="frow"><span class="fin">'+dfmt(d)+I("cal")+'</span><span class="fin sel">오전 '+(i?"10":"09")+':00</span><span class="tl">~</span><span class="fin sel">오전 '+(i?"11":"10")+':00</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div>';}).join("")+
+   '<button type="button" class="fadd2" data-todo>'+I("plus")+'제안일 추가</button></div>'+
+   '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===dl?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
+   '<div class="fld"><div class="frm"><label>리마인드 알림 설정 <i>*</i></label><span class="tgl on" aria-hidden="true"></span></div><div class="gnote">면접일 하루 전, 지원자에게 면접 리마인드 알림이 발송됩니다.</div></div>'+
+   '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label>'+
+   '<div class="addr"><div class="arow"><span class="fin wide ph">주소를 입력해 주세요.</span><button type="button" class="abtn" data-todo>주소 검색</button></div><span class="fin wide ph">상세 주소를 입력해 주세요. (선택)</span><label class="ackl"><span class="ck"></span>이 공고의 면접 장소로 저장</label></div>'+
+   '<label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
+   '<div class="fld"><label>안내 사항</label><div class="fta">텍스트 입력</div></div>';}
 function openPropDrawer(ids){var a=findA(ids[0]),who=esc(a.name)+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
   $("overlay").innerHTML='<button type="button" class="ddim" data-close aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안하기"><div class="dh"><h2>면접 제안하기</h2><button type="button" class="xbtn" data-close aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
-   '<div class="fld"><label>면접 제안일 <i>*</i> <small>현재 기준 3시간 이후부터 선택 가능 · 한국 표준시(KST) 기준</small></label><div class="frow"><span class="fin">'+dfmt(dOff(7))+I("cal")+'</span><span class="fin sel">오전 09:00</span><span class="tl">~</span><span class="fin sel">오전 10:00</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div><button type="button" class="fadd2" data-todo>'+I("plus")+'제안일 추가</button></div>'+
-   '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===0?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
-   '<div class="fld"><label>면접 유형 <i>*</i></label><label class="rad on"><span></span>대면 면접</label><label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
+   ivFields([dOff(7)],0)+
    '</div><div class="df"><button type="button" class="bt pri lg" data-propsend="'+ids.join(",")+'">'+who+' 님에게 보내기</button></div></aside>';}
 function noticeWithAlert(ids){if(!ids.length)return;var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
   alertDlg(who+'에게<br>결과를 안내할까요?','결과 안내 메시지가 지원자에게 발송됩니다.','취소','안내하기',function(){ids.forEach(function(id){findA(id).noticed=true;});render();toast("결과를 안내했습니다.");});}
@@ -1461,7 +1472,7 @@ function coach(){
   var idx=m.scn?0:CMS.indexOf(m),left=CMS.filter(function(x){return !CM.done[x.k];}).length;
   var box=document.createElement("div");box.id="cmbox";box.className="cmbox";box.setAttribute("role","dialog");box.setAttribute("aria-label","PRD 변경 사항");
   if(m.scn){box.innerHTML='<span class="tag">시나리오</span><b>'+m.t+'</b><p>'+m.d+'</p><div class="cf"><span></span><span><button type="button" class="sk" data-scnx>닫기</button><button type="button" data-scngo>다음</button></span></div>';}
-  else box.innerHTML='<span class="tag">PRD 변경 '+(idx+1)+'/'+CMS.length+'</span><b>'+(typeof m.t==='function'?m.t():m.t)+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf">'+(cmHasNext(m.k)?'<span class="dots">'+CMS.map(function(x,j){return '<i'+(j===idx?' class="on"':'')+'></i>';}).join("")+'</span>':'<span></span>')+'<button type="button" data-cmnext>'+(cmHasNext(m.k)?'다음':'닫기')+'</button></div>';/* 이어질 코치마크가 없으면 인디케이터 없이 [닫기]만 */
+  else box.innerHTML='<span class="tag">PRD 변경 '+(idx+1)+'/'+CMS.length+'</span><b>'+(typeof m.t==='function'?m.t():m.t)+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf">'+(cmHasNext(m.k)?'<span class="dots">'+CMS.map(function(x,j){return '<i'+(j===idx?' class="on"':'')+'></i>';}).join("")+'</span>':'<span></span>')+'<span>'+(cmHasNext(m.k)?'<button type="button" class="sk" data-cmall>전체 닫기</button>':'')+'<button type="button" data-cmnext>'+(cmHasNext(m.k)?'다음':'닫기')+'</button></span></div>';/* 이어질 코치마크가 없으면 인디케이터 없이 [닫기]만 */
   document.body.appendChild(box);
   var bw=280,bh=box.offsetHeight,gap=28,x0,y0,line,dot;
   var cy=r.top+r.height/2;
@@ -1533,6 +1544,7 @@ document.addEventListener("click",function(e){
   if(d.rej){openRej(d.rej);return;}
   if(d.rejx!==undefined){closeRej();return;}
   if(d.rejmin!==undefined){var wy=t.closest(".rjwhy");var mn=wy.classList.toggle("min");t.textContent=mn?"탈락 사유 보기":"접기";return;}
+  if(d.cmall!==undefined){var ov2=!!$("overlay").innerHTML;CMS.forEach(function(x){if(!!x.ov!==ov2||(x.when&&!x.when()))return;if(cmVisible(document.querySelector(x.sel)))CM.done[x.k]=1;});CM.focus=null;cmClear();return;}/* 이 화면에 뜨는 코치마크 모두 닫기 */
   if(d.cmgo){cmGo(d.cmgo);return;}
   if(d.scngo!==undefined){scnGo();return;}
   if(d.scnx!==undefined){CM.scn=null;cmClear();return;}
