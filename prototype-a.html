@@ -467,6 +467,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .empty b{display:block;color:var(--gray-950);font-size:16px;margin-bottom:4px}
 
 /* 체크박스 */
+.ck:disabled{background:#f4f6f7!important;border-color:#e2e6e8!important;cursor:not-allowed}
 .ck{width:20px;height:20px;border:1.5px solid var(--gray-300);border-radius:4px;background:#fff;display:inline-grid;place-items:center}
 .ck.on,.ck.part{background:var(--brand);border-color:var(--brand)}
 .ck.on::after{content:"";width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
@@ -1095,12 +1096,13 @@ function doneHtml(){
   return '<div class="dempty">'+I("ok")+'<b>'+DONE_T[S.doneCond]+'</b>'+
     (nx?'<span>'+WAIT_T[nx.c.id]+' 기다리는 지원자가<br>'+nx.n+'명 남아 있어요.</span><div class="dbtns"><button type="button" class="bt sec" data-dall>지원자 전체보기</button><button type="button" class="bt pri" data-fcond="'+nx.c.id+'">이어서 처리하기</button></div>':'<div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div>')+'</div>';}
 /* ---------- [07] 칸반뷰: 리스트뷰와 같은 조건 · 필터 · 정렬 · 일괄 처리. 카드는 정보만(버튼 없음) ---------- */
+function selStage(){var k=Object.keys(S.sel).filter(function(i){return S.sel[i];});if(!k.length)return null;var a=findA(k[0]);return a?a.stage:null;}/* 일괄 선택은 같은 단계 지원자끼리만 */
 function boardRows(i){var l=S.db[S.pid].filter(posOK);
   if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.kept[a.id])&&a.stage===i&&passF(a);}),c);}
   return sortRows(l.filter(function(a){return a.stage===i&&passF(a);}));}
 function kCard(a,c){
   var need=c?inList(c,a):false,fin=a.final==="fail";
-  var topR=(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+ck(!!S.sel[a.id],'data-sel="'+a.id+'"');
+  var topR=(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+(function(){var ss=selStage();var dis=ss!==null&&ss!==a.stage;return ck(!!S.sel[a.id],'data-sel="'+a.id+'"'+(dis?' disabled title="같은 단계의 지원자만 함께 선택할 수 있습니다"':''));})();
   var mark=fin?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'';
   var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(!fin&&(c?need:a.se>=3)?'<span class="bdg yel">'+(c?c.el(a):a.se)+'일 경과</span>':'');
   var k=a.iv&&a.iv.k,sc='';
@@ -1516,7 +1518,7 @@ document.addEventListener("click",function(e){
   if(d.cmnext!==undefined){CM.done[CM.cur]=1;if(CM.cur==="emp")CM.empForce=false;coach();return;}
   if(d.cmreplay!==undefined){CM.done={};CM.off=false;CM.sc=null;if(S.view!=="app"){S.view="app";enter(S.pid,null);}if(!$("overlay").innerHTML&&!S.done&&!S.cond&&summary(S.pid).total){showSummary();}else{closeOverlay();}coach();return;}/* 지금 화면 상태는 유지하고 코치마크만 다시. 기본 목록이면 첫 진입 팝업부터 */
   if(d.lay){S.lay=d.lay;render();return;}
-  if(d.sel){S.sel[d.sel]=!S.sel[d.sel];render();return;}
+  if(d.sel){var ss=selStage(),aa=findA(d.sel);if(!S.sel[d.sel]&&ss!==null&&aa&&aa.stage!==ss){toast("같은 단계의 지원자만 함께 선택할 수 있습니다.");return;}S.sel[d.sel]=!S.sel[d.sel];render();return;}
   if(d.all!==undefined){var rows=visibleRows(),all=rows.every(function(a){return S.sel[a.id];});rows.forEach(function(a){S.sel[a.id]=!all;});render();return;}
   if(d.open){openApplicant(d.open);return;}
   if(d.chat){openAD(d.chat);return;}
