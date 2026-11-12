@@ -1082,7 +1082,7 @@ function renderFbar(){
   var left="",rest="";
   if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n'+(overListP(c).length?'':' z')+'">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
   else if(tot){left='<span class="fwrap"><button type="button" class="chip need" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
-  else{left='<span class="chip need off" aria-disabled="true">'+I("lac")+'처리 대기 중 지원자 <b>0명</b></span>';}/* 전체 완료 · 0명: 비활성 · 숫자 파란색 · ⌄ 없음 (flow [02]) */
+  else{left='<span class="chip need off" aria-disabled="true">'+I("lac")+'처리 대기 중 지원자 0명</span>';}/* 전체 완료 · 0명: 비활성 · 숫자도 글자와 같은 색 · ⌄ 없음 */
   /* 필터 줄에는 사용자가 건 필터만 pill로. 정렬은 pill 없이 툴바 정렬 버튼 selected 상태로만 표시 */
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
     rest+='<span class="fwrap"><span class="fp'+(vs.length?'':' novalue')+'"><button type="button" class="pb" data-fmenu="g:'+k+'">'+pillLabel(g)+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-fgx="'+k+'" aria-label="'+g.t+' 필터 삭제">'+I("x")+'</button></span></span>';});
