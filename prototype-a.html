@@ -83,9 +83,9 @@ svg{flex:none}
 .rjbar{height:52px;flex:none;display:flex;align-items:center;gap:12px;padding:0 20px;background:#202326;color:#fff}
 .rjtag{font-size:11px;font-weight:700;color:#ffb3b0;border:1px solid #6b3a38;border-radius:4px;padding:2px 6px}
 .rjtabs{display:flex;gap:4px}.rjtabs button{height:30px;padding:0 12px;border-radius:6px;font-size:13px;color:#adb5bd}.rjtabs button:hover{color:#fff}.rjtabs button.on{background:#3a3f44;color:#fff;font-weight:600}
-.rjbar .sp{flex:1}.rjback{height:32px;padding:0 14px;border-radius:8px;background:#fff;color:#131618;font-size:13px;font-weight:600}
+.rjbar .sp{flex:1}.rjback{height:36px;padding:0 16px 0 12px;border-radius:8px;background:#1b55f6;color:#fff;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:6px;box-shadow:0 0 0 3px rgba(27,85,246,.35)}.rjback:hover{background:#1446d4}.rjback svg{flex:none}
 .rjbody{position:relative;flex:1;min-height:0}.rjbody iframe{width:100%;height:100%;border:0;background:#fff;display:block}
-.rjwhy{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));background:#202326;color:#fff;border-radius:12px;padding:16px 18px 14px;box-shadow:0 10px 30px rgba(0,0,0,.28);font-size:13px;line-height:20px}
+.rjwhy{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));background:#202326;color:#fff;border-radius:12px;padding:16px 18px 14px;box-shadow:0 10px 30px rgba(0,0,0,.28);font-size:13px;line-height:20px}
 .rjwhy b{display:block;font-size:14px;margin-bottom:4px;color:#ffb3b0}.rjwhy p{margin:0;color:#e3e7ea}
 .rjmin{position:absolute;right:14px;top:14px;font-size:12px;color:#9ea8af}.rjmin:hover{color:#fff}
 .rjwhy.min{width:auto;padding:8px 14px}.rjwhy.min b,.rjwhy.min p{display:none}.rjwhy.min .rjmin{position:static;color:#ffb3b0;font-weight:600}
@@ -821,7 +821,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
   <div class="gs open"><button type="button" class="gt" data-dstep="B" aria-expanded="true"><span class="gn">B</span>B안 · 칩형<span class="gc"></span></button>
     <div class="gsub"><p class="drs">'처리 대기중 지원자 12명' 칩이 처리할 지원자가 12명 있다는 뜻보다, 지금 목록에 12명만 보인다는 뜻으로 읽혀 탈락했습니다.</p><button type="button" class="gi dlink" data-rej="b">B안 프로토타입 보기</button></div></div>
   <div class="gs"><button type="button" class="gt" data-dstep="C" aria-expanded="false"><span class="gn">C</span>C안 · 그룹형<span class="gc"></span></button>
-    <div class="gsub"><p class="drs">조건별 그룹마다 같은 지원자가 중복으로 보이는 구조라, 지원자를 빠짐없이 처리하도록 돕는 취지와 맞지 않아 탈락했습니다.</p><button type="button" class="gi dlink" data-rej="c">C안 프로토타입 보기</button></div></div>
+    <div class="gsub"><p class="drs">조건별 그룹마다 같은 지원자가 중복으로 보이는 구조라, 사용자 입장에서 혼란스러울 것 같아 탈락했습니다.</p><button type="button" class="gi dlink" data-rej="c">C안 프로토타입 보기</button></div></div>
   <div class="gs"><button type="button" class="gt" data-dstep="D" aria-expanded="false"><span class="gn">D</span>D안 · 배너형<span class="gc"></span></button>
     <div class="gsub"><p class="drs">기존 띠 배너와 함께 노출되어 주목도가 떨어지고, 배너 내용이 지원자 목록과 연결되어 보이지 않아 탈락했습니다. 배너 조건으로 목록이 정렬되었다는 것도 알아차리기 어렵습니다.</p><button type="button" class="gi dlink" data-rej="d">D안 프로토타입 보기</button></div></div>
 </aside>
@@ -1377,10 +1377,10 @@ function closePops(){document.querySelectorAll(".bulk .pop").forEach(function(m)
 
 
 var REJ={b:{t:"B안 · 칩형",r:"'처리 대기중 지원자 12명' 칩이 처리할 지원자가 12명 있다는 뜻보다, 지금 목록에 12명만 보인다는 뜻으로 읽혀 탈락했습니다."},
- c:{t:"C안 · 그룹형",r:"조건별 그룹마다 같은 지원자가 중복으로 보이는 구조라, 지원자를 빠짐없이 처리하도록 돕는 취지와 맞지 않아 탈락했습니다."},
+ c:{t:"C안 · 그룹형",r:"조건별 그룹마다 같은 지원자가 중복으로 보이는 구조라, 사용자 입장에서 혼란스러울 것 같아 탈락했습니다."},
  d:{t:"D안 · 배너형",r:"기존 띠 배너와 함께 노출되어 주목도가 떨어지고, 배너 내용이 지원자 목록과 연결되어 보이지 않아 탈락했습니다. 배너 조건으로 목록이 정렬되었다는 것도 알아차리기 어렵습니다."}};
 function openRej(k){var v=REJ[k];cmClear();var w=$("rejv");if(!w){w=document.createElement("div");w.id="rejv";w.className="rejv";document.body.appendChild(w);}
-  w.innerHTML='<div class="rjbar"><span class="rjtag">탈락한 시안</span><div class="rjtabs">'+["b","c","d"].map(function(x){return '<button type="button" data-rej="'+x+'"'+(x===k?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+REJ[x].t+'</button>';}).join("")+'</div><span class="sp"></span><button type="button" class="rjback" data-rejx>A안으로 돌아가기</button></div>'+
+  w.innerHTML='<div class="rjbar"><span class="rjtag">탈락한 시안</span><div class="rjtabs">'+["b","c","d"].map(function(x){return '<button type="button" data-rej="'+x+'"'+(x===k?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+REJ[x].t+'</button>';}).join("")+'</div><span class="sp"></span><button type="button" class="rjback" data-rejx><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>A안으로 돌아가기</button></div>'+
    '<div class="rjbody"><iframe src="prototype-'+k+'.html" title="'+v.t+' 프로토타입"></iframe><div class="rjwhy" role="note"><b>'+v.t+' · 탈락 사유</b><p>'+v.r+'</p><button type="button" class="rjmin" data-rejmin aria-label="탈락 사유 접기">접기</button></div></div>';
   document.documentElement.style.overflow="hidden";}
 function closeRej(){var w=$("rejv");if(w)w.remove();document.documentElement.style.overflow="";coachSoon();}
