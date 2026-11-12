@@ -89,6 +89,16 @@ svg{flex:none}
 .rjwhy b{display:block;font-size:14px;margin-bottom:4px;color:#ffb3b0}.rjwhy p{margin:0;color:#e3e7ea}
 .rjmin{position:absolute;right:14px;top:14px;font-size:12px;color:#9ea8af}.rjmin:hover{color:#fff}
 .rjwhy.min{width:auto;padding:8px 14px}.rjwhy.min b,.rjwhy.min p{display:none}.rjwhy.min .rjmin{position:static;color:#ffb3b0;font-weight:600}
+
+/* 시나리오 가이드 강조 · 탈락 시안은 보조 */
+#guide{border-color:#1b55f6;box-shadow:0 10px 28px rgba(27,85,246,.22)}
+#guide .gh{background:#1b55f6;border-bottom-color:#1b55f6}#guide .gh b{color:#fff;font-weight:700;font-size:14px}
+#guide .gh b::before{content:"NEW";font-size:10px;font-weight:700;color:#1b55f6;background:#fff;border-radius:4px;padding:1px 5px;margin-right:6px;vertical-align:1px}
+#guide .gmin{color:#fff}#guide .gmin:hover{background:rgba(255,255,255,.16)}
+.guide.drop{box-shadow:0 4px 12px rgba(19,22,24,.08)}.guide.drop .gh b{font-weight:500;color:#6c767f;font-size:12px}
+/* 팝업 닫기 · 조건 해제 직후 처리 대기 칩 어포던스 (피그마 100-19490) */
+.chip.need.nudge{border:2px solid #8db0f8;padding:0 9px 0 11px;animation:cpulse 1.6s ease-out 4}
+@media (prefers-reduced-motion:reduce){.chip.need.nudge{animation:none}}
 .pbtn{border:1px solid var(--gray-300);background:#fff;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:500}
 .pbtn[aria-pressed="true"]{background:var(--gray-950);color:#fff;border-color:var(--gray-950)}
 .frame{max-width:1440px;margin:0 auto;overflow-x:auto;border-radius:10px;box-shadow:0 12px 40px rgba(19,22,24,.12)}
@@ -1157,7 +1167,7 @@ function renderFbar(){
   bn.hidden=true;bn.innerHTML="";
   var left="",rest="";
   if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n'+(overListP(c).length?'':' z')+'">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
-  else if(tot){left='<span class="fwrap"><button type="button" class="chip need" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
+  else if(tot){left='<span class="fwrap"><button type="button" class="chip need'+(S.nudge?' nudge':'')+'" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
   else{left='<span class="chip need off'+(S.done==="all"?' hl':'')+'" aria-disabled="true">'+I("lac")+'처리 대기 중 지원자 0명</span>';}/* 전체 완료 · 0명: 비활성 · 숫자도 글자와 같은 색 · ⌄ 없음 */
   /* 필터 줄에는 사용자가 건 필터만 pill로. 정렬은 pill 없이 툴바 정렬 버튼 selected 상태로만 표시 */
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
@@ -1447,13 +1457,13 @@ document.addEventListener("click",function(e){
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
   if(d.go){S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
   if(t.id==="resetBtn"){init();closeOverlay();enter("A",null);return;}
-  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON")closeOverlay();return;}
+  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON"){var wasSum=!!$("dT");closeOverlay();if(wasSum&&!S.cond){S.nudge=true;renderFbar();}}return;}
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
-  if(d.apply){S.done=null;S.kept={};S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
-  if(t.id==="cclear"){S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;render();return;}
-  if(d.fmenu){openF(t);return;}
+  if(d.apply){S.nudge=false;S.done=null;S.kept={};S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
+  if(t.id==="cclear"){S.nudge=true;S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;render();return;}
+  if(d.fmenu){if(S.nudge&&d.fmenu==="cond"){S.nudge=false;t.classList.remove("nudge");}openF(t);return;}
   if(d.dall!==undefined){S.done=null;S.cond=null;S.kept={};S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.fcond){S.done=null;S.kept={};S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.sug){S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
