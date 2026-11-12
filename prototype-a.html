@@ -38,7 +38,8 @@ svg{flex:none}
 .gbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--gray-950)}
 .gbtn:hover{background:#eef0f2}.gbtn[aria-expanded="true"]{background:#eef0f2}
 .gbtn .new{font-size:10px;font-weight:700;color:#1b55f6;background:#eef3ff;border-radius:4px;padding:1px 5px;letter-spacing:.02em}
-.guide{position:fixed;right:24px;bottom:24px;width:260px;background:#fff;border:1px solid #e2e6e8;border-radius:12px;box-shadow:0 8px 24px rgba(19,22,24,.14);z-index:45;font-size:13px;overflow:hidden}
+.gstack{position:fixed;right:24px;bottom:24px;z-index:45;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-height:calc(100vh - 48px)}
+.guide{position:relative;width:260px;overflow:auto;background:#fff;border:1px solid #e2e6e8;border-radius:12px;box-shadow:0 8px 24px rgba(19,22,24,.14);z-index:45;font-size:13px;overflow:hidden}
 .guide.min .gs,.guide.min .gf{display:none}.guide.min .gh{border-bottom:0;cursor:pointer}.guide.min{width:240px}
 .gmin .ex{display:none}.guide.min .gmin .ex{display:block}.guide.min .gmin .co{display:none}
 .gh{display:flex;align-items:center;justify-content:space-between;height:42px;padding:0 10px 0 14px;border-bottom:1px solid #eef0f2}.gh b{font-size:13px;font-weight:600}
@@ -73,7 +74,7 @@ svg{flex:none}
 
 .pbr{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
 .gbtn.sub{height:26px;font-size:12px;font-weight:500;color:#6c767f;padding:0 8px}.gbtn.sub:hover,.gbtn.sub[aria-expanded="true"]{color:#131618}
-.guide.drop{top:96px;bottom:auto;width:300px}
+.guide.drop{width:260px}.guide.drop.min{width:240px}
 .drs{margin:0 0 6px;padding:10px 12px;background:#f4f6f7;border-radius:6px;font-size:12px;line-height:18px;color:#30363c}
 .gi.dlink{text-decoration:none;color:#1b55f6;font-weight:600}.gi.dlink::before{background:#1b55f6}.gi.dlink span{margin-left:2px}
 .pbtn{border:1px solid var(--gray-300);background:#fff;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:500}
@@ -790,18 +791,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
   <span class="ptag">A안 · 필터형</span>
   <span>오늘 26.11.05(목) · 예시 데이터 · 경과일 N은 가안</span>
   <span class="sp"></span>
-  <div class="pbr"><button type="button" class="gbtn" id="guideBtn" aria-expanded="true" aria-controls="guide"><span class="new">NEW</span>프로토타입 시나리오 가이드</button>
-  <button type="button" class="gbtn sub" id="dropBtn" aria-expanded="false" aria-controls="drop">탈락한 시안도 보실래요?</button></div>
+  <button type="button" class="gbtn" id="guideBtn" aria-expanded="true" aria-controls="guide"><span class="new">NEW</span>프로토타입 시나리오 가이드</button>
 </div>
-<aside class="guide drop" id="drop" aria-label="탈락한 시안" hidden>
-  <div class="gh"><b>탈락한 시안</b><button type="button" class="gmin" data-dropx aria-label="닫기"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></div>
-  <div class="gs open"><button type="button" class="gt" data-dstep="B" aria-expanded="true"><span class="gn">B</span>B안 · 칩형<span class="gc"></span></button>
-    <div class="gsub"><p class="drs">필터 영역의 '처리 대기 중 지원자 12명' 칩이 처리할 지원자가 12명 있다는 뜻보다, 지금 목록에 12명만 보인다는 뜻으로 읽혀 탈락했습니다.</p><a class="gi dlink" href="https://kijemi-create.github.io/applicant-reminder-prototype/prototype-b.html" target="_blank" rel="noopener">B안 프로토타입 보기<span aria-hidden="true">↗</span></a></div></div>
-  <div class="gs"><button type="button" class="gt" data-dstep="C" aria-expanded="false"><span class="gn">C</span>C안 · 그룹형<span class="gc"></span></button>
-    <div class="gsub"><p class="drs">조건별 그룹마다 같은 지원자가 중복으로 보이는 구조라, 지원자를 빠짐없이 처리하도록 돕는 취지와 맞지 않아 탈락했습니다.</p><a class="gi dlink" href="https://kijemi-create.github.io/applicant-reminder-prototype/prototype-c.html" target="_blank" rel="noopener">C안 프로토타입 보기<span aria-hidden="true">↗</span></a></div></div>
-  <div class="gs"><button type="button" class="gt" data-dstep="D" aria-expanded="false"><span class="gn">D</span>D안 · 배너형<span class="gc"></span></button>
-    <div class="gsub"><p class="drs">기존 띠 배너와 함께 노출되어 주목도가 떨어지고, 배너 내용이 지원자 목록과 연결되어 보이지 않아 탈락했습니다. 배너 조건으로 목록이 정렬되었다는 것도 알아차리기 어렵습니다.</p><a class="gi dlink" href="https://kijemi-create.github.io/applicant-reminder-prototype/prototype-d.html" target="_blank" rel="noopener">D안 프로토타입 보기<span aria-hidden="true">↗</span></a></div></div>
-</aside>
+
+<div class="gstack" id="gstack">
 <aside class="guide" id="guide" aria-label="프로토타입 시나리오 가이드">
   <div class="gh" data-ghead><b>프로토타입 시나리오 가이드</b><button type="button" class="gmin" data-gmin aria-label="가이드 접기"><svg class="co" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.5 2.5v4h4M6.5 13.5v-4h-4M9.5 6.5l4.5-4.5M6.5 9.5 2 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ex" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 2h4v4M6 14H2v-4M14 2 9.5 6.5M2 14l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
   <div class="gs open" data-gs="1"><button type="button" class="gt" data-gstep="1" aria-expanded="true"><span class="gn">1</span>지원자 관리 진입하기<span class="gc"></span></button>
@@ -812,6 +805,16 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
     <div class="gsub"><button type="button" class="gi" id="doneBtn">모두 처리한 상태</button></div></div>
   <div class="gf"><button type="button" class="gr" id="resetBtn">처음부터 다시</button><span class="gdv" aria-hidden="true"></span><button type="button" class="gr" data-cmreplay>PRD 변경 사항 다시 보기</button></div>
 </aside>
+<aside class="guide drop min" id="drop" aria-label="탈락한 시안">
+  <div class="gh" data-ghead><b>탈락한 시안도 보실래요?</b><button type="button" class="gmin" data-gmin aria-label="탈락한 시안 펼치기"><svg class="co" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.5 2.5v4h4M6.5 13.5v-4h-4M9.5 6.5l4.5-4.5M6.5 9.5 2 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ex" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 2h4v4M6 14H2v-4M14 2 9.5 6.5M2 14l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div class="gs open"><button type="button" class="gt" data-dstep="B" aria-expanded="true"><span class="gn">B</span>B안 · 칩형<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">필터 영역의 '처리 대기 중 지원자 12명' 칩이 처리할 지원자가 12명 있다는 뜻보다, 지금 목록에 12명만 보인다는 뜻으로 읽혀 탈락했습니다.</p><a class="gi dlink" href="https://kijemi-create.github.io/applicant-reminder-prototype/prototype-b.html" target="_blank" rel="noopener">B안 프로토타입 보기<span aria-hidden="true">↗</span></a></div></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="C" aria-expanded="false"><span class="gn">C</span>C안 · 그룹형<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">조건별 그룹마다 같은 지원자가 중복으로 보이는 구조라, 지원자를 빠짐없이 처리하도록 돕는 취지와 맞지 않아 탈락했습니다.</p><a class="gi dlink" href="https://kijemi-create.github.io/applicant-reminder-prototype/prototype-c.html" target="_blank" rel="noopener">C안 프로토타입 보기<span aria-hidden="true">↗</span></a></div></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="D" aria-expanded="false"><span class="gn">D</span>D안 · 배너형<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">기존 띠 배너와 함께 노출되어 주목도가 떨어지고, 배너 내용이 지원자 목록과 연결되어 보이지 않아 탈락했습니다. 배너 조건으로 목록이 정렬되었다는 것도 알아차리기 어렵습니다.</p><a class="gi dlink" href="https://kijemi-create.github.io/applicant-reminder-prototype/prototype-d.html" target="_blank" rel="noopener">D안 프로토타입 보기<span aria-hidden="true">↗</span></a></div></div>
+</aside>
+</div>
 
 <div id="appView">
   <div class="frame"><div class="app">
@@ -1304,9 +1307,9 @@ function scenario(k){init();S.seen={A:true,B:true,C:true};S.view="app";closeOver
   var c3=CONDS.find(function(c){return c.id===3;}),list=overList("A",c3);
   function only(a){return CONDS.filter(function(c){return inList(c,a);}).length===1;}
   var keep=list.find(only)||list[0];
-  if(k==="cond"){list.forEach(function(a){if(a!==keep)a.lv=0;});enter("A",3);toast("남은 1명을 선택해 [열람 처리]하면 이 조건을 모두 처리한 화면을 볼 수 있습니다");return;}
+  if(k==="cond"){list.forEach(function(a){if(a!==keep)a.lv=0;});enter("A",3);scnCoach("조건 완료 직전 상태입니다","'지원서를 열람해 주세요' 조건에 남은 지원자는 1명입니다. [다음]을 누르면 이 지원자를 열람 처리해, 조건 1개를 모두 처리한 화면으로 넘어갑니다.");return;}
   S.db.A.forEach(function(a){if(a===keep)return;if(CONDS.some(function(c){return inList(c,a);}))a.final="fail";});
-  enter("A",3);S.lastTotal=summary("A").total;toast("남은 1명을 선택해 [열람 처리]하면 처리 대기 지원자를 모두 처리한 화면을 볼 수 있습니다");}
+  enter("A",3);S.lastTotal=summary("A").total;scnCoach("전체 완료 직전 상태입니다","이 공고에 처리 대기 중인 지원자는 1명 남았습니다. [다음]을 누르면 이 지원자를 열람 처리해, 처리 대기 지원자를 모두 처리한 화면으로 넘어갑니다.");}
 function openChat(id){
   var a=findA(id);
   if(a.iv.k==="r"){
@@ -1362,6 +1365,7 @@ function leaveNote(ids){return "";/* 토스트에 조건 제외 문구 노출 �
 function closePops(){document.querySelectorAll(".bulk .pop").forEach(function(m){m.remove();});}
 
 
+function gPanel(pn,open){pn.classList.toggle("min",!open);if(open)document.querySelectorAll("#gstack .guide").forEach(function(o){if(o!==pn)o.classList.add("min");});$("guideBtn").setAttribute("aria-expanded",String(!$("guide").classList.contains("min")));}/* 우측 하단 가이드 · 탈락 시안: 하나를 펼치면 다른 하나는 접힘 */
 /* ---------- PRD 변경 코치마크: 바뀐 영역이 화면에 보일 때만 그 자리에 노출 ---------- */
 var CM={done:{},cur:null,off:false,sc:null};
 var CMS=[
@@ -1371,22 +1375,28 @@ var CMS=[
  {k:"tip",sel:"#list .lh .htip2",t:"지원일 툴팁 문구를 바꿨습니다",d:"지원일 옆 아이콘에 마우스를 올리면 '지원자가 처리를 기다린 기간'을 보여줍니다."},
  {k:"emp",sel:"#list .dempty",t:"조건마다 다른 완료 화면을 보여줍니다",d:function(){return "조건의 지원자를 모두 처리하면 목록 자리에 완료 화면이 나오고, 조건마다 완료 문구가 다릅니다."+(S.done==="cond"?"<br><br>[이어서 처리하기]는 아직 처리 전인 조건 중 남은 지원자가 가장 많은 조건을 먼저 보여줍니다.":"");}}
 ];
+function scnCoach(t,d){CM.scn={sel:"#list .lr.need",t:t,d:d};coachSoon();}
+function scnGo(){CM.scn=null;cmClear();var c=document.querySelector("#list .lr.need [data-sel]");if(!c)return;c.click();setTimeout(function(){$("bView").click();},60);}
 function cmVisible(el){if(!el)return false;var r=el.getBoundingClientRect();return r.width>0&&r.height>0;}
 function cmClear(){["cmhl","cmbox","cmln","cmdot"].forEach(function(id){var n=document.getElementById(id);if(n)n.remove();});}
 function coach(){
-  cmClear();CM.cur=null;if(CM.off||S.view!=="app")return;
+  cmClear();CM.cur=null;if(S.view!=="app")return;
   var ovOpen=!!$("overlay").innerHTML;
   var m=null,el=null;
-  for(var i=0;i<CMS.length;i++){var x=CMS[i];if(CM.done[x.k])continue;if(!!x.ov!==ovOpen)continue;var e2=document.querySelector(x.sel);if(cmVisible(e2)){m=x;el=e2;break;}}
+  if(CM.scn&&!ovOpen){var se=document.querySelector(CM.scn.sel);if(cmVisible(se)){m={k:"scn",t:CM.scn.t,d:CM.scn.d,scn:true};el=se;}}
+  if(!m&&CM.off)return;
+  var ORD=["pop","emp","ban","fil","tip"];/* 화면 맥락이 분명한 팝업 · 완료 화면을 먼저 */
+  for(var i=0;!m&&i<ORD.length;i++){var x=CMS.find(function(q){return q.k===ORD[i];});if(CM.done[x.k])continue;if(!!x.ov!==ovOpen)continue;var e2=document.querySelector(x.sel);if(cmVisible(e2)){m=x;el=e2;break;}}
   if(!m)return;CM.cur=m.k;
   function rectOf(e){if(!e.classList.contains("dempty"))return e.getBoundingClientRect();var rs=[].map.call(e.children,function(c){return c.getBoundingClientRect();});var l=Math.min.apply(0,rs.map(function(q){return q.left;})),t=Math.min.apply(0,rs.map(function(q){return q.top;})),rr=Math.max.apply(0,rs.map(function(q){return q.right;})),b=Math.max.apply(0,rs.map(function(q){return q.bottom;}));return {left:l-24,top:t-16,right:rr+24,bottom:b+16,width:rr-l+48,height:b-t+32};}/* 완료 화면은 내용 영역만 강조 */
   var r=rectOf(el);
   if(!m.ov&&(r.top<60||r.bottom>innerHeight-40)){if(CM.sc===m.k){CM.cur=null;return;}CM.sc=m.k;el.scrollIntoView({block:"center"});r=rectOf(el);}/* 처음 한 번만 화면 안으로 스크롤, 이후 사용자가 스크롤해 벗어나면 숨김 */
   var pad=6,hl=document.createElement("div");hl.id="cmhl";hl.className="cmhl";
   hl.style.cssText="left:"+(r.left-pad)+"px;top:"+(r.top-pad)+"px;width:"+(r.width+pad*2)+"px;height:"+(r.height+pad*2)+"px";document.body.appendChild(hl);
-  var idx=CMS.indexOf(m),left=CMS.filter(function(x){return !CM.done[x.k];}).length;
+  var idx=m.scn?0:CMS.indexOf(m),left=CMS.filter(function(x){return !CM.done[x.k];}).length;
   var box=document.createElement("div");box.id="cmbox";box.className="cmbox";box.setAttribute("role","dialog");box.setAttribute("aria-label","PRD 변경 사항");
-  box.innerHTML='<span class="tag">PRD 변경 '+(idx+1)+'/'+CMS.length+'</span><b>'+m.t+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf"><span class="dots">'+CMS.map(function(x,j){return '<i'+(j===idx?' class="on"':'')+'></i>';}).join("")+'</span><span><button type="button" class="sk" data-cmoff>모두 닫기</button><button type="button" data-cmnext>'+(idx<CMS.length-1&&left>1?'다음':'확인')+'</button></span></div>';
+  if(m.scn){box.innerHTML='<span class="tag">시나리오</span><b>'+m.t+'</b><p>'+m.d+'</p><div class="cf"><span></span><span><button type="button" class="sk" data-scnx>닫기</button><button type="button" data-scngo>다음</button></span></div>';}
+  else box.innerHTML='<span class="tag">PRD 변경 '+(idx+1)+'/'+CMS.length+'</span><b>'+m.t+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf"><span class="dots">'+CMS.map(function(x,j){return '<i'+(j===idx?' class="on"':'')+'></i>';}).join("")+'</span><span><button type="button" class="sk" data-cmoff>모두 닫기</button><button type="button" data-cmnext>'+(idx<CMS.length-1&&left>1?'다음':'확인')+'</button></span></div>';
   document.body.appendChild(box);
   var bw=280,bh=box.offsetHeight,gap=28,x0,y0,line,dot;
   var cy=r.top+r.height/2;
@@ -1414,7 +1424,7 @@ document.addEventListener("click",function(e){
   var ps=e.target.closest("[data-psum]");
   if(ps){var pid=ps.dataset.psum;if(pid!==S.pid){S.seen[pid]=true;enter(pid,null);}showSummary();return;}
   var kq=e.target.closest("[data-kreq]");if(kq&&!e.target.closest("button")){openAD(kq.dataset.kreq);return;}
-  var gh=e.target.closest("[data-ghead]");if(gh&&!e.target.closest("button")&&$("guide").classList.contains("min")){$("guide").classList.remove("min");$("guideBtn").setAttribute("aria-expanded","true");return;}
+  var gh=e.target.closest("[data-ghead]");if(gh&&!e.target.closest("button")){var pn=gh.closest(".guide");if(pn.classList.contains("min")){gPanel(pn,true);}return;}
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
   if(d.go){S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
   if(t.id==="resetBtn"){init();closeOverlay();enter("A",null);return;}
@@ -1452,9 +1462,10 @@ document.addEventListener("click",function(e){
   if(d.fclear!==undefined){S.fd={};document.querySelectorAll(".pill.on").forEach(function(b){b.classList.remove("on");});updFcnt();return;}
   if(d.fapply!==undefined){Object.keys(S.fd).forEach(function(k){if(!S.fd[k].length)delete S.fd[k];});S.f=S.fd;S.sel={};closeOverlay();render();toast(fCount(S.f)?"필터를 적용했습니다. 이 단계에 "+visibleRows().length+"명이 보입니다.":"필터를 해제했습니다.");return;}
   if(d.dstep){var g2=t.closest(".gs"),w2=g2.classList.contains("open");document.querySelectorAll("#drop .gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!w2){g2.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
-  if(t.id==="dropBtn"||d.dropx!==undefined){var dp=$("drop"),op=t.id==="dropBtn"?dp.hidden:false;dp.hidden=!op;$("dropBtn").setAttribute("aria-expanded",String(op));return;}
   if(d.gstep){var g=t.closest(".gs"),was=g.classList.contains("open");document.querySelectorAll("#guide .gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!was){g.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
-  if(d.gmin!==undefined||t.id==="guideBtn"){var gd=$("guide"),mn=!gd.classList.contains("min");gd.classList.toggle("min",mn);$("guideBtn").setAttribute("aria-expanded",String(!mn));t.blur();return;}
+  if(d.gmin!==undefined||t.id==="guideBtn"){var pn2=t.id==="guideBtn"?$("guide"):t.closest(".guide");gPanel(pn2,pn2.classList.contains("min"));t.blur();return;}
+  if(d.scngo!==undefined){scnGo();return;}
+  if(d.scnx!==undefined){CM.scn=null;cmClear();return;}
   if(d.cmoff!==undefined){CM.off=true;cmClear();return;}
   if(d.cmnext!==undefined){CM.done[CM.cur]=1;coach();return;}
   if(d.cmreplay!==undefined){CM.done={};CM.off=false;CM.sc=null;if(S.view!=="app"){S.view="app";enter(S.pid,null);}if(!$("overlay").innerHTML&&!S.done&&!S.cond&&summary(S.pid).total){showSummary();}else{closeOverlay();}coach();return;}/* 지금 화면 상태는 유지하고 코치마크만 다시. 기본 목록이면 첫 진입 팝업부터 */
