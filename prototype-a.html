@@ -652,7 +652,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fmenu.vdd .vn{flex:none;height:24px;padding:0 8px;border-radius:6px;background:#eef3ff;color:#1b55f6;font-size:12px;font-weight:600;display:grid;place-items:center}
 
 /* 면접 상태 버튼 (피그마 처리필요 지원자 목록): 확정 전 = tertiary 회색, 일정 변경 요청 확인 = outlineSecondary 파랑 + 일정 아이콘 */
-.bdg.yel{background:#fffce8;color:#cc8800;box-shadow:inset 0 0 0 1px #ffbb00}/* XDS Biz BZBadge outline yellow */
+.bdg.yel{background:#fffce8;color:#cc8800;box-shadow:inset 0 0 0 1px #ffbb00}.bdg.gline{background:#fff;color:#4c555c;box-shadow:inset 0 0 0 1px #d1d6da}/* XDS Biz BZBadge outline yellow */
 .ob.pend{color:#30363c;background:#f4f6f7;border-color:#f4f6f7;font-weight:500}
 .ob.pend:hover{background:#e2e6e8;border-color:#e2e6e8}
 .ob.req{border-color:#d1d6da;color:#1b55f6;background:#fff;font-weight:500}
@@ -758,7 +758,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .ivdr .dh{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 24px;border-bottom:1px solid #e2e6e8}.ivdr .dh h2{margin:0;font-size:20px}
 .ivdr .db{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:28px}
 .fld{display:flex;flex-direction:column;gap:8px}.fld>label{font-size:14px;font-weight:600;color:#131618}.fld>label i{color:#f22a23;font-style:normal}.fld>label small{font-weight:400;color:#6c767f;font-size:12px;margin-left:4px}
-.frow{display:grid;grid-template-columns:1fr 1fr 12px 1fr 40px;gap:8px;align-items:center}
+button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100%}button.fin:hover{border-color:#9ea8af}.fold{font-size:12px;line-height:18px;color:#6c767f;margin:-2px 0 4px}.bt.pri:disabled{background:#e9ecee!important;color:#9ea8af!important;cursor:default;box-shadow:none}.ftr:disabled{cursor:default}.frow{display:grid;grid-template-columns:1fr 1fr 12px 1fr 40px;gap:8px;align-items:center}
 .fin{height:44px;border:1px solid #d1d6da;border-radius:8px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;font-size:14px;color:#131618}.fin .ic{color:#6c767f;font-size:18px}.fin.wide{justify-content:flex-start}
 .frow .tl{text-align:center;color:#6c767f}
 .ftr{width:40px;height:40px;border-radius:8px;background:#f4f6f7;display:grid;place-items:center;color:#9ea8af}
@@ -1001,6 +1001,7 @@ var CONDS=[
  {id:7,hint:"면접 결과를 반영해 주세요",sub:"면접 후 12일째 · 단계 이동 및 심사 미처리",how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 제외됩니다",s:"면접 후 12일 정체",n:12,t:"면접 결과를 반영해 주세요",col:"면접 종료일",sort:"면접 종료 오래된순",scope:"면접 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="d";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=12&&a.se>=a.iv.n;}}
 ];
 function inList(c,a){return c.inScope(a)&&c.over(a);}
+function overAny(a){return CONDS.some(function(c){return inList(c,a);});}
 var TAGS={1:"결과 미입력",2:"단계 이동 없음",3:"미열람",4:"열람 후 미처리",6:"일정 변경 요청",7:"면접 후 미처리"};
 var ALL={id:99,t:"처리 필요 지원자 전체",s:"처리 필요 지원자 전체",col:"지원일",sort:"지원일 오래된순",how:"지원자마다 표시된 조건을 처리하면 목록에서 제외됩니다",
  inScope:function(a){return CONDS.some(function(c){return inList(c,a);});},over:function(){return true;},el:function(a){return a.applied;}};
@@ -1105,7 +1106,7 @@ function stBadge(a){if(a.final==="fail")return '<span class="bdg gray">불합격
 
 function visibleRows(){
   var l=S.db[S.pid].filter(posOK);
-  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id]||S.kept[a.id])&&a.stage===S.tab&&passF(a);}),c);}/* 조건 목록에는 조건에 해당하는(기준일을 넘긴) 지원자만 */
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (c.inScope(a)||S.leaving[a.id]||S.kept[a.id])&&a.stage===S.tab&&passF(a);}),c);}/* 정책: 조건 범위에 해당하는 지원자는 모두 노출. 경과일 기준을 넘긴 지원자만 노란 배지로 강조 */
   return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
 /* 완료 empty: 조건 이름 대신 끝낸 행동으로 말하고, '처리' 반복을 피함. 조건 완료 시 남은 조건 중 가장 오래 기다린 지원자가 있는 1개만 이어서 제안 */
@@ -1121,13 +1122,13 @@ function doneHtml(){
 /* ---------- [07] 칸반뷰: 리스트뷰와 같은 조건 · 필터 · 정렬 · 일괄 처리. 카드는 정보만(버튼 없음) ---------- */
 function selStage(){var k=Object.keys(S.sel).filter(function(i){return S.sel[i];});if(!k.length)return null;var a=findA(k[0]);return a?a.stage:null;}/* 일괄 선택은 같은 단계 지원자끼리만 */
 function boardRows(i){var l=S.db[S.pid].filter(posOK);
-  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.kept[a.id])&&a.stage===i&&passF(a);}),c);}
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (c.inScope(a)||S.kept[a.id])&&a.stage===i&&passF(a);}),c);}
   return sortRows(l.filter(function(a){return a.stage===i&&passF(a);}));}
 function kCard(a,c){
   var need=c?inList(c,a):false,fin=a.final==="fail";
   var topR=(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+(function(){var ss=selStage();var dis=ss!==null&&ss!==a.stage;return ck(!!S.sel[a.id],'data-sel="'+a.id+'"'+(dis?' disabled title="같은 단계의 지원자만 함께 선택할 수 있습니다"':''));})();
   var mark=fin?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'';
-  var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(!fin&&(c?need:a.se>=3)?'<span class="bdg yel">'+(c?c.el(a):a.se)+'일 경과</span>':'');
+  var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(!fin&&(c?c.inScope(a):a.se>=3)?'<span class="bdg '+((c?need:overAny(a))?'yel':'gline')+'">'+(c?c.el(a):a.se)+'일 경과</span>':'');
   var k=a.iv&&a.iv.k,sc='';
   if(k==="p")sc='<span class="p">면접 제안 확정 전</span>';
   else if(k==="r")sc='<span class="r">'+I("cal")+'일정 변경 요청</span>';
@@ -1162,7 +1163,7 @@ function renderList(){
     rows.forEach(function(a,i){
       var inS=c.inScope(a),ov=inList(c,a),el=c.el(a);
       var fin=!!a.final&&!!S.kept[a.id];
-      var chip=fin?'':!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg yel">'+el+'일 경과</span>';/* 조건 목록의 경과일 배지는 모두 노랑(BZBadge outline yellow). 기준일을 넘긴 지원자만 빨간 dot */
+      var chip=fin?'':!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg '+(ov?'yel':'gline')+'">'+el+'일 경과</span>';/* 경과일 배지: 기본 회색, 경과일 기준을 넘긴 지원자만 노랑(BZBadge outline yellow) + 빨간 dot */
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS&&!fin?' out':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length&&fActive()){h+='<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>';}
@@ -1174,7 +1175,7 @@ function renderList(){
     cols="60px 158px 260px 230px 230px 200px 1fr";
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 처리를 기다린 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     rows.forEach(function(a){
-      var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg yel">'+a.se+'일 경과</span>':'')/* 경과 배지는 모든 목록에서 노랑 */;
+      var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg '+(overAny(a)?'yel':'gline')+'">'+a.se+'일 경과</span>':'')/* 경과 배지: 기본 회색, 경과일 기준을 넘긴 지원자만 노랑 */;
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+''/* 전체 목록에서는 처리 대기 dot 없음 (조건을 고르면 표시) */+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+=fActive()?'<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>':'<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
@@ -1342,10 +1343,10 @@ function renderAD(){
     '<div class="adcv"><h3>'+esc(a.name)+' 지원서</h3><p class="adn">'+esc(a.name)+' · '+a.g+', 만 '+a.age+'세</p>'+
     '<div class="sec-t"><b>경력</b></div><div class="paper"><div class="ph" style="width:46%"></div><div class="ph" style="width:92%"></div><div class="ph" style="width:84%"></div><div class="ph" style="width:70%"></div></div>'+
     '<div class="sec-t"><b>학력</b></div><div class="paper"><div class="ph" style="width:56%"></div><div class="ph" style="width:80%"></div></div></div>';
-  var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안"><div class="dh"><h2>'+(S.ad.newProp?'면접 제안하기':'면접 제안 변경하기')+'</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
-     (S.ad.newProp?'':'<div class="ibox">'+I("info")+'<div>일정을 변경한 후 다시 보내주세요.</div></div>')+
-     ivFields([dOff(7),dOff(8)],S.ad.newProp?0:2)+
-     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
+  var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안"><div class="dh"><h2>'+(S.ad.newProp?'면접 제안하기':'면접 제안일 변경하기')+'</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
+     (S.ad.newProp?'':'<div class="ibox">'+I("info")+'<div>'+esc(a.name)+'님이 일정 변경을 요청했습니다. 새로운 날짜나 시간을 선택해 주세요.</div></div>')+
+     ivFields([dOff(7),dOff(8)],0,S.ad.newProp?null:(S.ad.chg||[]))+
+     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend'+(!S.ad.newProp&&!(S.ad.chg||[]).some(Boolean)?' disabled':'')+'>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
   var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠어요?':'면접 제안을 취소하시겠어요?')+'</h3><p>취소 후 복구할 수 없으며, 지원자에게 면접 취소 안내가 발송됩니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
   $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
   var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
@@ -1363,7 +1364,7 @@ function openChat(id){
     sheet('일정 변경 요청 확인',
       '<div class="ibox red">'+I("info")+'<div>'+esc(a.name)+'님이 '+a.iv.n+'일 전 면접 일정 변경을 요청했습니다. 일정을 수정해 다시 제안하거나 면접을 취소해 주세요.</div></div>'+
       '<div class="chat"><span class="ts">'+fmt(dOff(-a.iv.n-2))+'</span><div class="msg me"><span class="k">보낸 면접 제안</span><b>1차 면접 · 대면 면접</b><div class="row"><span>일시</span><span>'+fmt(dOff(-a.iv.n+3))+' 오후 2:00</span></div><div class="row"><span>장소</span><span>본사 3층 회의실</span></div></div>'+
-      '<span class="ts">'+fmt(dOff(-a.iv.n))+'</span><div class="msg you alert"><span class="k">지원자 일정 변경 요청</span><b>제안해 주신 일정에 참석이 어려워요</b><div class="row"><span>희망 일정</span><span>'+fmt(dOff(4))+' 오전 또는 다음 주 화요일 오후</span></div></div></div>',
+      '<span class="ts">'+fmt(dOff(-a.iv.n))+'</span><div class="msg you alert"><span class="k">지원자 일정 변경 요청</span><b>제안해 주신 일정에 참석이 어려워요</b></div></div>',
       '<button type="button" class="bt line" data-ivact="cancel" data-id="'+a.id+'">면접 취소</button><button type="button" class="bt pri" data-ivact="repropose" data-id="'+a.id+'">일정 수정해서 다시 제안</button>');
   }else{
     sheet('보낸 면접 제안',
@@ -1395,9 +1396,13 @@ function moveWithAlert(ids,st){var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.le
   function go(){doMove(ids,st);S.sel={};afterChange(ids);toast(ids.length+"명의 지원자를 다른 단계로 이동했습니다.");}
   alertDlg(who+'에게<br>면접을 제안할까요?','건너뛰면 나중에 지원자 상세에서<br>제안할 수 있습니다.','건너뛰기','면접 제안하기',function(){go();openPropDrawer(ids);},go);}
 /* 면접 제안하기 드로어 단독 (지원자 상세로 이동하지 않음) */
-function ivFields(dates,dl){/* 피그마 면접 제안 드로어 입력 항목: 제안일 · 답변 기한 · 리마인드 알림 · 면접 유형 · 면접 장소 · 안내 사항 */
+function ivFields(dates,dl,chg){/* 피그마 면접 제안 드로어 입력 항목: 제안일 · 답변 기한 · 리마인드 알림 · 면접 유형 · 면접 장소 · 안내 사항 */
   return '<div class="fld"><label>면접 제안일 <i>*</i> <small>현재 기준 3시간 이후부터 선택 가능 · 한국 표준시(KST) 기준</small></label>'+
-   dates.map(function(d,i){return '<div class="frow"><span class="fin">'+dfmt(d)+I("cal")+'</span><span class="fin sel">오전 '+(i?"10":"09")+':00</span><span class="tl">~</span><span class="fin sel">오전 '+(i?"11":"10")+':00</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div>';}).join("")+
+   dates.map(function(d,i){var t1='오전 '+(i?"10":"09")+':00',t2='오전 '+(i?"11":"10")+':00';
+     if(chg){/* 변경 드로어: 처음엔 기존 값 그대로(에러 없음) + 아래 회색 '기존 일정'. 칸을 누르면 날짜가 바뀐 것으로 시연 */
+       var nd=chg[i]?dOff(10+i):d,tag=' data-ivchg="'+i+'"';
+       return '<div class="frow"><button type="button" class="fin"'+tag+'>'+dfmt(nd)+I("cal")+'</button><button type="button" class="fin sel"'+tag+'>'+t1+'</button><span class="tl">~</span><button type="button" class="fin sel"'+tag+'>'+t2+'</button><button type="button" class="ftr" disabled aria-label="삭제">'+I("trash")+'</button></div><div class="fold">기존 일정 · '+dfmt(d)+' '+t1+' ~ '+t2.replace("오전 ","")+'</div>';}
+     return '<div class="frow"><span class="fin">'+dfmt(d)+I("cal")+'</span><span class="fin sel">'+t1+'</span><span class="tl">~</span><span class="fin sel">'+t2+'</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div>';}).join("")+
    '<button type="button" class="fadd2" data-todo>'+I("plus")+'제안일 추가</button></div>'+
    '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===dl?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
    '<div class="fld"><div class="frm"><label>리마인드 알림 설정 <i>*</i></label><span class="tgl on" aria-hidden="true"></span></div><div class="gnote">면접일 하루 전, 지원자에게 면접 리마인드 알림이 발송됩니다.</div></div>'+
@@ -1557,9 +1562,10 @@ document.addEventListener("click",function(e){
   if(d.open){openApplicant(d.open);return;}
   if(d.chat){openAD(d.chat);return;}
   if(d.adclose!==undefined){closeOverlay();S.ad=null;return;}
+  if(d.ivchg!==undefined&&S.ad){S.ad.chg=S.ad.chg||[];S.ad.chg[+d.ivchg]=true;renderAD();return;}
   if(d.adprev!==undefined){S.ad.view="prev";renderAD();return;}
   if(d.adchat!==undefined){S.ad.view="chat";renderAD();return;}
-  if(d.addrawer!==undefined){S.ad.drawer=true;renderAD();return;}
+  if(d.addrawer!==undefined){S.ad.drawer=true;S.ad.chg=[];renderAD();return;}
   if(d.addrawerx!==undefined){S.ad.drawer=false;renderAD();return;}
   if(d.adconfirm!==undefined){S.ad.confirm=true;renderAD();return;}
   if(d.adconfirmx!==undefined){S.ad.confirm=false;renderAD();return;}
