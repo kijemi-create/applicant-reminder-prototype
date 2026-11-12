@@ -1472,7 +1472,7 @@ function coach(){
   var idx=m.scn?0:CMS.indexOf(m),left=CMS.filter(function(x){return !CM.done[x.k];}).length;
   var box=document.createElement("div");box.id="cmbox";box.className="cmbox";box.setAttribute("role","dialog");box.setAttribute("aria-label","PRD 변경 사항");
   if(m.scn){box.innerHTML='<span class="tag">시나리오</span><b>'+m.t+'</b><p>'+m.d+'</p><div class="cf"><span></span><span><button type="button" class="sk" data-scnx>닫기</button><button type="button" data-scngo>다음</button></span></div>';}
-  else box.innerHTML='<span class="tag">PRD 변경 '+(idx+1)+'/'+CMS.length+'</span><b>'+(typeof m.t==='function'?m.t():m.t)+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf">'+(cmHasNext(m.k)?'<span class="dots">'+CMS.map(function(x,j){return '<i'+(j===idx?' class="on"':'')+'></i>';}).join("")+'</span>':'<span></span>')+'<span>'+(cmHasNext(m.k)?'<button type="button" class="sk" data-cmall>전체 닫기</button>':'')+'<button type="button" data-cmnext>'+(cmHasNext(m.k)?'다음':'닫기')+'</button></span></div>';/* 이어질 코치마크가 없으면 인디케이터 없이 [닫기]만 */
+  else box.innerHTML='<span class="tag">PRD 변경 사항 '+(idx+1)+'</span><b>'+(typeof m.t==='function'?m.t():m.t)+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf"><span></span>'+'<span>'+(cmHasNext(m.k)?'<button type="button" class="sk" data-cmall>전체 닫기</button>':'')+'<button type="button" data-cmnext>'+(cmHasNext(m.k)?'다음':'닫기')+'</button></span></div>';/* 이어질 코치마크가 없으면 인디케이터 없이 [닫기]만 */
   document.body.appendChild(box);
   var bw=280,bh=box.offsetHeight,gap=28,x0,y0,line,dot;
   var cy=r.top+r.height/2;
