@@ -1416,7 +1416,7 @@ var CMS=[
 ];
 function scnCoach(t,d){CM.scn={sel:"#list .lr.need",t:t,d:d};coachSoon();}
 function scnGo(){CM.scn=null;cmClear();var c=document.querySelector("#list .lr.need [data-sel]");if(!c)return;c.click();setTimeout(function(){$("bView").click();},60);}
-function cmHasNext(cur){var ovOpen=!!$("overlay").innerHTML;return CMS.some(function(x){if(x.k===cur||CM.done[x.k]||!!x.ov!==ovOpen)return false;return cmVisible(document.querySelector(x.sel));});}/* 이 화면에서 이어질 코치마크가 없으면 '닫기' */
+function cmHasNext(cur){if(cur==="emp"||S.done)return false;var ovOpen=!!$("overlay").innerHTML;return CMS.some(function(x){if(x.k===cur||CM.done[x.k]||!!x.ov!==ovOpen)return false;return cmVisible(document.querySelector(x.sel));});}/* 이 화면에서 이어질 코치마크가 없으면 '닫기' */
 function cmVisible(el){if(!el)return false;var r=el.getBoundingClientRect();return r.width>0&&r.height>0;}
 function cmClear(){["cmhl","cmbox","cmln","cmdot"].forEach(function(id){var n=document.getElementById(id);if(n)n.remove();});}
 function coach(){
@@ -1427,7 +1427,7 @@ function coach(){
   if(!m&&!ovOpen&&!$("alertHost")&&CM.empForce&&S.done==="cond"){var ee=document.querySelector("#list .dempty");if(cmVisible(ee)){m=CMS.find(function(q){return q.k==="emp";});el=ee;}}
   if(!m&&CM.off)return;
   var ORD=["pop","emp","ban","fil","tip"];/* 화면 맥락이 분명한 팝업 · 완료 화면을 먼저 */
-  for(var i=0;!m&&i<ORD.length;i++){var x=CMS.find(function(q){return q.k===ORD[i];});if(CM.done[x.k])continue;if(!!x.ov!==ovOpen)continue;var e2=document.querySelector(x.sel);if(cmVisible(e2)){m=x;el=e2;break;}}
+  for(var i=0;!m&&i<ORD.length;i++){var x=CMS.find(function(q){return q.k===ORD[i];});if(CM.done[x.k])continue;if(S.done&&x.k!=="emp")continue;/* 완료 화면에서는 완료 코치마크만 */if(!!x.ov!==ovOpen)continue;var e2=document.querySelector(x.sel);if(cmVisible(e2)){m=x;el=e2;break;}}
   if(!m)return;CM.cur=m.k;
   function rectOf(e){if(!e.classList.contains("dempty"))return e.getBoundingClientRect();var rs=[].map.call(e.children,function(c){return c.getBoundingClientRect();});var l=Math.min.apply(0,rs.map(function(q){return q.left;})),t=Math.min.apply(0,rs.map(function(q){return q.top;})),rr=Math.max.apply(0,rs.map(function(q){return q.right;})),b=Math.max.apply(0,rs.map(function(q){return q.bottom;}));return {left:l-24,top:t-16,right:rr+24,bottom:b+16,width:rr-l+48,height:b-t+32};}/* 완료 화면은 내용 영역만 강조 */
   var r=rectOf(el);
