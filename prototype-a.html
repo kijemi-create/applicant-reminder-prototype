@@ -1171,7 +1171,7 @@ function renderFbar(){
   bn.hidden=true;bn.innerHTML="";
   var left="",rest="";
   if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n'+(overListP(c).length?'':' z')+'">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
-  else if(tot){left='<span class="fwrap"><button type="button" class="chip need'+(S.nudge?' nudge':'')+'" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
+  else if(tot){left='<span class="fwrap"><button type="button" class="chip need nudge" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
   else{left='<span class="chip need off'+(S.done==="all"?' hl':'')+'" aria-disabled="true">'+I("lac")+'처리 대기 중 지원자 0명</span>';}/* 전체 완료 · 0명: 비활성 · 숫자도 글자와 같은 색 · ⌄ 없음 */
   /* 필터 줄에는 사용자가 건 필터만 pill로. 정렬은 pill 없이 툴바 정렬 버튼 selected 상태로만 표시 */
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
@@ -1469,7 +1469,7 @@ document.addEventListener("click",function(e){
   if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
   if(d.apply){S.nudge=false;S.done=null;S.kept={};S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
   if(t.id==="cclear"){S.nudge=true;S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;render();return;}
-  if(d.fmenu){if(S.nudge&&d.fmenu==="cond"){S.nudge=false;t.classList.remove("nudge");}openF(t);return;}
+  if(d.fmenu){openF(t);return;}
   if(d.dall!==undefined){S.done=null;S.cond=null;S.kept={};S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.fcond){S.done=null;S.kept={};S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.sug){S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
