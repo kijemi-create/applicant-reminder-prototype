@@ -1126,7 +1126,7 @@ function boardRows(i){var l=S.db[S.pid].filter(posOK);
   return sortRows(l.filter(function(a){return a.stage===i&&passF(a);}));}
 function kCard(a,c){
   var need=c?inList(c,a):false,fin=a.final==="fail";
-  var topR=(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+(function(){var ss=selStage();var dis=ss!==null&&ss!==a.stage;return ck(!!S.sel[a.id],'data-sel="'+a.id+'"'+(dis?' disabled title="같은 단계의 지원자만 함께 선택할 수 있습니다"':''));})();
+  var topR=(c&&c.inScope(a)&&!fin?'<span class="kd" title="처리 대기"></span>':'')+(function(){var ss=selStage();var dis=ss!==null&&ss!==a.stage;return ck(!!S.sel[a.id],'data-sel="'+a.id+'"'+(dis?' disabled title="같은 단계의 지원자만 함께 선택할 수 있습니다"':''));})();
   var mark=fin?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'';
   var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(!fin&&(c?c.inScope(a):a.se>=3)?'<span class="bdg '+((c?need:overAny(a))?'yel':'gline')+'">'+(c?c.el(a):a.se)+'일 경과</span>':'');
   var k=a.iv&&a.iv.k,sc='';
@@ -1163,8 +1163,8 @@ function renderList(){
     rows.forEach(function(a,i){
       var inS=c.inScope(a),ov=inList(c,a),el=c.el(a);
       var fin=!!a.final&&!!S.kept[a.id];
-      var chip=fin?'':!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg '+(ov?'yel':'gline')+'">'+el+'일 경과</span>';/* 경과일 배지: 기본 회색, 경과일 기준을 넘긴 지원자만 노랑(BZBadge outline yellow) + 빨간 dot */
-      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ov?' need':'')+(!inS&&!fin?' out':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
+      var chip=fin?'':!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg '+(ov?'yel':'gline')+'">'+el+'일 경과</span>';/* 조건에 해당하는 지원자 모두 빨간 dot. 경과일 배지는 기본 회색, 경과일 기준을 넘긴 지원자만 노랑(BZBadge outline yellow) */
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(inS?' need':'')+(!inS&&!fin?' out':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length&&fActive()){h+='<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>';}
     else if(!rows.length){
