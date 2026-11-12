@@ -108,9 +108,26 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .tool{margin-top:24px;display:flex;align-items:center;gap:8px}
 .tool .sp{flex:1}
 .seg{display:inline-flex;padding:2px;background:var(--gray-50);border-radius:8px;gap:2px}
-.seg span{width:32px;height:32px;border-radius:6px;display:grid;place-items:center;color:var(--gray-400)}
-.seg span.on{background:#fff;color:var(--gray-950);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.seg button{width:32px;height:32px;border-radius:6px;display:grid;place-items:center;color:var(--gray-400)}
+.seg button.on{background:#fff;color:var(--gray-950);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .seg .ic{font-size:18px}
+/* [07] 칸반뷰 */
+.list.kbw{margin-top:12px}
+.kb{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
+.kcol{flex:0 0 252px;background:#f4f6f7;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:440px}
+.kcol.over{box-shadow:inset 0 0 0 2px #1b55f6}
+.kh{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#30363c;padding:4px 4px 6px}.kh .dt{width:6px;height:6px;border-radius:50%;background:#9ea8af}.kh .n{color:#131618}
+.kc{background:#fff;border:1px solid #e2e6e8;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;cursor:grab}
+.kc[data-kreq]{cursor:pointer}.kc.sel{border-color:#1b55f6}.kc.drag{opacity:.4}
+.kt{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#6c767f;min-height:24px}
+.kr{display:flex;align-items:center;gap:8px}.kd{width:6px;height:6px;border-radius:50%;background:var(--red)}.kw{font-size:12px;color:#6c767f}
+.kn{display:flex;align-items:center;gap:4px;font-size:15px;font-weight:600;color:#131618}.kn .star{color:#c0c7cd;font-size:14px}
+.ke{font-size:13px;color:#30363c;line-height:20px}
+.kch{display:flex;gap:4px;flex-wrap:wrap}.kdup{border:1px solid #e2e6e8}
+.ks{border-top:1px solid #e2e6e8;margin-top:2px;padding-top:8px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#131618}
+.ks .l{color:#30363c}.ks .p{color:#8a949e}.ks .r{color:#1b55f6;font-weight:600;display:inline-flex;gap:4px;align-items:center}.ks .r .ic{font-size:14px}
+.kempty{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;color:#8a949e;line-height:20px;padding:24px 0}
+
 .cbl{display:inline-flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:500;color:var(--gray-800);margin-right:8px}
 .vdiv{width:1px;height:20px;background:var(--gray-100);margin:0 4px}
 
@@ -748,7 +765,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
       <div class="nbanner" id="nbanner" hidden></div>
       <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
-        <div class="seg" aria-hidden="true"><span class="on"><span class="ic" data-i="list"></span></span><span><span class="ic" data-i="board"></span></span></div>
+        <div class="seg" id="seg"><button type="button" data-lay="list" aria-label="리스트뷰"><span class="ic" data-i="list"></span></button><button type="button" data-lay="board" aria-label="칸반뷰"><span class="ic" data-i="board"></span></button></div>
         <span class="sp"></span>
         <button type="button" class="qck" id="qvU" data-qck="u"><span class="ck"></span>미열람 지원자만 보기</button>
         <button type="button" class="qck" id="qvN" data-qck="n" title="합불은 정했지만 결과를 안내하지 않은 지원자"><span class="ck"></span>안내 전 지원자만 보기</button>
@@ -986,9 +1003,37 @@ function doneHtml(){
   var rest=CONDS.map(function(c,i){return {c:c,n:overListP(c).length,i:i};}).filter(function(x){return x.n;}).sort(function(a,b){return b.n-a.n||a.i-b.i;}),nx=rest[0];
   return '<div class="dempty">'+I("ok")+'<b>'+DONE_T[S.doneCond]+'</b>'+
     (nx?'<span>'+WAIT_T[nx.c.id]+' 기다리는 지원자가<br>'+nx.n+'명 남아 있어요.</span><div class="dbtns"><button type="button" class="bt sec" data-dall>지원자 전체보기</button><button type="button" class="bt pri" data-fcond="'+nx.c.id+'">이어서 처리하기</button></div>':'<div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div>')+'</div>';}
+/* ---------- [07] 칸반뷰: 리스트뷰와 같은 조건 · 필터 · 정렬 · 일괄 처리. 카드는 정보만(버튼 없음) ---------- */
+function boardRows(i){var l=S.db[S.pid].filter(posOK);
+  if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.kept[a.id])&&a.stage===i&&passF(a);}),c);}
+  return sortRows(l.filter(function(a){return a.stage===i&&passF(a);}));}
+function kCard(a,c){
+  var need=c?inList(c,a):ALL.inScope(a),fin=a.final==="fail";
+  var topR=(!c&&!fin&&a.se>=3?'<span class="kw">'+a.se+'일 경과</span>':'')+(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+ck(!!S.sel[a.id],'data-sel="'+a.id+'"');
+  var mark=fin?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'';
+  var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(c&&!fin&&need?'<span class="bdg yel">'+c.el(a)+'일 경과</span>':'');
+  var k=a.iv&&a.iv.k,sc='';
+  if(k==="p")sc='<span class="p">면접 제안 확정 전</span>';
+  else if(k==="r")sc='<span class="r">'+I("cal")+'일정 변경 요청</span>';
+  else if(k==="c")sc='<span>'+fmt(dOff(a.iv.d))+' 오후 2:00</span>';
+  else if(k==="d")sc='<span>'+fmt(dOff(-a.iv.n))+' 오전 10:00</span>';
+  return '<div class="kc'+(S.sel[a.id]?' sel':'')+'" draggable="'+(!a.final)+'" data-kc="'+a.id+'"'+(k==="r"?' data-kreq="'+a.id+'" title="눌러서 일정 변경 요청 확인"':'')+'>'+
+    '<div class="kt"><span>'+esc(a.pos)+'</span><span class="kr">'+topR+'</span></div>'+
+    '<div class="kn">'+esc(a.name)+'<span class="star">'+I("star")+'</span>'+mark+'</div>'+
+    '<div class="ke">'+a.car[0]+' · '+a.edu[0]+'<br>'+a.edu[1]+'</div>'+
+    (chips?'<div class="kch">'+chips+'</div>':'')+
+    (sc?'<div class="ks"><span class="l">면접 일정</span>'+sc+'</div>':'')+'</div>';}
+function renderBoard(){
+  var c=S.cond?cond(S.cond):null;
+  $("list").classList.add("kbw");
+  $("list").innerHTML='<div class="kb">'+STAGES.map(function(st,i){var rows=boardRows(i);
+    return '<div class="kcol" data-kcol="'+i+'"><div class="kh"><span class="dt"></span>'+st+' <span class="n">'+rows.length+'명</span></div>'+
+      (rows.length?rows.map(function(a){return kCard(a,c);}).join(""):'<div class="kempty">'+(c?'조건에 해당하는<br>지원자가 없습니다':'지원자가 없습니다')+'</div>')+'</div>';}).join("")+'</div>';}
 function renderList(){
   if(S.done){$("list").innerHTML=doneHtml();$("list").style.gridTemplateColumns="";return;}
   if(noneAnyStage()){$("list").innerHTML='<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>';return;}
+  if(S.lay==="board"){renderBoard();return;}
+  $("list").classList.remove("kbw");
   var rows=visibleRows();
   var all=rows.length&&rows.every(function(a){return S.sel[a.id];}),some=rows.some(function(a){return S.sel[a.id];});
   var head=ck(all?true:some?"part":false,'data-all');
@@ -1116,7 +1161,8 @@ function render(){
   $("appView").hidden=S.view!=="app";$("mailView").hidden=S.view!=="mail";
   document.querySelectorAll("[data-go]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.go===S.view));});
   if(S.view==="mail"){renderMail();return;}
-  renderPosts();renderReopen();renderPtabs();renderTabs();renderFbar();renderList();renderBulk();$("tabs").hidden=!!S.done||noneAnyStage();
+  renderPosts();renderReopen();renderPtabs();renderTabs();renderFbar();renderList();renderBulk();$("tabs").hidden=!!S.done||noneAnyStage()||S.lay==="board";
+  document.querySelectorAll("#seg [data-lay]").forEach(function(b){var on=(S.lay||"list")===b.dataset.lay;b.classList.toggle("on",on);b.setAttribute("aria-pressed",String(on));});
 }
 
 /* ---------- 오버레이 ---------- */
@@ -1226,7 +1272,7 @@ function toastAct(m,acts){var t=$("toast");t.innerHTML='<div class="tw">'+I("ok"
 function toast(m){$("toast").classList.remove("act");var t=$("toast");t.innerHTML=I("ok")+'<span>'+esc(m)+'</span>';t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},2600);}
 function afterChange(ids){
   if(!S.cond&&S.lastTotal>0&&summary(S.pid).total===0){S.done="all";}
-  if(S.cond){var c=cond(S.cond);ids.forEach(function(id){var a=findA(id);if(a&&!c.inScope(a))S.leaving[a.id]=1;});}
+  /* flow: 범위를 벗어난 지원자는 바로 목록에서 빠짐 (처리 완료 배지 없이) */
   render();setTimeout(function(){S.leaving={};
     /* 조건의 지원자를 모두 처리하면 조건을 풀고 전체 지원자를 보여줌 */
     if(S.cond&&!overList(S.pid,cond(S.cond)).length){S.sel={};S.sort=null;if(summary(S.pid).total){S.done="cond";S.doneCond=S.cond;}else{S.done="all";S.cond=null;}}
@@ -1253,12 +1299,20 @@ function doFinal(ids,r){ids.forEach(function(id){var a=findA(id);a.final=r;if(r=
 function leaveNote(ids){return "";/* 토스트에 조건 제외 문구 노출 안 함 */var c=cond(S.cond),n=ids.filter(function(id){return !c.inScope(findA(id));}).length;return n?" 조건에서 "+n+"명이 제외되었습니다.":"";}
 function closePops(){document.querySelectorAll(".bulk .pop").forEach(function(m){m.remove();});}
 
+
+/* 칸반 카드 드래그 앤 드롭 → 리스트뷰 단계 이동과 같은 면접 제안 얼럿 */
+var DRAG=null;
+document.addEventListener("dragstart",function(e){var k=e.target.closest&&e.target.closest("[data-kc]");if(!k)return;DRAG=k.dataset.kc;k.classList.add("drag");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",DRAG);}catch(x){}});
+document.addEventListener("dragend",function(e){DRAG=null;document.querySelectorAll(".kc.drag,.kcol.over").forEach(function(n){n.classList.remove("drag","over");});});
+document.addEventListener("dragover",function(e){var col=e.target.closest&&e.target.closest("[data-kcol]");if(!col||!DRAG)return;e.preventDefault();document.querySelectorAll(".kcol.over").forEach(function(n){if(n!==col)n.classList.remove("over");});col.classList.add("over");});
+document.addEventListener("drop",function(e){var col=e.target.closest&&e.target.closest("[data-kcol]");if(!col||!DRAG)return;e.preventDefault();var id=DRAG,st=+col.dataset.kcol;DRAG=null;col.classList.remove("over");var a=findA(id);if(!a||a.stage===st||a.final)return;moveWithAlert([id],st);});
 document.addEventListener("click",function(e){
   if(!e.target.closest(".ba[data-menu]")||e.target.closest(".pop"))closePops();
   if(!e.target.closest("#reopen"))closeR();
   if(!e.target.closest(".fwrap")){closeF();S.dp=null;}
   var ps=e.target.closest("[data-psum]");
   if(ps){var pid=ps.dataset.psum;if(pid!==S.pid){S.seen[pid]=true;enter(pid,null);}showSummary();return;}
+  var kq=e.target.closest("[data-kreq]");if(kq&&!e.target.closest("button")){openAD(kq.dataset.kreq);return;}
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
   if(d.go){S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
   if(t.id==="resetBtn"){init();closeOverlay();enter("A",null);return;}
@@ -1295,6 +1349,7 @@ document.addEventListener("click",function(e){
   if(d.fopt){var g=FG[d.fopt],v=g.o.find(function(o){return String(o.v)===d.v;}).v,arr=S.fd[d.fopt]||(S.fd[d.fopt]=[]),ix=arr.indexOf(v);if(ix>=0)arr.splice(ix,1);else arr.push(v);t.classList.toggle("on",ix<0);updFcnt();return;}
   if(d.fclear!==undefined){S.fd={};document.querySelectorAll(".pill.on").forEach(function(b){b.classList.remove("on");});updFcnt();return;}
   if(d.fapply!==undefined){Object.keys(S.fd).forEach(function(k){if(!S.fd[k].length)delete S.fd[k];});S.f=S.fd;S.sel={};closeOverlay();render();toast(fCount(S.f)?"필터를 적용했습니다. 이 단계에 "+visibleRows().length+"명이 보입니다.":"필터를 해제했습니다.");return;}
+  if(d.lay){S.lay=d.lay;render();return;}
   if(d.sel){S.sel[d.sel]=!S.sel[d.sel];render();return;}
   if(d.all!==undefined){var rows=visibleRows(),all=rows.every(function(a){return S.sel[a.id];});rows.forEach(function(a){S.sel[a.id]=!all;});render();return;}
   if(d.open){openApplicant(d.open);return;}
