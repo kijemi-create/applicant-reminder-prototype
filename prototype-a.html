@@ -1125,7 +1125,7 @@ function showSummary(){
   var p=POSTS.find(function(x){return x.id===S.pid;}),s=summary(S.pid);
   if(!s.total){toast("지금은 처리가 필요한 지원자가 없습니다");return;}
   $("overlay").innerHTML='<div class="backdrop" data-close></div><div class="dwrap" data-close><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dT">'+
-    '<div class="hd"><span class="pn">'+esc(p.name)+'</span><h2 id="dT">처리 대기 중 지원자 <em>'+s.total+'명</em></h2><p>오래 기다린 지원자부터 처리하면 기업 인상도 좋아집니다.</p></div>'+
+    '<div class="hd"><h2 id="dT">처리 대기 중 지원자 <em>'+s.total+'명</em></h2><p>오래 기다린 지원자부터 처리하면 기업 인상도 좋아집니다.</p></div>'+
     '<ul class="crit" style="margin:0">'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+esc(r.c.t)+'<small>'+esc(r.c.sub)+'</small></span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
     '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있습니다.</span></div>'+
     '<div class="btns"><button type="button" class="bt sec" data-close>닫기</button></div>'+
