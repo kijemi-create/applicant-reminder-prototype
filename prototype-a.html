@@ -46,7 +46,7 @@ body:has(#overlay .ivdr) #gstack,body:has(#overlay .adw) #gstack,body:has(#overl
 .gh{display:flex;align-items:center;justify-content:space-between;gap:8px;height:42px;padding:0 10px 0 14px;border-bottom:1px solid #eef0f2}.gh b{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gh .gmin{flex:none}
 .gmin{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;color:#6c767f}.gmin:hover{background:#f4f6f7}
 .gs{border-bottom:1px solid #eef0f2}
-.gt{width:100%;display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;font-size:13px;color:#131618;text-align:left}
+.gt{width:100%;display:flex;align-items:center;gap:8px;min-height:38px;padding-top:6px;padding-bottom:6px;line-height:18px;padding:0 14px;font-size:13px;color:#131618;text-align:left}
 .gt:hover{background:#fafbfc}
 .gn{width:16px;height:16px;border-radius:50%;border:1px solid #9ea8af;color:#6c767f;font-size:10px;font-weight:600;display:grid;place-items:center;flex:none}
 .gs.open .gn{background:#30363c;border-color:#30363c;color:#fff}
@@ -75,7 +75,7 @@ body:has(#overlay .ivdr) #gstack,body:has(#overlay .adw) #gstack,body:has(#overl
 
 .pbr{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
 .gbtn.sub{height:26px;font-size:12px;font-weight:500;color:#6c767f;padding:0 8px}.gbtn.sub:hover,.gbtn.sub[aria-expanded="true"]{color:#131618}
-.guide.drop{width:260px}.guide.drop.min{width:260px}
+.guide.drop{width:260px}.prdc .gt{align-items:flex-start}.prdc .gn{margin-top:1px}.prdc .gc{margin-top:5px}.guide.drop.min{width:260px}
 .drs{margin:0 0 6px;padding:10px 12px;background:#f4f6f7;border-radius:6px;font-size:12px;line-height:18px;color:#30363c}
 .gi.dlink{text-decoration:none;color:#1b55f6;font-weight:600}.gi.dlink::before{background:#1b55f6}.gi.dlink span{margin-left:2px}
 
@@ -830,7 +830,22 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
     <div class="gsub"><button type="button" class="gi" data-scn="cond" aria-pressed="false">조건 완료 직전</button><button type="button" class="gi" data-scn="all" aria-pressed="false">전체 완료 직전</button></div></div>
   <div class="gs" data-gs="3"><button type="button" class="gt" data-gstep="3" aria-expanded="false"><span class="gn">3</span>처리 후 상태 보기<span class="gc"></span></button>
     <div class="gsub"><button type="button" class="gi" id="doneBtn" aria-pressed="false">모두 처리한 상태</button></div></div>
-  <div class="gf"><button type="button" class="gr" id="resetBtn">처음부터 다시</button><span class="gdv" aria-hidden="true"></span><button type="button" class="gr" data-cmreplay>PRD 변경 사항 다시 보기</button></div>
+  <div class="gf"><button type="button" class="gr" id="resetBtn">처음부터 다시</button></div>
+</aside>
+<aside class="guide drop min prdc" id="prdc" aria-label="PRD 변경 사항 모아보기">
+  <div class="gh" data-ghead><b>PRD 변경 사항 모아보기</b><button type="button" class="gmin" data-gmin aria-label="PRD 변경 사항 펼치기"><svg class="co" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.5 2.5v4h4M6.5 13.5v-4h-4M9.5 6.5l4.5-4.5M6.5 9.5 2 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ex" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 2h4v4M6 14H2v-4M14 2 9.5 6.5M2 14l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="P1" aria-expanded="false"><span class="gn">1</span>조건명을 행동 문장으로 바꿨습니다<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">첫 진입 팝업의 조건명을 사용자가 취해야 할 액션으로 표현했습니다. 조건 기준은 PRD와 같습니다.</p><button type="button" class="gi dlink" data-cmgo="pop">화면에서 보기</button></div></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="P2" aria-expanded="false"><span class="gn">2</span>띠 배너 위치를 옮겼습니다<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">포지션 탭 아래에 있던 띠 배너를 공고 선택 영역 아래로 옮겼습니다.</p><button type="button" class="gi dlink" data-cmgo="ban">화면에서 보기</button></div></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="P3" aria-expanded="false"><span class="gn">3</span>필터를 칩으로 바꿨습니다<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">툴바의 필터 아이콘 버튼을 삭제하고, [필터 추가]로 고른 항목을 필터 칩으로 보여줍니다.</p><button type="button" class="gi dlink" data-cmgo="fil">화면에서 보기</button></div></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="P4" aria-expanded="false"><span class="gn">4</span>전체 목록에서는 dot을 표시하지 않습니다<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">처리 대기 dot은 조건 필터를 골랐을 때만 표시합니다.</p><button type="button" class="gi dlink" data-cmgo="dot">화면에서 보기</button></div></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="P5" aria-expanded="false"><span class="gn">5</span>지원일 툴팁 문구를 바꿨습니다<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">지원일 옆 아이콘 툴팁: '지원자가 처리를 기다린 기간'.</p><button type="button" class="gi dlink" data-cmgo="tip">화면에서 보기</button></div></div>
+  <div class="gs"><button type="button" class="gt" data-dstep="P6" aria-expanded="false"><span class="gn">6</span>조건마다 다른 완료 화면을 보여줍니다<span class="gc"></span></button>
+    <div class="gsub"><p class="drs">조건을 모두 처리하면 목록 자리에 완료 화면이 나오고, [이어서 처리하기]는 가장 오래 기다린 지원자가 있는 조건으로 이어집니다.</p><button type="button" class="gi dlink" data-cmgo="emp">화면에서 보기</button></div></div>
 </aside>
 <aside class="guide drop min" id="drop" aria-label="탈락한 시안">
   <div class="gh" data-ghead><b>탈락한 시안도 보실래요?</b><button type="button" class="gmin" data-gmin aria-label="탈락한 시안 펼치기"><svg class="co" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.5 2.5v4h4M6.5 13.5v-4h-4M9.5 6.5l4.5-4.5M6.5 9.5 2 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ex" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 2h4v4M6 14H2v-4M14 2 9.5 6.5M2 14l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
@@ -1419,7 +1434,12 @@ var CMS=[
 ];
 function scnCoach(t,d){CM.scn={sel:"#list .lr.need",t:t,d:d};coachSoon();}
 function scnGo(){CM.scn=null;cmClear();var c=document.querySelector("#list .lr.need [data-sel]");if(!c)return;c.click();setTimeout(function(){$("bView").click();},60);}
-function cmHasNext(cur){if(cur==="emp"||S.done)return false;var ovOpen=!!$("overlay").innerHTML;return CMS.some(function(x){if(x.k===cur||CM.done[x.k]||!!x.ov!==ovOpen||(x.when&&!x.when()))return false;return cmVisible(document.querySelector(x.sel));});}/* 이 화면에서 이어질 코치마크가 없으면 '닫기' */
+function cmGo(k){CM.off=false;CM.sc=null;delete CM.done[k];CM.focus=k;cmClear();closeRej&&$("rejv")&&closeRej();
+  if(k==="emp"){GACT="cond";scenario("cond");syncGuide();setTimeout(scnGo,150);return;}
+  closeOverlay();if(S.view!=="app")S.view="app";S.done=null;S.cond=null;S.kept={};S.sel={};S.lay="list";render();
+  if(k==="pop"){showSummary();}
+  window.scrollTo(0,0);coachSoon();}
+function cmHasNext(cur){if(cur==="emp"||S.done||CM.focus)return false;var ovOpen=!!$("overlay").innerHTML;return CMS.some(function(x){if(x.k===cur||CM.done[x.k]||!!x.ov!==ovOpen||(x.when&&!x.when()))return false;return cmVisible(document.querySelector(x.sel));});}/* 이 화면에서 이어질 코치마크가 없으면 '닫기' */
 function cmVisible(el){if(!el)return false;var r=el.getBoundingClientRect();return r.width>0&&r.height>0;}
 function cmClear(){["cmhl","cmbox","cmln","cmdot"].forEach(function(id){var n=document.getElementById(id);if(n)n.remove();});}
 function coach(){
@@ -1427,6 +1447,7 @@ function coach(){
   var ovOpen=!!$("overlay").innerHTML;
   var m=null,el=null;
   if(CM.scn&&!ovOpen){var se=document.querySelector(CM.scn.sel);if(cmVisible(se)){m={k:"scn",t:CM.scn.t,d:CM.scn.d,scn:true};el=se;}}
+  if(!m&&CM.focus){var fm=CMS.find(function(q){return q.k===CM.focus;});if(fm&&!!fm.ov===ovOpen){var fe=document.querySelector(fm.sel);if(cmVisible(fe)){m=fm;el=fe;}}if(!m)return;}
   if(!m&&!ovOpen&&!$("alertHost")&&CM.empForce&&S.done==="cond"){var ee=document.querySelector("#list .dempty");if(cmVisible(ee)){m=CMS.find(function(q){return q.k==="emp";});el=ee;}}
   if(!m&&CM.off)return;
   var ORD=["pop","emp","ban","fil","dot","tip"];/* 화면 맥락이 분명한 팝업 · 완료 화면을 먼저 */
@@ -1512,10 +1533,11 @@ document.addEventListener("click",function(e){
   if(d.rej){openRej(d.rej);return;}
   if(d.rejx!==undefined){closeRej();return;}
   if(d.rejmin!==undefined){var wy=t.closest(".rjwhy");var mn=wy.classList.toggle("min");t.textContent=mn?"탈락 사유 보기":"접기";return;}
+  if(d.cmgo){cmGo(d.cmgo);return;}
   if(d.scngo!==undefined){scnGo();return;}
   if(d.scnx!==undefined){CM.scn=null;cmClear();return;}
   if(d.cmoff!==undefined){CM.off=true;CM.empForce=false;cmClear();return;}
-  if(d.cmnext!==undefined){CM.done[CM.cur]=1;if(CM.cur==="emp")CM.empForce=false;coach();return;}
+  if(d.cmnext!==undefined){CM.done[CM.cur]=1;if(CM.cur==="emp")CM.empForce=false;if(CM.focus){CM.focus=null;cmClear();return;}coach();return;}
   if(d.cmreplay!==undefined){CM.done={};CM.off=false;CM.sc=null;if(S.view!=="app"){S.view="app";enter(S.pid,null);}if(!$("overlay").innerHTML&&!S.done&&!S.cond&&summary(S.pid).total){showSummary();}else{closeOverlay();}coach();return;}/* 지금 화면 상태는 유지하고 코치마크만 다시. 기본 목록이면 첫 진입 팝업부터 */
   if(d.lay){S.lay=d.lay;render();return;}
   if(d.sel){var ss=selStage(),aa=findA(d.sel);if(!S.sel[d.sel]&&ss!==null&&aa&&aa.stage!==ss){toast("같은 단계의 지원자만 함께 선택할 수 있습니다.");return;}S.sel[d.sel]=!S.sel[d.sel];render();return;}
