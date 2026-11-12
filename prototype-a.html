@@ -56,8 +56,8 @@ body:has(#overlay .ivdr) #gstack,body:has(#overlay .adw) #gstack,body:has(#overl
 .gs.open .gsub{display:flex}
 .gi{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border-radius:6px;font-size:12px;color:#30363c;text-align:left}
 .gi::before{content:"";width:3px;height:3px;border-radius:50%;background:#9ea8af;flex:none}
-.gi:hover,.gi[aria-pressed="true"]{background:#f4f6f7}
-.gi[aria-pressed="true"]{color:#131618;font-weight:600}
+.gi:hover{background:#f4f6f7}
+.gi[aria-pressed="true"]{background:#eef3ff;color:#1b55f6;font-weight:600;box-shadow:inset 2px 0 0 #1b55f6}.gi[aria-pressed="true"]::before{background:#1b55f6}
 .gf{padding:8px 14px 10px;display:flex;align-items:center;gap:10px}.gdv{width:1px;height:10px;background:#d1d6da}.gr{font-size:12px;color:#6c767f;height:24px}.gr:hover{color:#131618}
 
 .rbanner{margin-top:20px;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:8px;background:#eef3ff;color:#1b55f6;font-size:13px;font-weight:500}
@@ -826,9 +826,9 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
   <div class="gs open" data-gs="1"><button type="button" class="gt" data-gstep="1" aria-expanded="true"><span class="gn">1</span>지원자 관리 진입하기<span class="gc"></span></button>
     <div class="gsub"><button type="button" class="gi" data-go="app" aria-pressed="true">주간 첫 방문 · 요약 팝업 보기</button></div></div>
   <div class="gs" data-gs="2"><button type="button" class="gt" data-gstep="2" aria-expanded="false"><span class="gn">2</span>조건 처리 완료해 보기<span class="gc"></span></button>
-    <div class="gsub"><button type="button" class="gi" data-scn="cond">조건 완료 직전</button><button type="button" class="gi" data-scn="all">전체 완료 직전</button></div></div>
+    <div class="gsub"><button type="button" class="gi" data-scn="cond" aria-pressed="false">조건 완료 직전</button><button type="button" class="gi" data-scn="all" aria-pressed="false">전체 완료 직전</button></div></div>
   <div class="gs" data-gs="3"><button type="button" class="gt" data-gstep="3" aria-expanded="false"><span class="gn">3</span>처리 후 상태 보기<span class="gc"></span></button>
-    <div class="gsub"><button type="button" class="gi" id="doneBtn">모두 처리한 상태</button></div></div>
+    <div class="gsub"><button type="button" class="gi" id="doneBtn" aria-pressed="false">모두 처리한 상태</button></div></div>
   <div class="gf"><button type="button" class="gr" id="resetBtn">처음부터 다시</button><span class="gdv" aria-hidden="true"></span><button type="button" class="gr" data-cmreplay>PRD 변경 사항 다시 보기</button></div>
 </aside>
 <aside class="guide drop min" id="drop" aria-label="탈락한 시안">
@@ -1084,7 +1084,7 @@ function visibleRows(){
   if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.leaving[a.id]||S.kept[a.id])&&a.stage===S.tab&&passF(a);}),c);}/* 조건 목록에는 조건에 해당하는(기준일을 넘긴) 지원자만 */
   return sortRows(l.filter(function(a){return a.stage===S.tab&&passF(a);}));
 }
-/* 완료 empty: 조건 이름 대신 끝낸 행동으로 말하고, '처리' 반복을 피함. 조건 완료 시 남은 조건 중 인원이 가장 많은 1개만 이어서 제안 */
+/* 완료 empty: 조건 이름 대신 끝낸 행동으로 말하고, '처리' 반복을 피함. 조건 완료 시 남은 조건 중 가장 오래 기다린 지원자가 있는 1개만 이어서 제안 */
 var DONE_T={1:"최종합격 · 불합격 심사를 모두 마쳤습니다",2:"현재 단계에 머물던 지원자를 모두 정리했습니다",3:"지원서를 모두 열람했습니다",4:"열람한 지원자의 다음 단계를 모두 정했습니다",6:"일정 변경 요청에 모두 답했습니다",7:"면접 결과를 모두 반영했습니다"};
 var WAIT_T={1:"최종합격 · 불합격을",2:"단계 이동이나 심사를",3:"지원서 열람을",4:"다음 단계 결정을",6:"일정 변경 답변을",7:"면접 결과 반영을"};
 /* 필터 결과가 모든 단계에서 0명이면 단계 탭도 숨김 (피그마 '필터 적용 시 결과 없음') */
@@ -1250,7 +1250,7 @@ function updFcnt(){$("fcnt").innerHTML='<b>'+fCount(S.fd)+'</b>/'+FTOTAL+'개 �
 function renderBulk(){var n=Object.keys(S.sel).filter(function(k){return S.sel[k];}).length;$("bulk").hidden=!n;$("bn").textContent=n+"명";}
 function render(){
   $("appView").hidden=S.view!=="app";$("mailView").hidden=S.view!=="mail";
-  document.querySelectorAll("[data-go]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.go===S.view));});
+  syncGuide();
   if(S.view==="mail"){renderMail();return;}
   renderPosts();renderReopen();renderPtabs();renderTabs();renderFbar();renderList();renderBulk();$("tabs").hidden=!!S.done||noneAnyStage()||S.lay==="board";
   document.querySelectorAll("#seg [data-lay]").forEach(function(b){var on=(S.lay||"list")===b.dataset.lay;b.classList.toggle("on",on);b.setAttribute("aria-pressed",String(on));});
@@ -1401,6 +1401,8 @@ function openRej(k){var v=REJ[k];cmClear();var w=$("rejv");if(!w){w=document.cre
    '<div class="gf"><button type="button" class="rjback" data-rejx><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>A안으로 돌아가기</button></div></aside></div>';
   document.documentElement.style.overflow="hidden";}
 function closeRej(){var w=$("rejv");if(w)w.remove();document.documentElement.style.overflow="";coachSoon();}
+var GACT="app";/* 시나리오 가이드에서 지금 들어와 있는 항목 */
+function syncGuide(){document.querySelectorAll("#guide .gi").forEach(function(b){var k=b.dataset.go||b.dataset.scn||(b.id==="doneBtn"?"done":"");if(!k)return;b.setAttribute("aria-pressed",String(k===(GACT||"app")));});}
 function gPanel(pn,open){pn.classList.toggle("min",!open);if(open)document.querySelectorAll("#gstack .guide").forEach(function(o){if(o!==pn)o.classList.add("min");});}/* 우측 하단 가이드 · 탈락 시안: 하나를 펼치면 다른 하나는 접힘 */
 /* ---------- PRD 변경 코치마크: 바뀐 영역이 화면에 보일 때만 그 자리에 노출 ---------- */
 var CM={done:{},cur:null,off:false,sc:null};
@@ -1464,12 +1466,12 @@ document.addEventListener("click",function(e){
   var kq=e.target.closest("[data-kreq]");if(kq&&!e.target.closest("button")){openAD(kq.dataset.kreq);return;}
   var gh=e.target.closest("[data-ghead]");if(gh&&!e.target.closest("button")){var pn=gh.closest(".guide");if(pn.classList.contains("min")){gPanel(pn,true);}return;}
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
-  if(d.go){S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
-  if(t.id==="resetBtn"){init();closeOverlay();enter("A",null);return;}
+  if(d.go){GACT=d.go;S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
+  if(t.id==="resetBtn"){GACT="app";init();closeOverlay();enter("A",null);return;}
   if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON"){var wasSum=!!$("dT");closeOverlay();if(wasSum&&!S.cond){S.nudge=true;renderFbar();}}return;}
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
-  if(t.id==="doneBtn"){closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
+  if(t.id==="doneBtn"){GACT="done";closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
   if(d.apply){S.nudge=false;S.done=null;S.kept={};S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
   if(t.id==="cclear"){S.nudge=true;S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;render();return;}
   if(d.fmenu){openF(t);return;}
@@ -1525,7 +1527,7 @@ document.addEventListener("click",function(e){
   if(d.adconfirmx!==undefined){S.ad.confirm=false;renderAD();return;}
   if(d.adsend!==undefined){var a1=findA(S.ad.id),was=a1.iv.k;a1.iv={k:"p"};if(S.ad.newProp){S.ad.newProp=false;S.ad.drawer=false;S.ad.view="chat";afterChange([a1.id]);renderAD();toast("면접 제안을 보냈습니다.");return;}S.ad.log.push(was==="r"?"chg":"chg2");S.ad.drawer=false;S.ad.view="chat";var n1=leaveNote([a1.id]);afterChange([a1.id]);renderAD();toast("면접 제안을 변경했습니다."+n1);return;}
   if(d.adcancel!==undefined){var a2=findA(S.ad.id);a2.iv={k:"none"};S.ad.log.push("cancel");S.ad.confirm=false;S.ad.view="chat";var n2=leaveNote([a2.id]);afterChange([a2.id]);renderAD();toast("면접을 취소했습니다."+n2);return;}
-  if(d.scn){scenario(d.scn);return;}
+  if(d.scn){GACT=d.scn;scenario(d.scn);syncGuide();return;}
   if(d.menu){
     var had=t.querySelector(".pop");closePops();if(had)return;
     var m=document.createElement("div");m.className="pop";
