@@ -717,7 +717,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .cm{display:flex;flex-direction:column;gap:4px;max-width:86%}
 .cm.me{align-self:flex-end;align-items:flex-end}.cm.you{align-self:flex-start}
 .cm .bub{background:#f4f6f7;border-radius:10px;padding:10px 12px;font-size:13px;line-height:20px;color:#131618;display:flex;flex-direction:column;gap:8px}
-.cm.me .bub{background:#fff;border:1px solid #e2e6e8}
+.cm.me .bub{background:#f4f6f7;border:0}
 .cm.hot .bub{background:#fff6f5;box-shadow:0 0 0 1px #f22a23}
 .cts{font-size:11px;color:#9ea8af}
 .cbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 8px 0 10px;border:1px solid #e2e6e8;border-radius:8px;background:#fff;font-size:13px;color:#131618;align-self:flex-start}
@@ -733,7 +733,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .pvbar{background:#eef3ff;color:#1b55f6;font-size:13px;line-height:20px;text-align:center;padding:12px 16px;margin:0}
 .cban{margin:12px 16px 0;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 14px;border-radius:10px;background:#fff;border:1px solid #e2e6e8;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .cban div{flex:1;display:flex;flex-direction:column;font-size:12px;line-height:18px;color:#6c767f}.cban b{font-size:13px;color:#1b55f6;font-weight:600}
-.cbtn.off{background:#f4f6f7;border-color:#f4f6f7;color:#9ea8af;font-weight:600}.cbtn.off .ic{color:#9ea8af}
+.cbtn.off{background:#e9ecef;border-color:#e9ecef;color:#9ea8af;font-weight:600;width:100%;height:36px}.cbtn.off .ic{color:#9ea8af}
 .cbg.red{background:#ffecec;color:#f22a23}
 .reqbox{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:10px;background:#fff6f5;border:1px solid #ffd3d0;font-size:12px;color:#6c767f}
 .reqbox.gray{background:#f4f6f7;border-color:#e2e6e8}
@@ -1291,12 +1291,13 @@ function renderAD(){
   var opts=[dOff(3),dOff(4),dOff(5)];
   function bubbleBtn(badge,cls){return '<button type="button" class="cbtn" data-adprev>'+I("cal")+'<b>면접 제안</b>'+(badge?'<span class="cbg '+cls+'">'+badge+'</span>':'')+'<span class="cv">'+I("chev")+'</span></button>';}
   var chg=S.ad.log.indexOf("chg")>=0,cxl=S.ad.log.indexOf("cancel")>=0;
-  var firstBtn=cxl?bubbleBtn("취소","red"):(chg?'<span class="cbtn off">'+I("x")+'면접 제안</span>':bubbleBtn(req?"변경요청":(pend?"응답 대기":""),req?"yel":"gray"));
+  var firstBtn=cxl?bubbleBtn("취소","red"):(chg?'<span class="cbtn off"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#b8bfc5"/><path d="M5.6 5.6l4.8 4.8M10.4 5.6l-4.8 4.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>면접 제안</span>':bubbleBtn(req?"변경요청":(pend?"응답 대기":""),req?"yel":"gray"));
   var hist='<span class="cday">'+fmt(sent).replace(/\((.)\)/," $1요일")+'</span>'+
     '<div class="cm me"><div class="bub">'+(cxl?'면접 취소되었습니다.':'면접 제안이 발송되었습니다.')+firstBtn+'</div><span class="cts">Bot · 오전 11:22</span></div>';
-  if(S.ad.wasReq){hist+='<span class="cday">'+fmt(reqd).replace(/\((.)\)/," $1요일")+'</span>'+
+  if(S.ad.wasReq&&!chg){hist+='<span class="cday">'+fmt(reqd).replace(/\((.)\)/," $1요일")+'</span>'+
     '<div class="cm you"><div class="bub">면접 일정 변경을 요청했습니다.</div><span class="cts">Bot · 오후 3:10</span></div>';}
-  S.ad.log.forEach(function(l){hist+='<span class="cday">'+fmt(TODAY).replace(/\((.)\)/," $1요일")+'</span>'+(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","yel")+'</div><span class="cts">Bot · 방금</span></div>');});
+  /* 피그마 200-297815: 제안 변경 후에는 발송 버블(비활성 카드) + 변경 버블만, 같은 날짜 아래에 노출 */
+  S.ad.log.forEach(function(l){hist+=(l==="cancel"?'<span class="cday">'+fmt(TODAY).replace(/\((.)\)/," $1요일")+'</span>':'')+(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","gray")+'</div><span class="cts">Bot · 오전 11:22</span></div>');});
   var chat;
   if(S.ad.view==="prev"){
     chat='<div class="chd"><button type="button" class="back" data-adchat aria-label="채팅으로">'+I("chev")+'</button><b>면접 제안 미리보기</b></div><div class="cbody pv">'+
@@ -1309,7 +1310,7 @@ function renderAD(){
     chat='<div class="chd"><b>지원자에게 연락하기</b></div>'+
       (req?'<div class="cban"><div><b>일정 변경 요청이 왔습니다</b><span>요청 후 '+rn+'일 경과</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
       '<div class="cbody">'+hist+'</div>'+
-      '<div class="cft">'+(req?'':'<button type="button" class="ivchip" data-addrawer>'+I("cal")+'면접 제안하기</button>')+'<div class="cin"><input placeholder="지원자에게 연락해 보세요." aria-label="메시지"><button type="button" class="send" data-todo aria-label="보내기">'+I("chev")+'</button></div><p>'+I("info")+'주민등록번호 등 민감한 개인정보 입력에 주의해 주세요.</p></div>';
+      '<div class="cft">'+(req?'':'<button type="button" class="ivchip" data-addrawer><span aria-hidden="true">👋🏻</span>면접 제안하기</button>')+'<div class="cin"><input placeholder="지원자에게 연락해 보세요." aria-label="메시지"><button type="button" class="send" data-todo aria-label="보내기">'+I("chev")+'</button></div><p>'+I("info")+'주민등록번호 등 민감한 개인정보 입력에 주의해 주세요.</p></div>';
   }
   var rail=[["move","단계 이동"],["check","최종 합격"],["x","불합격"],["edit","내 메모"],["down","다운로드"],["more","더보기"]].map(function(r){return '<button type="button" data-todo>'+I(r[0])+'<span>'+r[1]+'</span></button>';}).join("");
   var doc='<div class="adhd"><span class="bdg line">'+STAGES[a.stage]+'</span><span>'+esc(a.pos)+'</span><span>'+I("mail")+'applicant@email.com</span><span>010-1234-5678</span></div>'+
