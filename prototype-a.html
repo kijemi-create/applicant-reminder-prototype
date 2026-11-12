@@ -32,6 +32,30 @@ svg{flex:none}
 .proto b{font-weight:700;color:var(--gray-950)}
 .proto .sp{flex:1}
 .proto .ptag{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:6px;background:var(--gray-950);color:#fff;font-size:13px;font-weight:700;margin-right:6px}
+
+/* 시나리오 가이드 (flex 전자계약 시작 가이드 패턴) */
+.proto{align-items:center}
+.gbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--gray-950)}
+.gbtn:hover{background:#eef0f2}.gbtn[aria-expanded="true"]{background:#eef0f2}
+.gbtn .new{font-size:10px;font-weight:700;color:#1b55f6;background:#eef3ff;border-radius:4px;padding:1px 5px;letter-spacing:.02em}
+.guide{position:fixed;right:24px;bottom:24px;width:260px;background:#fff;border:1px solid #e2e6e8;border-radius:12px;box-shadow:0 8px 24px rgba(19,22,24,.14);z-index:45;font-size:13px;overflow:hidden}
+.guide[hidden]{display:none}
+.gh{display:flex;align-items:center;justify-content:space-between;height:42px;padding:0 10px 0 14px;border-bottom:1px solid #eef0f2}.gh b{font-size:13px;font-weight:600}
+.gmin{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;color:#6c767f}.gmin:hover{background:#f4f6f7}
+.gs{border-bottom:1px solid #eef0f2}
+.gt{width:100%;display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;font-size:13px;color:#131618;text-align:left}
+.gt:hover{background:#fafbfc}
+.gn{width:16px;height:16px;border-radius:50%;border:1px solid #9ea8af;color:#6c767f;font-size:10px;font-weight:600;display:grid;place-items:center;flex:none}
+.gs.open .gn{background:#30363c;border-color:#30363c;color:#fff}
+.gc{margin-left:auto;width:7px;height:7px;border:solid #6c767f;border-width:0 1.5px 1.5px 0;transform:translateY(-2px) rotate(45deg);transition:transform .15s}
+.gs.open .gc{transform:translateY(2px) rotate(-135deg)}
+.gsub{display:none;flex-direction:column;gap:2px;padding:0 6px 8px}
+.gs.open .gsub{display:flex}
+.gi{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border-radius:6px;font-size:12px;color:#30363c;text-align:left}
+.gi::before{content:"";width:3px;height:3px;border-radius:50%;background:#9ea8af;flex:none}
+.gi:hover,.gi[aria-pressed="true"]{background:#f4f6f7}
+.gi[aria-pressed="true"]{color:#131618;font-weight:600}
+.gf{padding:8px 14px 10px}.gr{font-size:12px;color:#6c767f;height:24px}.gr:hover{color:#131618}
 .pbtn{border:1px solid var(--gray-300);background:#fff;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:500}
 .pbtn[aria-pressed="true"]{background:var(--gray-950);color:#fff;border-color:var(--gray-950)}
 .frame{max-width:1440px;margin:0 auto;overflow-x:auto;border-radius:10px;box-shadow:0 12px 40px rgba(19,22,24,.12)}
@@ -739,18 +763,24 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .ntd{align-self:flex-start;width:fit-content;display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;border-radius:999px;background:#e9f8ef;color:#02b160;font-size:12px;font-weight:600}.ntd::before{content:"";width:6px;height:6px;border-radius:50%;background:#02b160}
 </style>
 
-<div class="proto" role="toolbar" aria-label="프로토타입 시나리오">
+<div class="proto" role="toolbar" aria-label="프로토타입">
   <span class="ptag">A안 · 필터형</span>
-  <b>시나리오</b>
-  <button type="button" class="pbtn" data-go="app" aria-pressed="true">지원자 관리 진입 (주간 첫 방문)</button>
-  <button type="button" class="pbtn" data-go="mail" aria-pressed="false">월요일 리마인드 메일</button>
-  <button type="button" class="pbtn" data-scn="cond">조건 완료 직전</button>
-  <button type="button" class="pbtn" data-scn="all">전체 완료 직전</button>
-  <button type="button" class="pbtn" id="doneBtn">모두 처리한 상태</button>
-  <button type="button" class="pbtn" id="resetBtn">처음부터 다시</button>
-  <span class="sp"></span>
   <span>오늘 26.11.05(목) · 예시 데이터 · 경과일 N은 가안</span>
+  <span class="sp"></span>
+  <button type="button" class="gbtn" id="guideBtn" aria-expanded="true" aria-controls="guide"><span class="new">NEW</span>프로토타입 시나리오 가이드</button>
 </div>
+<aside class="guide" id="guide" aria-label="프로토타입 시나리오 가이드">
+  <div class="gh"><b>프로토타입 시나리오 가이드</b><button type="button" class="gmin" data-gmin aria-label="가이드 접기"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.5 2.5v4h4M6.5 13.5v-4h-4M9.5 6.5l4.5-4.5M6.5 9.5 2 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div class="gs open" data-gs="1"><button type="button" class="gt" data-gstep="1" aria-expanded="true"><span class="gn">1</span>지원자 관리 진입하기<span class="gc"></span></button>
+    <div class="gsub"><button type="button" class="gi" data-go="app" aria-pressed="true">주간 첫 방문 · 요약 팝업 보기</button></div></div>
+  <div class="gs" data-gs="2"><button type="button" class="gt" data-gstep="2" aria-expanded="false"><span class="gn">2</span>조건 처리 완료해 보기<span class="gc"></span></button>
+    <div class="gsub"><button type="button" class="gi" data-scn="cond">조건 완료 직전</button><button type="button" class="gi" data-scn="all">전체 완료 직전</button></div></div>
+  <div class="gs" data-gs="3"><button type="button" class="gt" data-gstep="3" aria-expanded="false"><span class="gn">3</span>처리 후 상태 보기<span class="gc"></span></button>
+    <div class="gsub"><button type="button" class="gi" id="doneBtn">모두 처리한 상태</button></div></div>
+  <div class="gs" data-gs="4"><button type="button" class="gt" data-gstep="4" aria-expanded="false"><span class="gn">4</span>리마인드 메일 보기<span class="gc"></span></button>
+    <div class="gsub"><button type="button" class="gi" data-go="mail" aria-pressed="false">월요일 리마인드 메일</button></div></div>
+  <div class="gf"><button type="button" class="gr" id="resetBtn">처음부터 다시</button></div>
+</aside>
 
 <div id="appView">
   <div class="frame"><div class="app">
@@ -1349,6 +1379,8 @@ document.addEventListener("click",function(e){
   if(d.fopt){var g=FG[d.fopt],v=g.o.find(function(o){return String(o.v)===d.v;}).v,arr=S.fd[d.fopt]||(S.fd[d.fopt]=[]),ix=arr.indexOf(v);if(ix>=0)arr.splice(ix,1);else arr.push(v);t.classList.toggle("on",ix<0);updFcnt();return;}
   if(d.fclear!==undefined){S.fd={};document.querySelectorAll(".pill.on").forEach(function(b){b.classList.remove("on");});updFcnt();return;}
   if(d.fapply!==undefined){Object.keys(S.fd).forEach(function(k){if(!S.fd[k].length)delete S.fd[k];});S.f=S.fd;S.sel={};closeOverlay();render();toast(fCount(S.f)?"필터를 적용했습니다. 이 단계에 "+visibleRows().length+"명이 보입니다.":"필터를 해제했습니다.");return;}
+  if(d.gstep){var g=t.closest(".gs"),was=g.classList.contains("open");document.querySelectorAll("#guide .gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!was){g.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
+  if(d.gmin!==undefined||t.id==="guideBtn"){var gd=$("guide"),show=t.id==="guideBtn"?gd.hidden:false;gd.hidden=!show;$("guideBtn").setAttribute("aria-expanded",String(show));return;}
   if(d.lay){S.lay=d.lay;render();return;}
   if(d.sel){S.sel[d.sel]=!S.sel[d.sel];render();return;}
   if(d.all!==undefined){var rows=visibleRows(),all=rows.every(function(a){return S.sel[a.id];});rows.forEach(function(a){S.sel[a.id]=!all;});render();return;}
