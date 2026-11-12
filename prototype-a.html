@@ -38,6 +38,7 @@ svg{flex:none}
 .gbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--gray-950)}
 .gbtn:hover{background:#eef0f2}.gbtn[aria-expanded="true"]{background:#eef0f2}
 .gbtn .new{font-size:10px;font-weight:700;color:#1b55f6;background:#eef3ff;border-radius:4px;padding:1px 5px;letter-spacing:.02em}
+body:has(#overlay .ivdr) #gstack,body:has(#overlay .adw) #gstack,body:has(#overlay .sheet) #gstack,body:has(#alertHost) #gstack{visibility:hidden}/* 드로어 · 지원자 상세 · 얼럿이 열리면 우측 하단 가이드를 숨겨 버튼을 가리지 않게 */
 .gstack{position:fixed;right:24px;bottom:24px;z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-height:calc(100vh - 48px)}
 .guide{position:relative;width:260px;overflow:auto;background:#fff;border:1px solid #e2e6e8;border-radius:12px;box-shadow:0 8px 24px rgba(19,22,24,.14);z-index:45;font-size:13px;overflow:hidden}
 .guide.min .gs,.guide.min .gf,.guide.min .gintro{display:none}.guide.min .gh{border-bottom:0;cursor:pointer}.guide.min{width:260px}
@@ -1295,7 +1296,7 @@ function renderAD(){
     '<div class="cm me"><div class="bub">'+(cxl?'면접 취소되었습니다.':'면접 제안이 발송되었습니다.')+firstBtn+'</div><span class="cts">Bot · 오전 11:22</span></div>';
   if(S.ad.wasReq){hist+='<span class="cday">'+fmt(reqd).replace(/\((.)\)/," $1요일")+'</span>'+
     '<div class="cm you"><div class="bub">면접 일정 변경을 요청했습니다.</div><span class="cts">Bot · 오후 3:10</span></div>';}
-  S.ad.log.forEach(function(l){hist+='<span class="cday">'+fmt(TODAY).replace(/\((.)\)/," $1요일")+'</span>'+(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","blue")+'</div><span class="cts">Bot · 방금</span></div>');});
+  S.ad.log.forEach(function(l){hist+='<span class="cday">'+fmt(TODAY).replace(/\((.)\)/," $1요일")+'</span>'+(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","yel")+'</div><span class="cts">Bot · 방금</span></div>');});
   var chat;
   if(S.ad.view==="prev"){
     chat='<div class="chd"><button type="button" class="back" data-adchat aria-label="채팅으로">'+I("chev")+'</button><b>면접 제안 미리보기</b></div><div class="cbody pv">'+
@@ -1412,14 +1413,15 @@ var CMS=[
 ];
 function scnCoach(t,d){CM.scn={sel:"#list .lr.need",t:t,d:d};coachSoon();}
 function scnGo(){CM.scn=null;cmClear();var c=document.querySelector("#list .lr.need [data-sel]");if(!c)return;c.click();setTimeout(function(){$("bView").click();},60);}
+function cmHasNext(cur){var ovOpen=!!$("overlay").innerHTML;return CMS.some(function(x){if(x.k===cur||CM.done[x.k]||!!x.ov!==ovOpen)return false;return cmVisible(document.querySelector(x.sel));});}/* 이 화면에서 이어질 코치마크가 없으면 '닫기' */
 function cmVisible(el){if(!el)return false;var r=el.getBoundingClientRect();return r.width>0&&r.height>0;}
 function cmClear(){["cmhl","cmbox","cmln","cmdot"].forEach(function(id){var n=document.getElementById(id);if(n)n.remove();});}
 function coach(){
-  cmClear();CM.cur=null;if(S.view!=="app"||$("rejv"))return;
+  cmClear();CM.cur=null;if(S.view!=="app"||$("rejv")||$("alertHost"))return;
   var ovOpen=!!$("overlay").innerHTML;
   var m=null,el=null;
   if(CM.scn&&!ovOpen){var se=document.querySelector(CM.scn.sel);if(cmVisible(se)){m={k:"scn",t:CM.scn.t,d:CM.scn.d,scn:true};el=se;}}
-  if(!m&&CM.empForce&&S.done==="cond"){var ee=document.querySelector("#list .dempty");if(cmVisible(ee)){m=CMS.find(function(q){return q.k==="emp";});el=ee;}}
+  if(!m&&!ovOpen&&!$("alertHost")&&CM.empForce&&S.done==="cond"){var ee=document.querySelector("#list .dempty");if(cmVisible(ee)){m=CMS.find(function(q){return q.k==="emp";});el=ee;}}
   if(!m&&CM.off)return;
   var ORD=["pop","emp","ban","fil","tip"];/* 화면 맥락이 분명한 팝업 · 완료 화면을 먼저 */
   for(var i=0;!m&&i<ORD.length;i++){var x=CMS.find(function(q){return q.k===ORD[i];});if(CM.done[x.k])continue;if(!!x.ov!==ovOpen)continue;var e2=document.querySelector(x.sel);if(cmVisible(e2)){m=x;el=e2;break;}}
@@ -1432,7 +1434,7 @@ function coach(){
   var idx=m.scn?0:CMS.indexOf(m),left=CMS.filter(function(x){return !CM.done[x.k];}).length;
   var box=document.createElement("div");box.id="cmbox";box.className="cmbox";box.setAttribute("role","dialog");box.setAttribute("aria-label","PRD 변경 사항");
   if(m.scn){box.innerHTML='<span class="tag">시나리오</span><b>'+m.t+'</b><p>'+m.d+'</p><div class="cf"><span></span><span><button type="button" class="sk" data-scnx>닫기</button><button type="button" data-scngo>다음</button></span></div>';}
-  else box.innerHTML='<span class="tag">PRD 변경 '+(idx+1)+'/'+CMS.length+'</span><b>'+(typeof m.t==='function'?m.t():m.t)+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf"><span class="dots">'+CMS.map(function(x,j){return '<i'+(j===idx?' class="on"':'')+'></i>';}).join("")+'</span><span><button type="button" class="sk" data-cmoff>모두 닫기</button><button type="button" data-cmnext>'+(idx<CMS.length-1&&left>1?'다음':'확인')+'</button></span></div>';
+  else box.innerHTML='<span class="tag">PRD 변경 '+(idx+1)+'/'+CMS.length+'</span><b>'+(typeof m.t==='function'?m.t():m.t)+'</b><p>'+(typeof m.d==='function'?m.d():m.d)+'</p><div class="cf"><span class="dots">'+CMS.map(function(x,j){return '<i'+(j===idx?' class="on"':'')+'></i>';}).join("")+'</span><span><button type="button" class="sk" data-cmoff>모두 닫기</button><button type="button" data-cmnext>'+(cmHasNext(m.k)?'다음':'닫기')+'</button></span></div>';
   document.body.appendChild(box);
   var bw=280,bh=box.offsetHeight,gap=28,x0,y0,line,dot;
   var cy=r.top+r.height/2;
