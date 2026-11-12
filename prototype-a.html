@@ -1100,9 +1100,9 @@ function boardRows(i){var l=S.db[S.pid].filter(posOK);
   return sortRows(l.filter(function(a){return a.stage===i&&passF(a);}));}
 function kCard(a,c){
   var need=c?inList(c,a):false,fin=a.final==="fail";
-  var topR=(!c&&!fin&&a.se>=3?'<span class="kw">'+a.se+'일 경과</span>':'')+(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+ck(!!S.sel[a.id],'data-sel="'+a.id+'"');
+  var topR=(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+ck(!!S.sel[a.id],'data-sel="'+a.id+'"');
   var mark=fin?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'';
-  var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(c&&!fin&&need?'<span class="bdg yel">'+c.el(a)+'일 경과</span>':'');
+  var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(!fin&&(c?need:a.se>=3)?'<span class="bdg yel">'+(c?c.el(a):a.se)+'일 경과</span>':'');
   var k=a.iv&&a.iv.k,sc='';
   if(k==="p")sc='<span class="p">면접 제안 확정 전</span>';
   else if(k==="r")sc='<span class="r">'+I("cal")+'일정 변경 요청</span>';
@@ -1149,7 +1149,7 @@ function renderList(){
     cols="60px 158px 260px 230px 230px 200px 1fr";
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 처리를 기다린 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     rows.forEach(function(a){
-      var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg gray">'+a.se+'일 경과</span>':'');
+      var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg yel">'+a.se+'일 경과</span>':'')/* 경과 배지는 모든 목록에서 노랑 */;
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+''/* 전체 목록에서는 처리 대기 dot 없음 (조건을 고르면 표시) */+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+=fActive()?'<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>':'<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
