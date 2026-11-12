@@ -1099,7 +1099,7 @@ function boardRows(i){var l=S.db[S.pid].filter(posOK);
   if(S.cond){var c=cond(S.cond);return sortRows(l.filter(function(a){return (inList(c,a)||S.kept[a.id])&&a.stage===i&&passF(a);}),c);}
   return sortRows(l.filter(function(a){return a.stage===i&&passF(a);}));}
 function kCard(a,c){
-  var need=c?inList(c,a):ALL.inScope(a),fin=a.final==="fail";
+  var need=c?inList(c,a):false,fin=a.final==="fail";
   var topR=(!c&&!fin&&a.se>=3?'<span class="kw">'+a.se+'일 경과</span>':'')+(need&&!fin?'<span class="kd" title="처리 대기"></span>':'')+ck(!!S.sel[a.id],'data-sel="'+a.id+'"');
   var mark=fin?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'';
   var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(c&&!fin&&need?'<span class="bdg yel">'+c.el(a)+'일 경과</span>':'');
@@ -1150,7 +1150,7 @@ function renderList(){
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 처리를 기다린 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     rows.forEach(function(a){
       var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg gray">'+a.se+'일 경과</span>':'');
-      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(ALL.inScope(a)?' need':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
+      h+='<div class="lr'+(S.sel[a.id]?' sel':'')+''/* 전체 목록에서는 처리 대기 dot 없음 (조건을 고르면 표시) */+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+=fActive()?'<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>':'<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
   }
@@ -1411,12 +1411,13 @@ var CMS=[
  {k:"pop",sel:"#overlay .dialog .crit",ov:true,t:"조건명을 행동 문장으로 바꿨습니다",d:"PRD의 조건을 사용자가 취해야 할 액션으로 표현했습니다. 표현만 다를 뿐 조건 기준은 PRD와 같습니다."},
  {k:"ban",sel:"#rbanner",t:"띠 배너 위치를 옮겼습니다",d:"포지션 탭 아래에 있던 띠 배너를 공고 선택 영역 아래로 옮겼습니다."},
  {k:"fil",sel:"#fbar",t:"필터를 칩으로 바꿨습니다",d:"툴바의 필터 아이콘 버튼을 삭제하고, 필터 영역의 [필터 추가]로 고른 항목을 필터 칩으로 보여줍니다."},
+ {k:"dot",sel:"#list .lr",when:function(){return !S.cond&&!S.done&&S.lay!=="board";},t:"전체 목록에서는 dot을 표시하지 않습니다",d:"처리 대기 지원자와 단계 탭의 dot은 조건 필터를 골랐을 때만 표시합니다. 전체 목록에서는 처리할 내용을 알 수 없어 dot을 빼고, 조건 필터 칩 하나로 진입하게 했습니다."},
  {k:"tip",sel:"#list .lh .htip2",t:"지원일 툴팁 문구를 바꿨습니다",d:"지원일 옆 아이콘에 마우스를 올리면 '지원자가 처리를 기다린 기간'을 보여줍니다."},
  {k:"emp",sel:"#list .dempty",t:function(){return S.done==="cond"?"조건 하나를 모두 처리하면 완료 화면이 나옵니다":"처리 대기 지원자를 모두 처리하면 완료 화면이 나옵니다";},d:function(){return S.done==="cond"?"목록 자리에 조건마다 다른 완료 문구를 보여줍니다.<br><br>[이어서 처리하기]를 누르면 아직 처리 전인 조건 중 가장 오래 기다린 지원자가 있는 조건으로 바로 이어집니다.":"목록 자리에 완료 문구를 보여주고, 처리 대기 칩은 0명으로 강조합니다.";}}
 ];
 function scnCoach(t,d){CM.scn={sel:"#list .lr.need",t:t,d:d};coachSoon();}
 function scnGo(){CM.scn=null;cmClear();var c=document.querySelector("#list .lr.need [data-sel]");if(!c)return;c.click();setTimeout(function(){$("bView").click();},60);}
-function cmHasNext(cur){if(cur==="emp"||S.done)return false;var ovOpen=!!$("overlay").innerHTML;return CMS.some(function(x){if(x.k===cur||CM.done[x.k]||!!x.ov!==ovOpen)return false;return cmVisible(document.querySelector(x.sel));});}/* 이 화면에서 이어질 코치마크가 없으면 '닫기' */
+function cmHasNext(cur){if(cur==="emp"||S.done)return false;var ovOpen=!!$("overlay").innerHTML;return CMS.some(function(x){if(x.k===cur||CM.done[x.k]||!!x.ov!==ovOpen||(x.when&&!x.when()))return false;return cmVisible(document.querySelector(x.sel));});}/* 이 화면에서 이어질 코치마크가 없으면 '닫기' */
 function cmVisible(el){if(!el)return false;var r=el.getBoundingClientRect();return r.width>0&&r.height>0;}
 function cmClear(){["cmhl","cmbox","cmln","cmdot"].forEach(function(id){var n=document.getElementById(id);if(n)n.remove();});}
 function coach(){
@@ -1426,8 +1427,8 @@ function coach(){
   if(CM.scn&&!ovOpen){var se=document.querySelector(CM.scn.sel);if(cmVisible(se)){m={k:"scn",t:CM.scn.t,d:CM.scn.d,scn:true};el=se;}}
   if(!m&&!ovOpen&&!$("alertHost")&&CM.empForce&&S.done==="cond"){var ee=document.querySelector("#list .dempty");if(cmVisible(ee)){m=CMS.find(function(q){return q.k==="emp";});el=ee;}}
   if(!m&&CM.off)return;
-  var ORD=["pop","emp","ban","fil","tip"];/* 화면 맥락이 분명한 팝업 · 완료 화면을 먼저 */
-  for(var i=0;!m&&i<ORD.length;i++){var x=CMS.find(function(q){return q.k===ORD[i];});if(CM.done[x.k])continue;if(S.done&&x.k!=="emp")continue;/* 완료 화면에서는 완료 코치마크만 */if(!!x.ov!==ovOpen)continue;var e2=document.querySelector(x.sel);if(cmVisible(e2)){m=x;el=e2;break;}}
+  var ORD=["pop","emp","ban","fil","dot","tip"];/* 화면 맥락이 분명한 팝업 · 완료 화면을 먼저 */
+  for(var i=0;!m&&i<ORD.length;i++){var x=CMS.find(function(q){return q.k===ORD[i];});if(CM.done[x.k])continue;if(S.done&&x.k!=="emp")continue;if(x.when&&!x.when())continue;/* 완료 화면에서는 완료 코치마크만 */if(!!x.ov!==ovOpen)continue;var e2=document.querySelector(x.sel);if(cmVisible(e2)){m=x;el=e2;break;}}
   if(!m)return;CM.cur=m.k;
   function rectOf(e){if(!e.classList.contains("dempty"))return e.getBoundingClientRect();var rs=[].map.call(e.children,function(c){return c.getBoundingClientRect();});var l=Math.min.apply(0,rs.map(function(q){return q.left;})),t=Math.min.apply(0,rs.map(function(q){return q.top;})),rr=Math.max.apply(0,rs.map(function(q){return q.right;})),b=Math.max.apply(0,rs.map(function(q){return q.bottom;}));return {left:l-24,top:t-16,right:rr+24,bottom:b+16,width:rr-l+48,height:b-t+32};}/* 완료 화면은 내용 영역만 강조 */
   var r=rectOf(el);
