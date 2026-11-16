@@ -765,7 +765,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
 .fadd2{align-self:flex-end;display:inline-flex;gap:4px;align-items:center;height:32px;padding:0 12px;border:1px solid #d1d6da;border-radius:8px;font-size:13px;color:#1b55f6}
 .rad{display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border:1px solid #e2e6e8;border-radius:8px;font-size:14px;font-weight:400!important}
 .rad span{width:20px;height:20px;border-radius:50%;border:1px solid #c0c7cd}.rad.on{border-color:#1b55f6}.rad.on span{border:6px solid #1b55f6}
-.ivdr .fchg{color:#1b55f6;font-weight:600}.dfh{margin-right:auto;font-size:13px;color:#6c767f}.df{padding:16px 24px;display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #e2e6e8}
+.ivdr .ogrp{display:flex;flex-direction:column;gap:12px}.obox{background:#f4f6f7;border-radius:8px;padding:12px 16px;display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:20px}.obox b{color:#30363c;font-weight:600}.ogrid{display:grid;grid-template-columns:300px 300px;column-gap:16px;row-gap:4px;color:#6c767f}.fchg{color:#1b55f6;font-weight:600}.dfh{margin-right:auto;font-size:13px;color:#6c767f}.df{padding:16px 24px;display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #e2e6e8}
 .bt.lg{height:48px;padding:0 20px;font-size:16px}
 .cdim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:60}
 .cdlg{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:400px;background:#fff;border-radius:16px;padding:24px 20px 20px;z-index:61;display:flex;flex-direction:column;gap:8px}
@@ -1357,9 +1357,10 @@ function renderAD(){
     '<div class="sec-t"><b>경력</b></div><div class="paper"><div class="ph" style="width:46%"></div><div class="ph" style="width:92%"></div><div class="ph" style="width:84%"></div><div class="ph" style="width:70%"></div></div>'+
     '<div class="sec-t"><b>학력</b></div><div class="paper"><div class="ph" style="width:56%"></div><div class="ph" style="width:80%"></div></div></div>';
   var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안"><div class="dh"><h2>'+(S.ad.newProp?'면접 제안하기':'면접 제안일 변경하기')+'</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
-     (S.ad.newProp?'':'<div class="ibox">'+I("info")+'<div>'+esc(a.name)+'님이 일정 변경을 요청했습니다. 새로운 날짜나 시간을 선택해 주세요.</div></div>')+
-     ivFields([dOff(7),dOff(8)],0,S.ad.newProp?null:(S.ad.chg||[]))+
-     '</div><div class="df">'+(!S.ad.newProp&&!(S.ad.chg||[]).some(Boolean)?'<span class="dfh">날짜나 시간을 바꾸면 보낼 수 있습니다.</span>':'')+'<button type="button" class="bt pri lg" data-adsend'+(!S.ad.newProp&&!(S.ad.chg||[]).some(Boolean)?' disabled':'')+'>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
+     (S.ad.newProp?'':'<div class="ogrp"><div class="ibox">'+I("info")+'<div>'+esc(a.name)+'님이 일정 변경을 요청했습니다. 새로운 날짜나 시간을 선택해 주세요.</div></div>'+
+       '<div class="obox"><b>기존 일정</b><div class="ogrid">'+[[dOff(7),"오전 9:00~10:00"],[dOff(8),"오전 10:00~11:00"]].map(function(x){return '<span>'+fmt(x[0]).replace(/^\d{2}\./,"")+' '+x[1]+'</span>';}).join("")+'</div></div></div>')+/* 기존 일정은 안내 바로 아래 회색 박스(2열 · 최대 5개). 입력란은 면접 제안하기와 같은 기본값(내일 9~10시)으로 시작 */
+     ivFields(S.ad.newProp?[dOff(7),dOff(8)]:[dOff(1),dOff(1)],0)+
+     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
   var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠어요?':'면접 제안을 취소하시겠어요?')+'</h3><p>취소 후 복구할 수 없으며, 지원자에게 면접 취소 안내가 발송됩니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
   $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
   var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
