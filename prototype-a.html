@@ -492,7 +492,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 /* 다이얼로그 (실서비스 Dialog 규격) */
 .backdrop{position:fixed;inset:0;background:var(--scrim);z-index:50}
 .dwrap{position:fixed;inset:0;z-index:51;display:flex;align-items:center;justify-content:center;padding:16px}
-.dialog{width:calc(100vw - 32px);max-width:480px;min-width:280px;background:#fff;border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;gap:24px;max-height:calc(100vh - 32px)}
+.dlgft{display:flex;align-items:center;justify-content:space-between;gap:12px}.wkck{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--gray-800);background:none;border:0;padding:0;cursor:pointer}.dialog{width:calc(100vw - 32px);max-width:480px;min-width:280px;background:#fff;border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;gap:24px;max-height:calc(100vh - 32px)}
 .dialog .hd{display:flex;flex-direction:column;gap:4px}
 .dialog .pn{font-size:13px;line-height:20px;font-weight:500;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dialog h2{margin:0;font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.5px;color:var(--gray-950)}
@@ -882,7 +882,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
       <div class="tool">
         <div class="seg" id="seg"><button type="button" data-lay="list" aria-label="리스트뷰"><span class="ic" data-i="list"></span></button><button type="button" data-lay="board" aria-label="칸반뷰"><span class="ic" data-i="board"></span></button></div>
         <span class="sp"></span>
-        <button type="button" class="qck" id="qvU" data-qck="u"><span class="ck"></span>미열람 지원자만 보기</button>
+        
         <button type="button" class="qck" id="qvN" data-qck="n" title="합불은 정했지만 결과를 안내하지 않은 지원자"><span class="ck"></span>안내 전 지원자만 보기</button>
         <span class="vdiv"></span>
         <button type="button" class="ibtn" data-todo aria-label="검색"><span class="ic" data-i="search"></span></button>
@@ -1000,7 +1000,8 @@ var CONDS=[
  {id:6,hint:"일정 변경 요청에 답해 주세요",sub:"요청 후 7일 이상 · 미응답",how:"변경 요청을 확인해 일정을 다시 제안하거나 면접을 취소하면 목록에서 제외됩니다",s:"일정 변경 요청 7일 미처리",n:7,t:"일정 변경 요청에 답해 주세요",col:"변경 요청일",sort:"변경 요청 오래된순",scope:"일정 변경 요청 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="r";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=7&&a.se>=a.iv.n;}},
  {id:7,hint:"면접 결과를 반영해 주세요",sub:"면접 후 12일 이상 · 단계 이동 및 심사 미처리",how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 제외됩니다",s:"면접 후 12일 정체",n:12,t:"면접 결과를 반영해 주세요",col:"면접 종료일",sort:"면접 종료 오래된순",scope:"면접 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="d";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=12&&a.se>=a.iv.n;}}
 ];
-var VK={1:"지원 후",2:"이동 후",3:"지원 후",4:"열람 후",6:"요청 후",7:"면접 후"};/* 드롭다운 N명 앞 기준 문구 */
+var VK={1:"지원 후",2:"이동 후",3:"지원 후",4:"열람 후",6:"요청 후",7:"면접 후"};/* 경과일 배지 앞 기준 문구 (목록 · 칸반 카드) */
+function seK(a){return a.stage?"이동 후":"지원 후";}/* 조건 없는 목록: 현재 단계 머문 기간 기준 */
 function inList(c,a){return c.inScope(a)&&c.over(a);}
 function overAny(a){return CONDS.some(function(c){return inList(c,a);});}
 var TAGS={1:"결과 미입력",2:"단계 이동 없음",3:"미열람",4:"열람 후 미처리",6:"일정 변경 요청",7:"면접 후 미처리"};
@@ -1042,7 +1043,7 @@ function fActive(){return !!(S.qvU||S.qvN)||fCount(S.f)>0;}
 var QV=[{v:null,t:"전체 지원자"},{v:"unread",t:"미열람 지원자"},{v:"notice",t:"결과 안내 전 지원자",d:"합불은 정했지만 결과를 안내하지 않은 지원자"}];
 /* 조건을 바꿔도 사용자가 건 필터는 유지. 새 조건 범위 밖 값만 빼고, 칩은 남김 */
 function pruneF(){Object.keys(S.f).forEach(function(k){var g=FG[k];if(g&&g.o)S.f[k]=S.f[k].filter(function(v){return !isOut(g,v);});});}
-function isOut(g,v){return !!(S.cond&&g.out&&g.out.indexOf(v)>=0);}
+function isOut(g,v){return false;}/* 조건 적용 중에도 모든 필터 값 선택 가능. 결과 0명이면 '조건에 맞는 지원자가 없습니다' empty */
 /* 정렬: 실서비스와 같은 기준 + 순서 2단 선택. 조건 적용 중에는 조건 기준일이 기준 목록 맨 앞에 추가됨 */
 function sortBys(){return [{v:"applied",t:"지원일"},{v:"name",t:"이름"},{v:"age",t:"나이"},{v:"edu",t:"학력"},{v:"car",t:"경력"}];}
 function sortOrds(by){return (by==="applied"||by==="cond")?[{v:"new",t:"최신순"},{v:"old",t:"오래된 순"}]:[{v:"asc",t:"오름차순"},{v:"desc",t:"내림차순"}];}
@@ -1056,7 +1057,7 @@ function sortRows(r,c){var s=sortCur();
   return r;}
 var S;
 var S;
-function init(){S={db:build(),pid:"A",tab:0,cond:null,sel:{},seen:{},view:"app",leaving:{},kept:{},sort:null,f:{},qv:null,justDone:null,from:"popup"};S.mailSnap={A:summary("A"),B:summary("B"),C:summary("C")};}
+function init(){S={db:build(),pid:"A",tab:0,cond:null,sel:{},seen:{},snooze:{},view:"app",leaving:{},kept:{},sort:null,f:{},qv:null,justDone:null,from:"popup"};S.mailSnap={A:summary("A"),B:summary("B"),C:summary("C")};}
 init();
 
 /* ---------- 렌더 ---------- */
@@ -1129,7 +1130,7 @@ function kCard(a,c){
   var need=c?inList(c,a):false,fin=a.final==="fail";
   var topR=(c&&c.inScope(a)&&!fin?'<span class="kd" title="처리 대기"></span>':'')+(function(){var ss=selStage();var dis=ss!==null&&ss!==a.stage;return ck(!!S.sel[a.id],'data-sel="'+a.id+'"'+(dis?' disabled title="같은 단계의 지원자만 함께 선택할 수 있습니다"':''));})();
   var mark=fin?'<span class="fmk">불합격</span>':a.lv<0?'<span class="unrl">미열람</span>':'';
-  var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(!fin&&(c?c.inScope(a):a.se>=3)?'<span class="bdg '+((c?need:overAny(a))?'yel':'gline')+'">'+(c?c.el(a):a.se)+'일 경과</span>':'');
+  var chips=(a.dup?'<span class="bdg gray sm kdup">중복 지원자</span>':'')+(!fin&&(c?c.inScope(a):a.se>=3)?'<span class="bdg '+((c?need:overAny(a))?'yel':'gline')+'">'+(c?VK[c.id]+' '+c.el(a):seK(a)+' '+a.se)+'일 경과</span>':'');
   var k=a.iv&&a.iv.k,sc='';
   if(k==="p")sc='<span class="p">면접 제안 확정 전</span>';
   else if(k==="r")sc='<span class="r">'+I("cal")+'일정 변경 요청</span>';
@@ -1164,7 +1165,7 @@ function renderList(){
     rows.forEach(function(a,i){
       var inS=c.inScope(a),ov=inList(c,a),el=c.el(a);
       var fin=!!a.final&&!!S.kept[a.id];
-      var chip=fin?'':!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg '+(ov?'yel':'gline')+'">'+el+'일 경과</span>';/* 조건에 해당하는 지원자 모두 빨간 dot. 경과일 배지는 기본 회색, 경과일 기준을 넘긴 지원자만 노랑(BZBadge outline yellow) */
+      var chip=fin?'':!inS?'<span class="bdg ok">처리 완료</span>':c.id===99?allTags(a):'<span class="bdg '+(ov?'yel':'gline')+'">'+VK[c.id]+' '+el+'일 경과</span>';/* 조건에 해당하는 지원자 모두 빨간 dot. 경과일 배지는 기본 회색, 경과일 기준을 넘긴 지원자만 노랑(BZBadge outline yellow) */
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+(inS?' need':'')+(!inS&&!fin?' out':'')+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+chip+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length&&fActive()){h+='<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>';}
@@ -1176,7 +1177,7 @@ function renderList(){
     cols="60px 158px 260px 230px 230px 200px 1fr";
     h+='<div class="lh"><div>'+head+'</div><div>포지션</div><div>이름</div><div>학력</div><div>경력</div><div>지원일 <span class="htip2" data-tip="지원자가 처리를 기다린 기간">'+I("info")+'</span></div><div>일정 · 알림</div></div>';
     rows.forEach(function(a){
-      var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg '+(overAny(a)?'yel':'gline')+'">'+a.se+'일 경과</span>':'')/* 경과 배지: 기본 회색, 경과일 기준을 넘긴 지원자만 노랑 */;
+      var wait=a.final==="fail"?'':(a.se>=3?'<span class="bdg '+(overAny(a)?'yel':'gline')+'">'+seK(a)+' '+a.se+'일 경과</span>':'')/* 경과 배지: 기본 회색, 경과일 기준을 넘긴 지원자만 노랑 */;
       h+='<div class="lr'+(S.sel[a.id]?' sel':'')+''/* 전체 목록에서는 처리 대기 dot 없음 (조건을 고르면 표시) */+(a.final==="fail"?' jfail':'')+'"><div>'+ck(!!S.sel[a.id],'data-sel="'+a.id+'"')+'</div><div><span class="pos">'+esc(a.pos)+'</span></div>'+who(a)+edu(a)+car(a)+'<div class="dcell"><span class="t15">'+fmt(dOff(-a.applied))+'</span>'+wait+'</div>'+ivCell(a)+'</div>';
     });
     if(!rows.length)h+=fActive()?'<div class="fempty">'+I("fsearch")+'<b>조건에 맞는 지원자가 없습니다</b><button type="button" class="rst2" data-freset>'+I("reset")+'초기화</button></div>':'<div class="empty"><b>이 단계에 지원자가 없어요</b>다른 단계를 선택해 보세요.</div>';
@@ -1212,7 +1213,7 @@ function renderFbar(){
   /* 처리할 지원자도, 건 정렬·필터도 없으면 줄 전체를 숨겨 실서비스 화면과 같게 */
   $("fbar").hidden=!h;$("fbar").innerHTML=h;
   /* 피그마: '전체 지원자' 셀렉트 대신 체크 필터 2개. 조건 목록(최종 결과 전 지원자)에서는 '안내 전'은 비활성 */
-  $("qvU").querySelector(".ck").classList.toggle("on",!!S.qvU);$("qvN").querySelector(".ck").classList.toggle("on",!!S.qvN);$("qvN").disabled=!!S.cond;
+  $("qvN").querySelector(".ck").classList.toggle("on",!!S.qvN);$("qvN").disabled=!!S.cond;
   $("tbSort").classList.toggle("on",!!S.sort);/* 정렬 규칙: 조건의 기본 순서는 알리지 않음. 사용자가 직접 고른 정렬만 활성 표시 */
 }
 function dfmt(d){return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}
@@ -1255,7 +1256,7 @@ function openF(t){
   if(kind.indexOf("g:")===0){m.className+=" fl"+(FG[kind.slice(2)].range?" dr":"");h=groupMenu(kind.slice(2));}
   else if(kind==="add"){m.className+=" fl";h=addMenu();}
   else if(kind==="spill"){m.className+=" sortpop2";h='<div class="ehd"><span><b>정렬</b></span><button type="button" class="del" data-sdel>삭제</button></div><div class="row">'+sortPopHtml()+'</div>';}
-  else if(kind==="cond"){m.className+=" vdd";h=CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length;if(!n&&!on)return "";return '<button type="button" class="vrow'+(on?' on':'')+'" data-fcond="'+x.id+'"><span class="vt"><b>'+esc(x.t)+'</b><small>'+esc(x.sub.replace(/^(지원 후|열람 후|요청 후|면접 후|현재 단계) /,""))+'</small></span><span class="vn">'+VK[x.id]+' '+n+'명</span></button>';}).join("");}/* 피그마 VODropdown: 타이틀 · 서브 · N명 배지 안에 기준(지원 후 등), 0명 조건 숨김 */
+  else if(kind==="cond"){m.className+=" vdd";h=CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length;if(!n&&!on)return "";return '<button type="button" class="vrow'+(on?' on':'')+'" data-fcond="'+x.id+'"><span class="vt"><b>'+esc(x.t)+'</b><small>'+esc(x.sub)+'</small></span><span class="vn">'+n+'명</span></button>';}).join("");}/* 피그마 VODropdown: 타이틀 · 서브 · N명 배지, 0명 조건 숨김 */
   else if(kind==="view"){h='<div class="hd">보기</div>'+QV.map(function(x){var on=x.v===S.qv,out=x.v==="notice"&&!!S.cond;return '<button type="button" class="vopt'+(on?' on':'')+'" data-qv="'+(x.v||"")+'"'+(out?' disabled':'')+(x.d?' title="'+x.d+'"':'')+'><span>'+x.t+'</span>'+(out?'<small>조건 범위 밖</small>':on?I("check"):'')+'</button>';}).join("");}
   else if(kind==="done"){h='<div class="tip" role="status"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했습니다</b><span>다음에 들어올 때는 이 칩이 보이지 않습니다. 새로 기준을 넘는 지원자가 생기면 다시 표시됩니다.</span></div>';}
   else h=sortPopHtml();
@@ -1291,8 +1292,8 @@ function showSummary(){
     '<div class="hd"><h2 id="dT">처리 대기 중 지원자 <em>'+s.total+'명</em></h2><p>오래 기다린 지원자부터 처리하면 기업 인상도 좋아집니다.</p></div>'+
     '<ul class="crit" style="margin:0">'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+esc(r.c.t)+'<small>'+esc(r.c.sub)+'</small></span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
     '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있습니다.</span></div>'+
-    '<div class="btns"><button type="button" class="bt sec" data-close>닫기</button></div>'+
-    '</div></div>';
+    '<div class="dlgft"><button type="button" class="wkck" data-wk role="checkbox" aria-checked="'+!!S.snooze[S.pid]+'"><span class="ck'+(S.snooze[S.pid]?' on':'')+'"></span>일주일 동안 보지 않기</button><button type="button" class="bt pri" data-close>닫기</button></div>'+
+    '</div></div>';/* 노출: 매일 공고별 첫 진입 1회. '일주일 동안 보지 않기' 체크 후 닫으면 그 공고에서 7일간 자동 노출 안 함 */
   var f=$("overlay").querySelector("[data-apply]");if(f)f.focus();
 }
 function findA(id){return S.db[S.pid].find(function(a){return a.id===id;});}
@@ -1520,6 +1521,7 @@ document.addEventListener("click",function(e){
   if(d.fcond){S.done=null;S.kept={};S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.sug){S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
   if(d.freset!==undefined){S.f={};S.qvU=S.qvN=false;S.sort=null;S.sel={};render();return;}
+  if(d.wk!==undefined){S.snooze[S.pid]=!S.snooze[S.pid];t.setAttribute("aria-checked",String(!!S.snooze[S.pid]));t.querySelector(".ck").classList.toggle("on",!!S.snooze[S.pid]);return;}
   if(d.qck){if(d.qck==="u")S.qvU=!S.qvU;else S.qvN=!S.qvN;S.sel={};closeF();render();return;}
   if(d.fsheet!==undefined){openFilterSheet();return;}
   if(d.dinp){var cv=(S.f.date||[])[0],base=S.dp?S.dp.base:new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1);S.dp={k:"date",which:d.dinp,s:S.dp?S.dp.s:(cv?cv.s:null),e:S.dp?S.dp.e:(cv?cv.e:null),base:base};reopenDate();return;}
@@ -1609,7 +1611,7 @@ document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" "
 function enter(pid,c,fromMail){
   if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qvU=S.qvN=false;S.justDone=null;S.done=null;S.kept={};S.from=fromMail?"mail":"popup";pickTab();render();
   if(fromMail){S.seen[pid]=true;return;}
-  if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total)showSummary();}
+  if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total&&!S.snooze[pid])showSummary();}/* 매일 첫 진입 1회 · 일주일 동안 보지 않기면 미노출 */
 }
 function renderMail(){
   var snap=S.mailSnap,ids=["A","B","C"].filter(function(k){return snap[k].total;}),total=ids.reduce(function(s,k){return s+snap[k].total;},0);
