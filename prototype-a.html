@@ -731,7 +731,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .cft p{margin:0;font-size:11px;color:#9ea8af;display:flex;gap:4px;align-items:center}
 .cbody.pv{gap:20px;padding:0 0 16px}
 .cbody.pv>:not(.pvbar){margin:0 24px}
-.pvbar{background:#eef3ff;color:#1b55f6;font-size:13px;line-height:20px;text-align:center;padding:12px 16px;margin:0}
+.pvbar b{font-size:14px;font-weight:600}.pvt .bdg{margin-right:4px;vertical-align:1px}.pvbar{background:#eef3ff;color:#1b55f6;font-size:13px;line-height:20px;text-align:center;padding:12px 16px;margin:0}
 .cban{margin:12px 16px 0;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 14px;border-radius:10px;background:#fff;border:1px solid #e2e6e8;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .cban div{flex:1;display:flex;flex-direction:column;font-size:12px;line-height:18px;color:#6c767f}.cban b{font-size:13px;color:#1b55f6;font-weight:600}
 .cbtn.off{background:#e9ecef;border-color:#e9ecef;color:#9ea8af;font-weight:600;width:100%;height:36px}.cbtn.off .ic{color:#9ea8af}
@@ -1340,10 +1340,10 @@ function renderAD(){
   var chat;
   if(S.ad.view==="prev"){
     chat='<div class="chd"><button type="button" class="back" data-adchat aria-label="채팅으로">'+I("chev")+'</button><b>면접 제안 미리보기</b></div><div class="cbody pv">'+
-      (req?'<div class="pvbar">새 일정으로 변경하거나 면접을 취소해 주세요.</div>':'')+
+      (req?'<div class="pvbar"><b>지원자가 일정 변경을 요청했습니다.</b><br>새 일정으로 변경하거나 면접을 취소해 주세요.</div>':'')+
       (pend?'<div class="reqbox gray"><b>'+I("info")+'지원자의 응답을 기다리고 있습니다</b><span>'+fmt(sent)+' 발송 · 답변 기한 '+fmt(dOff(1))+'</span></div>':'')+
       '<dl class="pvl"><dt>면접 유형</dt><dd>대면 면접</dd><dt>면접 장소</dt><dd>서울시 서초구 서초대로 301 동익성봉빌딩 18층</dd><dt>안내 사항</dt><dd>18층 입구에서 인사 담당자 김잡코(010-1234-5678)에게 연락 주세요.</dd></dl>'+
-      '<div class="pvt">면접 제안일 <small>한국 표준시(KST) 기준</small></div><div class="pvo">'+opts.map(function(d){return '<span>'+fmt(d)+' 오전 10:00</span>';}).join("")+'</div>'+
+      '<div class="pvt">'+(req?'<span class="bdg yel sm">변경요청</span> ':'')+'면접 제안일 <small>한국 표준시(KST) 기준</small></div><div class="pvo">'+opts.map(function(d){return '<span'+(req?' class="x"':'')+'>'+fmt(d)+' 오전 10:00</span>';}).join("")+'</div>'+
       '</div>'+(k==="none"?'':'<div class="cft2"><button type="button" class="bt sec" data-adconfirm>'+(req?'면접 취소':'제안 취소')+'</button><button type="button" class="bt pri" data-addrawer>면접 제안 변경</button></div>');
   }else{
     chat='<div class="chd"><b>지원자에게 연락하기</b></div>'+
