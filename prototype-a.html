@@ -1344,7 +1344,7 @@ function renderAD(){
       '</div>'+(k==="none"?'':'<div class="cft2"><button type="button" class="bt sec" data-adconfirm>'+(req?'면접 취소':'제안 취소')+'</button><button type="button" class="bt pri" data-addrawer>면접 제안 변경</button></div>');
   }else{
     chat='<div class="chd"><b>지원자에게 연락하기</b></div>'+
-      (req?'<div class="cban"><div><b>일정 변경 요청이 왔습니다</b><span>요청 후 '+rn+'일 경과'+(pend2.length>1?' · 남은 요청 '+(pend2.length-1)+'건':'')+'</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
+      (req?'<div class="cban"><div><b>일정 변경 요청이 '+(pend2.length>1?pend2.length+'건 ':'')+'있습니다</b><span>요청 후 '+rn+'일 경과</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
       '<div class="cbody">'+hist+'</div>'+
       '<div class="cft">'+(req?'':'<button type="button" class="ivchip" data-addrawer><span aria-hidden="true">👋🏻</span>면접 제안하기</button>')+'<div class="cin"><input placeholder="지원자에게 연락해 보세요." aria-label="메시지"><button type="button" class="send" data-todo aria-label="보내기">'+I("chev")+'</button></div><p>'+I("info")+'주민등록번호 등 민감한 개인정보 입력에 주의해 주세요.</p></div>';
   }
