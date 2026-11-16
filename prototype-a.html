@@ -60,7 +60,7 @@ body:has(#overlay .ivdr) #gstack,body:has(#overlay .adw) #gstack,body:has(#overl
 .gi[aria-pressed="true"]{background:#eef3ff;color:#1b55f6;font-weight:600;box-shadow:inset 2px 0 0 #1b55f6}.gi[aria-pressed="true"]::before{background:#1b55f6}
 .gf{padding:8px 14px 10px;display:flex;align-items:center;gap:10px}.gdv{width:1px;height:10px;background:#d1d6da}.gr{font-size:12px;color:#6c767f;height:24px}.gr:hover{color:#131618}
 
-.rbanner{margin-top:20px;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:8px;background:#eef3ff;color:#1b55f6;font-size:13px;font-weight:500}
+.pbanner{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 16px;border-radius:8px;background:#f0f5ff;border:1px solid #dbe5ff;font-size:14px;color:var(--gray-800)}.pbanner[hidden]{display:none}.pbanner .pl{display:inline-flex;align-items:center;gap:8px}.pbanner .pl .ic{font-size:18px;color:var(--gray-700)}.pbanner b{color:#1b55f6;font-weight:600}.rbanner[hidden]{display:none}.rbanner{margin-top:20px;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:8px;background:#eef3ff;color:#1b55f6;font-size:13px;font-weight:500}
 /* PRD 변경 코치마크 (협업자 공유용) */
 .cmhl{position:fixed;z-index:70;border:2px solid #1f9254;background:rgba(31,146,84,.08);border-radius:10px;pointer-events:none;transition:all .15s}
 .cmbox{position:fixed;z-index:71;width:280px;background:#202326;color:#fff;border-radius:10px;padding:14px 16px 12px;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:12px;line-height:18px}
@@ -877,7 +877,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
       <div class="trow"><h2 class="h2">지원자 관리</h2><button type="button" class="obtn" data-todo><span class="ic" data-i="down"></span>전체 지원자 엑셀 저장 <span style="font-size:10px">▼</span></button></div>
       <div class="posts" id="posts"></div>
       <div class="rbanner" id="rbanner"><span aria-hidden="true">📢</span>불합격·최종 합격 처리 시, 결과가 자동으로 안내되지 않습니다. 결과 안내는 원할 때 해주세요.</div>
-      <div class="nbanner" id="nbanner" hidden></div>
+      <div class="pbanner" id="pbanner" hidden></div>
       <div class="ptabs" id="ptabs" role="tablist" aria-label="포지션" hidden></div>
       <div class="tool">
         <div class="seg" id="seg"><button type="button" data-lay="list" aria-label="리스트뷰"><span class="ic" data-i="list"></span></button><button type="button" data-lay="board" aria-label="칸반뷰"><span class="ic" data-i="board"></span></button></div>
@@ -1069,7 +1069,10 @@ function renderPosts(){
     return '<button type="button" class="card'+(p.id===S.pid?' on':'')+'" data-post="'+p.id+'"><div class="top"><span class="tl">'+(p.open?'<span class="bdg info">진행중</span>':'<span class="bdg line">채용마감</span>')+(need?'<span class="pneed" data-psum="'+p.id+'" role="button" tabindex="0" aria-label="처리 필요 지원자 '+need+'명, 요약 보기">'+I("bell")+'처리 필요 <b>'+need+'</b></span>':'')+'</span>'+I("ext")+'</div><span class="tt">'+esc(p.name)+'</span><span class="mt">'+p.period+' · 미열람 '+unread+'</span></button>';
   }).join("");
 }
-function renderReopen(){S.lastTotal=summary(S.pid).total;}
+function renderReopen(){S.lastTotal=summary(S.pid).total;
+  /* 처리 대기 띠 배너 (배포 후 약 1개월): 기존 안내 배너 자리에 노출, [확인하기] → 첫 진입과 같은 요약 팝업. 0명이면 미노출 */
+  var n=S.lastTotal,pb=$("pbanner");pb.hidden=!n;$("rbanner").hidden=!!n;
+  if(n)pb.innerHTML='<span class="pl">'+I("lac")+'처리 대기 중인 지원자가 <b>'+n+'명</b> 있습니다.</span><button type="button" class="bt pri sm" data-sumbtn>확인하기</button>';}
 function closeR(){var p=document.querySelector(".rpop");if(p)p.remove();}
 function posOK(a){return !S.pos||a.pos===S.pos;}
 function overListP(c){return overList(S.pid,c).filter(posOK);}
@@ -1452,7 +1455,7 @@ function gPanel(pn,open){pn.classList.toggle("min",!open);if(open)document.query
 var CM={done:{},cur:null,off:false,sc:null};
 var CMS=[
  {k:"pop",sel:"#overlay .dialog .crit",ov:true,t:"조건명을 행동 문장으로 바꿨습니다",d:"PRD의 조건을 사용자가 취해야 할 액션으로 표현했습니다. 표현만 다를 뿐 조건 기준은 PRD와 같습니다."},
- {k:"ban",sel:"#rbanner",t:"띠 배너 위치를 옮겼습니다",d:"포지션 탭 아래에 있던 띠 배너를 공고 선택 영역 아래로 옮겼습니다."},
+ {k:"ban",sel:"#pbanner",t:"처리 대기 띠 배너를 추가했습니다",d:"배포 후 약 1개월 동안 공고 선택 영역 아래에 처리 대기 인원을 보여줍니다. [확인하기]를 누르면 첫 진입 때와 같은 요약 팝업이 열립니다. 이후 팝업 진입률을 보고 유지 여부를 정합니다."},
  {k:"fil",sel:"#fbar",t:"필터를 칩으로 바꿨습니다",d:"툴바의 필터 아이콘 버튼을 삭제했습니다. [필터 추가]를 누르면 필터 드로어가 열리고, 적용한 항목을 필터 칩으로 보여줍니다."},
  {k:"dot",sel:"#list .lr",when:function(){return !S.cond&&!S.done&&S.lay!=="board";},t:"전체 목록에서는 dot과 경과일 배지를 표시하지 않습니다",d:"처리 대기 지원자의 dot, 단계 탭 dot, '지원 후 N일 경과' 같은 경과일 배지는 조건 필터를 골랐을 때만 표시합니다. 전체 목록에서는 처리할 내용을 알 수 없어 빼고, 조건 필터 칩 하나로 진입하게 했습니다."},
  {k:"tip",sel:"#list .lh .htip2",t:"지원일 툴팁 문구를 바꿨습니다",d:"지원일 옆 아이콘에 마우스를 올리면 '지원자가 처리를 기다린 기간'을 보여줍니다."},
@@ -1530,6 +1533,7 @@ document.addEventListener("click",function(e){
   if(d.fcond){S.done=null;S.kept={};S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.sug){S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
   if(d.freset!==undefined){S.f={};S.qvU=S.qvN=false;S.sort=null;S.sel={};render();return;}
+  if(d.sumbtn!==undefined){showSummary();return;}
   if(d.wk!==undefined){S.snooze[S.pid]=!S.snooze[S.pid];t.setAttribute("aria-checked",String(!!S.snooze[S.pid]));t.querySelector(".ck").classList.toggle("on",!!S.snooze[S.pid]);return;}
   if(d.qck){if(d.qck==="u")S.qvU=!S.qvU;else S.qvN=!S.qvN;S.sel={};closeF();render();return;}
   if(d.fsheet!==undefined){openFilterSheet();return;}
