@@ -765,7 +765,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
 .fadd2{align-self:flex-end;display:inline-flex;gap:4px;align-items:center;height:32px;padding:0 12px;border:1px solid #d1d6da;border-radius:8px;font-size:13px;color:#1b55f6}
 .rad{display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border:1px solid #e2e6e8;border-radius:8px;font-size:14px;font-weight:400!important}
 .rad span{width:20px;height:20px;border-radius:50%;border:1px solid #c0c7cd}.rad.on{border-color:#1b55f6}.rad.on span{border:6px solid #1b55f6}
-.ivdr .df{padding:16px 24px;display:flex;justify-content:flex-end;border-top:1px solid #e2e6e8}
+.ivdr .fchg{color:#1b55f6;font-weight:600}.dfh{margin-right:auto;font-size:13px;color:#6c767f}.df{padding:16px 24px;display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #e2e6e8}
 .bt.lg{height:48px;padding:0 20px;font-size:16px}
 .cdim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:60}
 .cdlg{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:400px;background:#fff;border-radius:16px;padding:24px 20px 20px;z-index:61;display:flex;flex-direction:column;gap:8px}
@@ -1201,7 +1201,7 @@ function renderFbar(){
   else if(tot){bh='<span class="l">'+I("lac")+'<span class="bmsg">처리를 기다리는 지원자가 <b class="nn">'+tot+'명</b> 있습니다.</span></span><span class="sp"></span><button type="button" class="bpri" data-sumpop>확인하기</button>';cls+=" on";}
   else if(S.justDone===S.pid){bh='<span class="l">'+I("check")+'<span class="bmsg">모두 처리했습니다</span></span>';cls+=" ok";}
   /* A안 · 필터형: 배너 대신 목록 위 필터 줄에 처리 대기중 칩(노션 필터 방식) */
-  bn.hidden=true;bn.innerHTML="";
+  if(bn){bn.hidden=true;bn.innerHTML="";}
   var left="",rest="";
   if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n'+(overListP(c).length?'':' z')+'">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
   else if(tot){left='<span class="fwrap"><button type="button" class="chip need nudge" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
@@ -1359,7 +1359,7 @@ function renderAD(){
   var drawer=S.ad.drawer?'<button type="button" class="ddim" data-addrawerx aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안"><div class="dh"><h2>'+(S.ad.newProp?'면접 제안하기':'면접 제안일 변경하기')+'</h2><button type="button" class="xbtn" data-addrawerx aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
      (S.ad.newProp?'':'<div class="ibox">'+I("info")+'<div>'+esc(a.name)+'님이 일정 변경을 요청했습니다. 새로운 날짜나 시간을 선택해 주세요.</div></div>')+
      ivFields([dOff(7),dOff(8)],0,S.ad.newProp?null:(S.ad.chg||[]))+
-     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend'+(!S.ad.newProp&&!(S.ad.chg||[]).some(Boolean)?' disabled':'')+'>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
+     '</div><div class="df">'+(!S.ad.newProp&&!(S.ad.chg||[]).some(Boolean)?'<span class="dfh">날짜나 시간을 바꾸면 보낼 수 있습니다.</span>':'')+'<button type="button" class="bt pri lg" data-adsend'+(!S.ad.newProp&&!(S.ad.chg||[]).some(Boolean)?' disabled':'')+'>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
   var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠어요?':'면접 제안을 취소하시겠어요?')+'</h3><p>취소 후 복구할 수 없으며, 지원자에게 면접 취소 안내가 발송됩니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
   $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
   var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
@@ -1414,7 +1414,7 @@ function ivFields(dates,dl,chg){/* 피그마 면접 제안 드로어 입력 항�
    dates.map(function(d,i){var t1='오전 '+(i?"10":"09")+':00',t2='오전 '+(i?"11":"10")+':00';
      if(chg){/* 변경 드로어: 처음엔 기존 값 그대로(에러 없음) + 아래 회색 '기존 일정'. 칸을 누르면 날짜가 바뀐 것으로 시연 */
        var nd=chg[i]?dOff(10+i):d,tag=' data-ivchg="'+i+'"';
-       return '<div class="frow"><button type="button" class="fin"'+tag+'>'+dfmt(nd)+I("cal")+'</button><button type="button" class="fin sel"'+tag+'>'+t1+'</button><span class="tl">~</span><button type="button" class="fin sel"'+tag+'>'+t2+'</button><button type="button" class="ftr" disabled aria-label="삭제">'+I("trash")+'</button></div><div class="fold">기존 일정 · '+dfmt(d)+' '+t1+' ~ '+t2.replace("오전 ","")+'</div>';}
+       return '<div class="frow"><button type="button" class="fin"'+tag+'>'+dfmt(nd)+I("cal")+'</button><button type="button" class="fin sel"'+tag+'>'+t1+'</button><span class="tl">~</span><button type="button" class="fin sel"'+tag+'>'+t2+'</button><button type="button" class="ftr" disabled aria-label="삭제">'+I("trash")+'</button></div><div class="fold">'+(chg[i]?'<b class="fchg">변경됨</b> · ':'')+'기존 일정 · '+dfmt(d)+' '+t1+' ~ '+t2.replace("오전 ","")+'</div>';}
      return '<div class="frow"><span class="fin">'+dfmt(d)+I("cal")+'</span><span class="fin sel">'+t1+'</span><span class="tl">~</span><span class="fin sel">'+t2+'</span><button type="button" class="ftr" data-todo aria-label="삭제">'+I("trash")+'</button></div>';}).join("")+
    '<button type="button" class="fadd2" data-todo>'+I("plus")+'제안일 추가</button></div>'+
    '<div class="fld"><label>답변 기한 <i>*</i></label>'+["오늘","1일 내","3일 내","7일 내"].map(function(t,i){return '<label class="rad'+(i===dl?' on':'')+'"><span></span>'+t+'</label>';}).join("")+'<div class="ibox">'+I("info")+'<div>지원자가 답변하지 않으면 면접이 자동으로 취소됩니다.</div></div></div>'+
