@@ -990,7 +990,8 @@ var SEED={
 };
 var POSTS=[{id:"A",name:"[이메일 지원] 테스트 공고 01",period:"26.10.01 ~ 26.11.30",open:true},{id:"B",name:"테스트컴퍼니 사무보조 채용",period:"26.10.25 ~ 26.11.24",open:true},{id:"C",name:"[합성시험] v2 PUT 확인 1104",period:"26.09.01 ~ 26.09.30",open:false}];
 var POS={A:["QA","인사관리자","그래픽 디자이너"],B:["사무보조","회계 사무"],C:["연구원"]};
-function build(){var db={};Object.keys(SEED).forEach(function(k){db[k]=SEED[k].map(function(r,i){var v=r[9];var iv=v===0?{k:"none"}:v[0]==="p"?{k:"p"}:v[0]==="c"?{k:"c",d:v[1]}:v[0]==="r"?{k:"r",n:v[1]}:{k:"d",n:v[1]};return {id:k+i,name:r[0],age:r[1],g:r[2],edu:EDU[r[3]],car:CAR[r[4]],stage:r[5],applied:r[6],se:r[7],lv:r[8],iv:iv,final:r[10]||null,dup:i%4===1,pos:POS[k][i%POS[k].length]};});});return db;}
+function build(){var db={};Object.keys(SEED).forEach(function(k){db[k]=SEED[k].map(function(r,i){var v=r[9];var iv=v===0?{k:"none"}:v[0]==="p"?{k:"p"}:v[0]==="c"?{k:"c",d:v[1]}:v[0]==="r"?{k:"r",n:v[1]}:{k:"d",n:v[1]};return {id:k+i,name:r[0],age:r[1],g:r[2],edu:EDU[r[3]],car:CAR[r[4]],stage:r[5],applied:r[6],se:r[7],lv:r[8],iv:iv,final:r[10]||null,dup:i%4===1,pos:POS[k][i%POS[k].length]};});});var mr=db.A&&db.A.find(function(a){return a.iv.k==="r";});if(mr){mr.iv.q=[{n:mr.iv.n},{n:Math.max(1,mr.iv.n-4)}];}/* 면접 제안 2개(1차·2차)를 모두 일정 변경 요청한 지원자 */
+  return db;}
 
 var CONDS=[
  {id:1,hint:"최종합격 · 불합격 처리해 주세요",sub:"지원 후 16일 이상 · 심사 미처리",how:"최종합격 또는 불합격을 입력하면 목록에서 제외됩니다",s:"지원 후 16일 미처리",n:16,t:"최종합격 · 불합격 처리해 주세요",col:"지원일",sort:"지원일 오래된순",scope:"최종 결과 미처리 지원자",inScope:function(a){return !a.final;},el:function(a){return a.applied;},over:function(a){return a.applied>=16;}},
@@ -1311,7 +1312,8 @@ function openApplicant(id){
   if(first)afterChange([a.id]);
 }
 /* ---------- 지원자 상세 + 지원자에게 연락하기(채팅) : 일정 변경 요청 확인 / 면접 제안 확정 전 ---------- */
-function openAD(id){var a=findA(id),req=a.iv.k==="r",rn=req?a.iv.n:0;S.ad={id:id,view:"chat",drawer:false,confirm:false,log:[],wasReq:req,rn0:rn,sent:dOff(-(req?rn+2:2)),reqd:dOff(-rn)};renderAD();}
+function openAD(id){var a=findA(id),req=a.iv.k==="r",rn=req?a.iv.n:0;S.ad={id:id,view:"chat",drawer:false,confirm:false,log:[],wasReq:req,rn0:rn,sent:dOff(-(req?rn+2:2)),reqd:dOff(-rn),q:(req&&a.iv.q)?a.iv.q.map(function(x){return {n:x.n,done:null};}):null};renderAD();}
+function adPending(){return S.ad.q?S.ad.q.filter(function(x){return !x.done;}).sort(function(x,y){return y.n-x.n;}):[];}/* 변경 요청 오래된 순 */
 function renderAD(){
   var a=findA(S.ad.id),k=a.iv.k,req=k==="r",pend=k==="p",rn=req?a.iv.n:0;
   var sent=S.ad.sent,reqd=S.ad.reqd;
@@ -1325,6 +1327,13 @@ function renderAD(){
     '<div class="cm you"><div class="bub">면접 일정 변경을 요청했습니다.</div><span class="cts">Bot · 오후 3:10</span></div>';}
   /* 피그마 200-297815: 제안 변경 후에는 발송 버블(비활성 카드) + 변경 버블만, 같은 날짜 아래에 노출 */
   S.ad.log.forEach(function(l){hist+=(l==="cancel"?'<span class="cday">'+fmt(TODAY).replace(/\((.)\)/," $1요일")+'</span>':'')+(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","gray")+'</div><span class="cts">Bot · 오전 11:22</span></div>');});
+  if(S.ad.q&&S.ad.q.length>1){/* 면접 제안 N개: 제안마다 버블 1개. 변경 요청도 요청마다 1개 */
+    var offB='<span class="cbtn off"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#b8bfc5"/><path d="M5.6 5.6l4.8 4.8M10.4 5.6l-4.8 4.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>면접 제안</span>';
+    hist='<span class="cday">'+fmt(sent).replace(/\((.)\)/," $1요일")+'</span>'+S.ad.q.map(function(x,i){return '<div class="cm me"><div class="bub">면접 제안이 발송되었습니다.'+(x.done==="chg"?offB:x.done==="cancel"?bubbleBtn("취소","red"):bubbleBtn("변경요청","yel"))+'</div><span class="cts">Bot · 오전 11:2'+(2+i)+'</span></div>';}).join("")+
+      S.ad.q.slice().sort(function(x,y){return y.n-x.n;}).map(function(x){return '<span class="cday">'+fmt(dOff(-x.n)).replace(/\((.)\)/," $1요일")+'</span><div class="cm you"><div class="bub">면접 일정 변경을 요청했습니다.</div><span class="cts">Bot · 오후 3:10</span></div>';}).join("");
+    S.ad.log.forEach(function(l){hist+=(l==="cancel"?'<div class="cm me"><div class="bub">면접이 취소되었습니다.</div><span class="cts">Bot · 방금</span></div>':'<div class="cm me"><div class="bub">면접 제안이 변경되었습니다.'+bubbleBtn("변경","gray")+'</div><span class="cts">Bot · 방금</span></div>');});
+  }
+  var pend2=adPending();
   var chat;
   if(S.ad.view==="prev"){
     chat='<div class="chd"><button type="button" class="back" data-adchat aria-label="채팅으로">'+I("chev")+'</button><b>면접 제안 미리보기</b></div><div class="cbody pv">'+
@@ -1335,7 +1344,7 @@ function renderAD(){
       '</div>'+(k==="none"?'':'<div class="cft2"><button type="button" class="bt sec" data-adconfirm>'+(req?'면접 취소':'제안 취소')+'</button><button type="button" class="bt pri" data-addrawer>면접 제안 변경</button></div>');
   }else{
     chat='<div class="chd"><b>지원자에게 연락하기</b></div>'+
-      (req?'<div class="cban"><div><b>일정 변경 요청이 왔습니다</b><span>요청 후 '+rn+'일 경과</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
+      (req?'<div class="cban"><div><b>일정 변경 요청이 왔습니다</b><span>요청 후 '+rn+'일 경과'+(pend2.length>1?' · 남은 요청 '+(pend2.length-1)+'건':'')+'</span></div><button type="button" class="bt pri sm" data-adprev>요청 확인</button></div>':'')+
       '<div class="cbody">'+hist+'</div>'+
       '<div class="cft">'+(req?'':'<button type="button" class="ivchip" data-addrawer><span aria-hidden="true">👋🏻</span>면접 제안하기</button>')+'<div class="cin"><input placeholder="지원자에게 연락해 보세요." aria-label="메시지"><button type="button" class="send" data-todo aria-label="보내기">'+I("chev")+'</button></div><p>'+I("info")+'주민등록번호 등 민감한 개인정보 입력에 주의해 주세요.</p></div>';
   }
@@ -1571,8 +1580,10 @@ document.addEventListener("click",function(e){
   if(d.addrawerx!==undefined){S.ad.drawer=false;renderAD();return;}
   if(d.adconfirm!==undefined){S.ad.confirm=true;renderAD();return;}
   if(d.adconfirmx!==undefined){S.ad.confirm=false;renderAD();return;}
-  if(d.adsend!==undefined){var a1=findA(S.ad.id),was=a1.iv.k;a1.iv={k:"p"};if(S.ad.newProp){S.ad.newProp=false;S.ad.drawer=false;S.ad.view="chat";afterChange([a1.id]);renderAD();toast("면접 제안을 보냈습니다.");return;}S.ad.log.push(was==="r"?"chg":"chg2");S.ad.drawer=false;S.ad.view="chat";var n1=leaveNote([a1.id]);afterChange([a1.id]);renderAD();toast("면접 제안을 변경했습니다."+n1);return;}
-  if(d.adcancel!==undefined){var a2=findA(S.ad.id);a2.iv={k:"none"};S.ad.log.push("cancel");S.ad.confirm=false;S.ad.view="chat";var n2=leaveNote([a2.id]);afterChange([a2.id]);renderAD();toast("면접을 취소했습니다."+n2);return;}
+  if(d.adsend!==undefined&&!S.ad.newProp&&adPending().length>1){var am=findA(S.ad.id),pq=adPending();pq[0].done="chg";var nx2=adPending()[0];am.iv={k:"r",n:nx2.n,q:am.iv.q};S.ad.log.push("chg");S.ad.drawer=false;S.ad.view="chat";renderAD();toast("면접 제안을 변경했습니다. 남은 변경 요청을 확인해 주세요.");return;}/* 변경 요청 여러 개: 오래된 것부터 1개씩 처리, 처리 후 다음 요청 배너 */
+  if(d.adsend!==undefined){var a1=findA(S.ad.id),was=a1.iv.k;if(S.ad.q&&!S.ad.newProp)adPending().forEach(function(x){x.done="chg";});a1.iv={k:"p"};if(S.ad.newProp){S.ad.newProp=false;S.ad.drawer=false;S.ad.view="chat";afterChange([a1.id]);renderAD();toast("면접 제안을 보냈습니다.");return;}S.ad.log.push(was==="r"?"chg":"chg2");S.ad.drawer=false;S.ad.view="chat";var n1=leaveNote([a1.id]);afterChange([a1.id]);renderAD();toast("면접 제안을 변경했습니다."+n1);return;}
+  if(d.adcancel!==undefined&&adPending().length>1){var ac=findA(S.ad.id),pc=adPending();pc[0].done="cancel";var nx3=adPending()[0];ac.iv={k:"r",n:nx3.n,q:ac.iv.q};S.ad.log.push("cancel");S.ad.confirm=false;S.ad.view="chat";renderAD();toast("면접을 취소했습니다. 남은 변경 요청을 확인해 주세요.");return;}
+  if(d.adcancel!==undefined){var a2=findA(S.ad.id);if(S.ad.q)adPending().forEach(function(x){x.done="cancel";});a2.iv={k:"none"};S.ad.log.push("cancel");S.ad.confirm=false;S.ad.view="chat";var n2=leaveNote([a2.id]);afterChange([a2.id]);renderAD();toast("면접을 취소했습니다."+n2);return;}
   if(d.scn){GACT=d.scn;scenario(d.scn);syncGuide();return;}
   if(d.menu){
     var had=t.querySelector(".pop");closePops();if(had)return;
