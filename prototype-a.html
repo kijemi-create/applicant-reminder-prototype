@@ -416,7 +416,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .pill:disabled{color:var(--gray-300);background:var(--gray-50);border-color:var(--gray-100);cursor:not-allowed}
 .drow{display:flex;align-items:center;gap:8px}
 .drow input{flex:1;height:44px;border:1px solid var(--gray-200);border-radius:8px;padding:0 12px;font:inherit;font-size:14px;color:var(--gray-950);background:#fff}
-.fcnt{flex:1;font-size:14px;color:var(--gray-600)}
+.sf .bt.sec:disabled{background:var(--gray-50);color:var(--gray-300);border-color:var(--gray-100);cursor:default}.sf .bt .ic{margin-right:4px}.fcnt{flex:1;font-size:14px;color:var(--gray-600)}
 .fcnt b{color:var(--brand);font-weight:600}
 .cbl .ck{pointer-events:none}
 
@@ -847,7 +847,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
   <div class="gs"><button type="button" class="gt" data-dstep="P2" aria-expanded="false"><span class="gn">2</span>띠 배너 위치를 옮겼습니다<span class="gc"></span></button>
     <div class="gsub"><p class="drs">포지션 탭 아래에 있던 띠 배너를 공고 선택 영역 아래로 옮겼습니다.</p><button type="button" class="gi dlink" data-cmgo="ban">화면에서 보기</button></div></div>
   <div class="gs"><button type="button" class="gt" data-dstep="P3" aria-expanded="false"><span class="gn">3</span>필터를 칩으로 바꿨습니다<span class="gc"></span></button>
-    <div class="gsub"><p class="drs">툴바의 필터 아이콘 버튼을 삭제하고, [필터 추가]로 고른 항목을 필터 칩으로 보여줍니다.</p><button type="button" class="gi dlink" data-cmgo="fil">화면에서 보기</button></div></div>
+    <div class="gsub"><p class="drs">툴바의 필터 아이콘 버튼을 삭제했습니다. [필터 추가]를 누르면 필터 드로어가 열리고, 적용한 항목을 필터 칩으로 보여줍니다.</p><button type="button" class="gi dlink" data-cmgo="fil">화면에서 보기</button></div></div>
   <div class="gs"><button type="button" class="gt" data-dstep="P4" aria-expanded="false"><span class="gn">4</span>전체 목록에서는 dot을 표시하지 않습니다<span class="gc"></span></button>
     <div class="gsub"><p class="drs">처리 대기 dot은 조건 필터를 골랐을 때만 표시합니다.</p><button type="button" class="gi dlink" data-cmgo="dot">화면에서 보기</button></div></div>
   <div class="gs"><button type="button" class="gt" data-dstep="P5" aria-expanded="false"><span class="gn">5</span>지원일 툴팁 문구를 바꿨습니다<span class="gc"></span></button>
@@ -1206,7 +1206,7 @@ function renderFbar(){
     rest+='<span class="fwrap"><span class="fp'+(vs.length?'':' novalue')+'"><button type="button" class="pb" data-fmenu="g:'+k+'">'+pillLabel(g)+'<span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" data-fgx="'+k+'" aria-label="'+g.t+' 필터 삭제">'+I("x")+'</button></span></span>';});
   /* 필터 추가: 툴바 필터 버튼 대신 조건 칩 오른쪽에 항상 노출 (노션 필터 방식: 항목 선택 → pill 생성 → 값 선택) */
   var used=!!rest;
-  rest+='<span class="fwrap"><button type="button" class="fadd" data-fmenu="add" aria-haspopup="menu">'+I("plus")+'필터 추가</button></span>';
+  rest+='<span class="fwrap"><button type="button" class="fadd" data-fsheet aria-haspopup="dialog">'+I("plus")+'필터 추가</button></span>';/* [필터 추가] → 필터 드로어(피그마 '지원자 목록-필터-디폴트'). 적용하면 고른 항목이 필터 칩으로 생김 */
   if(used)rest+='<button type="button" class="fall" data-fall>'+I("reset")+'초기화</button>';
   h=left+(left?'<span class="fdiv" aria-hidden="true"></span>':'')+rest;/* 조건 칩과 필터 사이 세로 구분선 (피그마) */
   /* 처리할 지원자도, 건 정렬·필터도 없으면 줄 전체를 숨겨 실서비스 화면과 같게 */
@@ -1255,7 +1255,7 @@ function openF(t){
   if(kind.indexOf("g:")===0){m.className+=" fl"+(FG[kind.slice(2)].range?" dr":"");h=groupMenu(kind.slice(2));}
   else if(kind==="add"){m.className+=" fl";h=addMenu();}
   else if(kind==="spill"){m.className+=" sortpop2";h='<div class="ehd"><span><b>정렬</b></span><button type="button" class="del" data-sdel>삭제</button></div><div class="row">'+sortPopHtml()+'</div>';}
-  else if(kind==="cond"){m.className+=" vdd";h=CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length;if(!n&&!on)return "";return '<button type="button" class="vrow'+(on?' on':'')+'" data-fcond="'+x.id+'"><span class="vt"><b>'+esc(x.t)+'</b><small>'+esc(x.sub)+'</small></span><span class="vn">'+VK[x.id]+' '+n+'명</span></button>';}).join("");}/* 피그마 VODropdown: 타이틀 · 서브 · N명 배지 안에 기준(지원 후 등), 0명 조건 숨김 */
+  else if(kind==="cond"){m.className+=" vdd";h=CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length;if(!n&&!on)return "";return '<button type="button" class="vrow'+(on?' on':'')+'" data-fcond="'+x.id+'"><span class="vt"><b>'+esc(x.t)+'</b><small>'+esc(x.sub.replace(/^(지원 후|열람 후|요청 후|면접 후|현재 단계) /,""))+'</small></span><span class="vn">'+VK[x.id]+' '+n+'명</span></button>';}).join("");}/* 피그마 VODropdown: 타이틀 · 서브 · N명 배지 안에 기준(지원 후 등), 0명 조건 숨김 */
   else if(kind==="view"){h='<div class="hd">보기</div>'+QV.map(function(x){var on=x.v===S.qv,out=x.v==="notice"&&!!S.cond;return '<button type="button" class="vopt'+(on?' on':'')+'" data-qv="'+(x.v||"")+'"'+(out?' disabled':'')+(x.d?' title="'+x.d+'"':'')+'><span>'+x.t+'</span>'+(out?'<small>조건 범위 밖</small>':on?I("check"):'')+'</button>';}).join("");}
   else if(kind==="done"){h='<div class="tip" role="status"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했습니다</b><span>다음에 들어올 때는 이 칩이 보이지 않습니다. 새로 기준을 넘는 지원자가 생기면 다시 표시됩니다.</span></div>';}
   else h=sortPopHtml();
@@ -1265,15 +1265,14 @@ function openFilterSheet(){
   S.fd=JSON.parse(JSON.stringify(S.f));
   var c=S.cond?cond(S.cond):null,p=POSTS.find(function(q){return q.id===S.pid;});
   var body='<div class="ftabs">'+FCATS.map(function(x,i){return '<button type="button" data-fcat="'+i+'"'+(i?'':' class="on"')+'>'+x.t+'</button>';}).join("")+'</div>'+
-    (c?'<div class="ibox">'+I("info")+'<div>‘'+esc(c.t)+'’ 조건 안에서 좁힙니다. 조건 범위 밖 항목은 선택할 수 없습니다.</div></div>':'')+
     FCATS.map(function(x,i){return '<section class="fsec" id="fcat'+i+'"><h3>'+x.t+'</h3>'+x.g.map(function(g){
       if(g.date)return '<div class="fgrp"><span>'+g.t+'</span><div class="drow"><input readonly value="20'+p.period.slice(0,8)+'" aria-label="지원일 시작"><span>~</span><input readonly value="2026.11.05" aria-label="지원일 종료"></div></div>';
       return '<div class="fgrp"><span>'+g.t+'</span><div class="pills">'+g.o.map(function(o){var on=(S.fd[g.k]||[]).indexOf(o.v)>=0,out=isOut(g,o.v);return '<button type="button" class="pill'+(on&&!out?' on':'')+'" data-fopt="'+g.k+'" data-v="'+o.v+'"'+(out?' disabled title="조건 범위 밖"':'')+'>'+o.t+'</button>';}).join("")+'</div></div>';
     }).join("")+'</section>';}).join("");
-  sheet("필터",body,'<span class="fcnt" id="fcnt"></span><button type="button" class="bt sec" data-fclear>초기화</button><button type="button" class="bt pri" data-fapply>적용하기</button>');
+  sheet("필터",body,'<span class="fcnt" id="fcnt"></span><button type="button" class="bt sec" id="fclr" data-fclear>'+I("reset")+'초기화</button><button type="button" class="bt pri" data-fapply>적용하기</button>');
   updFcnt();
 }
-function updFcnt(){$("fcnt").innerHTML='<b>'+fCount(S.fd)+'</b>/'+FTOTAL+'개 선택';}
+function updFcnt(){var n=fCount(S.fd);$("fcnt").innerHTML=(n?'<b>'+n+'</b>':'0')+'/'+FTOTAL+'개 선택';var b=$("fclr");if(b)b.disabled=!n;}
 function renderBulk(){var n=Object.keys(S.sel).filter(function(k){return S.sel[k];}).length;$("bulk").hidden=!n;$("bn").textContent=n+"명";}
 function render(){
   $("appView").hidden=S.view!=="app";$("mailView").hidden=S.view!=="mail";
@@ -1444,7 +1443,7 @@ var CM={done:{},cur:null,off:false,sc:null};
 var CMS=[
  {k:"pop",sel:"#overlay .dialog .crit",ov:true,t:"조건명을 행동 문장으로 바꿨습니다",d:"PRD의 조건을 사용자가 취해야 할 액션으로 표현했습니다. 표현만 다를 뿐 조건 기준은 PRD와 같습니다."},
  {k:"ban",sel:"#rbanner",t:"띠 배너 위치를 옮겼습니다",d:"포지션 탭 아래에 있던 띠 배너를 공고 선택 영역 아래로 옮겼습니다."},
- {k:"fil",sel:"#fbar",t:"필터를 칩으로 바꿨습니다",d:"툴바의 필터 아이콘 버튼을 삭제하고, 필터 영역의 [필터 추가]로 고른 항목을 필터 칩으로 보여줍니다."},
+ {k:"fil",sel:"#fbar",t:"필터를 칩으로 바꿨습니다",d:"툴바의 필터 아이콘 버튼을 삭제했습니다. [필터 추가]를 누르면 필터 드로어가 열리고, 적용한 항목을 필터 칩으로 보여줍니다."},
  {k:"dot",sel:"#list .lr",when:function(){return !S.cond&&!S.done&&S.lay!=="board";},t:"전체 목록에서는 dot을 표시하지 않습니다",d:"처리 대기 지원자와 단계 탭의 dot은 조건 필터를 골랐을 때만 표시합니다. 전체 목록에서는 처리할 내용을 알 수 없어 dot을 빼고, 조건 필터 칩 하나로 진입하게 했습니다."},
  {k:"tip",sel:"#list .lh .htip2",t:"지원일 툴팁 문구를 바꿨습니다",d:"지원일 옆 아이콘에 마우스를 올리면 '지원자가 처리를 기다린 기간'을 보여줍니다."},
  {k:"emp",sel:"#list .dempty",t:function(){return S.done==="cond"?"조건 하나를 모두 처리하면 완료 화면이 나옵니다":"처리 대기 지원자를 모두 처리하면 완료 화면이 나옵니다";},d:function(){return S.done==="cond"?"목록 자리에 조건마다 다른 완료 문구를 보여줍니다.<br><br>[이어서 처리하기]를 누르면 아직 처리 전인 조건 중 가장 오래 기다린 지원자가 있는 조건으로 바로 이어집니다.":"목록 자리에 완료 문구를 보여주고, 처리 대기 칩은 0명으로 강조합니다.";}}
@@ -1542,7 +1541,7 @@ document.addEventListener("click",function(e){
   if(d.fcat){var sec=$("fcat"+d.fcat),sb=sec.parentNode;sb.scrollTo({top:sec.offsetTop-sb.offsetTop-16,behavior:"smooth"});document.querySelectorAll(".ftabs button").forEach(function(b){b.classList.toggle("on",b===t);});return;}
   if(d.fopt){var g=FG[d.fopt],v=g.o.find(function(o){return String(o.v)===d.v;}).v,arr=S.fd[d.fopt]||(S.fd[d.fopt]=[]),ix=arr.indexOf(v);if(ix>=0)arr.splice(ix,1);else arr.push(v);t.classList.toggle("on",ix<0);updFcnt();return;}
   if(d.fclear!==undefined){S.fd={};document.querySelectorAll(".pill.on").forEach(function(b){b.classList.remove("on");});updFcnt();return;}
-  if(d.fapply!==undefined){Object.keys(S.fd).forEach(function(k){if(!S.fd[k].length)delete S.fd[k];});S.f=S.fd;S.sel={};closeOverlay();render();toast(fCount(S.f)?"필터를 적용했습니다. 이 단계에 "+visibleRows().length+"명이 보입니다.":"필터를 해제했습니다.");return;}
+  if(d.fapply!==undefined){Object.keys(S.fd).forEach(function(k){if(!S.fd[k].length)delete S.fd[k];});S.f=S.fd;S.sel={};closeOverlay();render();return;}/* 적용: 토스트 없이 필터 칩 생성 + 목록 좁힘 */
   if(d.dstep){var g2=t.closest(".gs"),w2=g2.classList.contains("open");t.closest(".guide").querySelectorAll(".gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!w2){g2.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
   if(d.gmore!==undefined){var gi2=t.closest(".gintro"),op2=gi2.classList.toggle("open");t.textContent=op2?"접기":"더보기";t.setAttribute("aria-expanded",String(op2));return;}
   if(d.gstep){var g=t.closest(".gs"),was=g.classList.contains("open");document.querySelectorAll("#guide .gs").forEach(function(x){x.classList.remove("open");x.querySelector(".gt").setAttribute("aria-expanded","false");});if(!was){g.classList.add("open");t.setAttribute("aria-expanded","true");}return;}
