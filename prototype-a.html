@@ -649,7 +649,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .fmenu.vdd .vt b{font-size:14px;line-height:20px;font-weight:500;color:#131618}
 .fmenu.vdd .vrow.on .vt b{color:#1b55f6}
 .fmenu.vdd .vt small{font-size:12px;line-height:18px;color:#6c767f}
-.fmenu.vdd .vn{flex:none;height:24px;padding:0 8px;border-radius:6px;background:#eef3ff;color:#1b55f6;font-size:12px;font-weight:600;display:grid;place-items:center}
+.fmenu.vdd .vk{flex:none;font-size:12px;color:#6c767f;margin-right:-8px;white-space:nowrap}.vn{flex:none;height:24px;padding:0 8px;border-radius:6px;background:#eef3ff;color:#1b55f6;font-size:12px;font-weight:600;display:grid;place-items:center}
 
 /* 면접 상태 버튼 (피그마 처리필요 지원자 목록): 확정 전 = tertiary 회색, 일정 변경 요청 확인 = outlineSecondary 파랑 + 일정 아이콘 */
 .bdg.yel{background:#fffce8;color:#cc8800;box-shadow:inset 0 0 0 1px #ffbb00}.bdg.gline{background:#fff;color:#4c555c;box-shadow:inset 0 0 0 1px #d1d6da}/* XDS Biz BZBadge outline yellow */
@@ -1000,6 +1000,7 @@ var CONDS=[
  {id:6,hint:"일정 변경 요청에 답해 주세요",sub:"요청 후 7일 이상 · 미응답",how:"변경 요청을 확인해 일정을 다시 제안하거나 면접을 취소하면 목록에서 제외됩니다",s:"일정 변경 요청 7일 미처리",n:7,t:"일정 변경 요청에 답해 주세요",col:"변경 요청일",sort:"변경 요청 오래된순",scope:"일정 변경 요청 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="r";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=7&&a.se>=a.iv.n;}},
  {id:7,hint:"면접 결과를 반영해 주세요",sub:"면접 후 12일 이상 · 단계 이동 및 심사 미처리",how:"다음 단계로 이동하거나 합불을 입력하면 목록에서 제외됩니다",s:"면접 후 12일 정체",n:12,t:"면접 결과를 반영해 주세요",col:"면접 종료일",sort:"면접 종료 오래된순",scope:"면접 후 최종 결과 미처리 지원자",inScope:function(a){return !a.final&&a.iv.k==="d";},el:function(a){return a.iv.n;},over:function(a){return a.iv.n>=12&&a.se>=a.iv.n;}}
 ];
+var VK={1:"지원 후",2:"이동 후",3:"지원 후",4:"열람 후",6:"요청 후",7:"면접 후"};/* 드롭다운 N명 앞 기준 문구 */
 function inList(c,a){return c.inScope(a)&&c.over(a);}
 function overAny(a){return CONDS.some(function(c){return inList(c,a);});}
 var TAGS={1:"결과 미입력",2:"단계 이동 없음",3:"미열람",4:"열람 후 미처리",6:"일정 변경 요청",7:"면접 후 미처리"};
@@ -1254,7 +1255,7 @@ function openF(t){
   if(kind.indexOf("g:")===0){m.className+=" fl"+(FG[kind.slice(2)].range?" dr":"");h=groupMenu(kind.slice(2));}
   else if(kind==="add"){m.className+=" fl";h=addMenu();}
   else if(kind==="spill"){m.className+=" sortpop2";h='<div class="ehd"><span><b>정렬</b></span><button type="button" class="del" data-sdel>삭제</button></div><div class="row">'+sortPopHtml()+'</div>';}
-  else if(kind==="cond"){m.className+=" vdd";h=CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length;if(!n&&!on)return "";return '<button type="button" class="vrow'+(on?' on':'')+'" data-fcond="'+x.id+'"><span class="vt"><b>'+esc(x.t)+'</b><small>'+esc(x.sub)+'</small></span><span class="vn">'+n+'명</span></button>';}).join("");}/* 피그마 VODropdown: 타이틀 · 서브 · N명 배지, 0명 조건 숨김 */
+  else if(kind==="cond"){m.className+=" vdd";h=CONDS.map(function(x){var on=x.id===S.cond,n=overListP(x).length;if(!n&&!on)return "";return '<button type="button" class="vrow'+(on?' on':'')+'" data-fcond="'+x.id+'"><span class="vt"><b>'+esc(x.t)+'</b><small>'+esc(x.sub)+'</small></span><span class="vk">'+VK[x.id]+'</span><span class="vn">'+n+'명</span></button>';}).join("");}/* 피그마 VODropdown: 타이틀 · 서브 · 기준(지원 후 등) · N명 배지, 0명 조건 숨김 */
   else if(kind==="view"){h='<div class="hd">보기</div>'+QV.map(function(x){var on=x.v===S.qv,out=x.v==="notice"&&!!S.cond;return '<button type="button" class="vopt'+(on?' on':'')+'" data-qv="'+(x.v||"")+'"'+(out?' disabled':'')+(x.d?' title="'+x.d+'"':'')+'><span>'+x.t+'</span>'+(out?'<small>조건 범위 밖</small>':on?I("check"):'')+'</button>';}).join("");}
   else if(kind==="done"){h='<div class="tip" role="status"><b>'+I("ok")+'기준을 넘긴 지원자를 모두 처리했습니다</b><span>다음에 들어올 때는 이 칩이 보이지 않습니다. 새로 기준을 넘는 지원자가 생기면 다시 표시됩니다.</span></div>';}
   else h=sortPopHtml();
