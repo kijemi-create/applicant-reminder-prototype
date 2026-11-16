@@ -1424,7 +1424,7 @@ function ivFields(dates,dl,chg){/* 피그마 면접 제안 드로어 입력 항�
    '<label class="rad"><span></span>화상 면접</label><label class="rad"><span></span>전화 면접</label></div>'+
    '<div class="fld"><label>안내 사항</label><div class="fta">텍스트 입력</div></div>';}
 function openPropDrawer(ids){var a=findA(ids[0]),who=esc(a.name)+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
-  $("overlay").innerHTML='<button type="button" class="ddim" data-close aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안하기"><div class="dh"><h2>면접 제안하기</h2><button type="button" class="xbtn" data-close aria-label="닫기">'+I("x")+'</button></div><div class="db">'+
+  $("overlay").innerHTML='<button type="button" class="ddim" data-close aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안하기"><div class="dh"><h2>면접 제안하기</h2><button type="button" class="xbtn" data-close aria-label="닫기">'+I("x")+'</button></div><div class="db">'+(ids.length>1?'<div class="ibox">'+I("info")+'<div>입력한 내용은 선택한 지원자에게 1:1 메시지로 발송됩니다.</div></div>':'')+
    ivFields([dOff(7)],0)+
    '</div><div class="df"><button type="button" class="bt pri lg" data-propsend="'+ids.join(",")+'">'+who+' 님에게 보내기</button></div></aside>';}
 function noticeWithAlert(ids){if(!ids.length)return;var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
