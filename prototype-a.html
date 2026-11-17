@@ -563,7 +563,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 /* A안 · 필터형: 처리 대기중 칩 (최신 컬러·문구) */
 .chip.need{height:36px;padding:0 10px 0 12px;gap:4px;border-color:#e2e6e8;color:#30363c;font-size:14px;font-weight:600}
 .chip.need:hover{border-color:#d1d6da;background:#f4f6f7}
-.chip.need>.ic{font-size:18px;color:#131618}
+.chip.need>.ic{font-size:18px;color:#1b55f6}/* 기본 칩: 회색 테두리 + 파란 아이콘 · 인원 (시안 100:19600) */.pnote{font-size:12px;line-height:18px;color:#6c767f}
 .chip.need b{color:#1b55f6;font-weight:600}
 .chip.need .cv .ic{font-size:14px;color:#6c767f}
 .chip.need.off.hl{border:2px solid #8db0f8;padding:0 9px 0 11px;color:#30363c;animation:cpulse 1.8s ease-out infinite}.chip.need.off.hl>.ic{color:#6c767f}.chip.need.off.hl:hover{border-color:#8db0f8}
@@ -1204,7 +1204,7 @@ function renderFbar(){
   if(bn){bn.hidden=true;bn.innerHTML="";}
   var left="",rest="";
   if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n'+(overListP(c).length?'':' z')+'">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
-  else if(tot){left='<span class="fwrap"><button type="button" class="chip need nudge" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
+  else if(tot){left='<span class="fwrap"><button type="button" class="chip need'+(Date.now()<(S.nudgeUntil||0)?' nudge':'')+'" data-fmenu="cond" aria-haspopup="menu">'+I("lac")+'처리 대기 중 지원자 <b>'+tot+'명</b><span class="cv">'+I("chev")+'</span></button></span>';}
   else{left='<span class="chip need off'+(S.done==="all"?' hl':'')+'" aria-disabled="true">'+I("lac")+'처리 대기 중 지원자 0명</span>';}/* 전체 완료 · 0명: 비활성 · 숫자도 글자와 같은 색 · ⌄ 없음 */
   /* 필터 줄에는 사용자가 건 필터만 pill로. 정렬은 pill 없이 툴바 정렬 버튼 selected 상태로만 표시 */
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
@@ -1293,9 +1293,9 @@ function showSummary(){
   var p=POSTS.find(function(x){return x.id===S.pid;}),s=summary(S.pid);
   if(!s.total){toast("지금은 처리가 필요한 지원자가 없습니다");return;}
   $("overlay").innerHTML='<div class="backdrop" data-close></div><div class="dwrap" data-close><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dT">'+
-    '<div class="hd"><h2 id="dT">처리 대기 중 지원자 <em>'+s.total+'명</em></h2><p>오래 기다린 지원자부터 처리하면 기업 인상도 좋아집니다.</p></div>'+
+    '<div class="hd"><h2 id="dT">처리 대기 중 지원자 <em>'+s.total+'명</em></h2><p>빠른 확인과 안내로 긍정적인 기업 인상을 남겨보세요.</p></div>'+
     '<ul class="crit" style="margin:0">'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+esc(r.c.t)+'<small>'+esc(r.c.sub)+'</small></span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
-    '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있습니다.</span></div>'+
+    '<div class="note pnote"><span>・한 지원자가 여러 조건에 해당할 수 있어, 인원 합계가 전체보다 많을 수 있습니다.<br>・각 항목의 기간은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간입니다.</span></div>'+
     '<div class="dlgft"><button type="button" class="wkck" data-wk role="checkbox" aria-checked="'+!!S.snooze[S.pid]+'"><span class="ck'+(S.snooze[S.pid]?' on':'')+'"></span>일주일 동안 보지 않기</button><button type="button" class="bt pri" data-close>닫기</button></div>'+
     '</div></div>';/* 노출: 매일 공고별 첫 진입 1회. '일주일 동안 보지 않기' 체크 후 닫으면 그 공고에서 7일간 자동 노출 안 함 */
   var f=$("overlay").querySelector("[data-apply]");if(f)f.focus();
@@ -1523,14 +1523,14 @@ document.addEventListener("click",function(e){
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
   if(d.go){GACT=d.go;S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
   if(t.id==="resetBtn"){GACT="app";init();closeOverlay();enter("A",null);return;}
-  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON"){var wasSum=!!$("dT");closeOverlay();if(wasSum&&!S.cond){S.nudge=true;renderFbar();}}return;}
+  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON"){var wasSum=!!$("dT");closeOverlay();if(wasSum&&!S.cond){S.nudge=true;nudgeNow();renderFbar();}}return;}
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
   if(t.id==="doneBtn"){GACT="done";closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
   if(d.apply){S.nudge=false;S.done=null;S.kept={};S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
-  if(t.id==="cclear"){S.nudge=true;S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;render();return;}
+  if(t.id==="cclear"){S.nudge=true;S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;nudgeNow();render();return;}
   if(d.fmenu){openF(t);return;}
-  if(d.dall!==undefined){S.done=null;S.cond=null;S.kept={};S.sort=null;S.sel={};pickTab();closeF();render();return;}
+  if(d.dall!==undefined){nudgeNow();S.done=null;S.cond=null;S.kept={};S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.fcond){S.done=null;S.kept={};S.qvN=false;S.cond=+d.fcond;pruneF();S.sort=null;S.sel={};pickTab();closeF();render();return;}
   if(d.sug){S.cond=+d.sug;S.sort=null;S.from="sug";S.sel={};pickTab();render();return;}
   if(d.freset!==undefined){S.f={};S.qvU=S.qvN=false;S.sort=null;S.sel={};render();return;}
@@ -1624,8 +1624,9 @@ document.addEventListener("change",function(e){
 document.addEventListener("input",function(e){if(e.target.id!=="faddq")return;var v=e.target.value.trim();e.target.parentNode.querySelectorAll(".addi").forEach(function(b){b.hidden=!!v&&b.textContent.indexOf(v)<0;});});
 document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.psum){e.preventDefault();e.target.click();return;}if(e.key==="Escape"&&$("rejv")){closeRej();return;}if(e.key==="Escape"){closeOverlay();closePops();closeF();}});
 
+function nudgeNow(){S.nudgeUntil=Date.now()+5000;clearTimeout(S._nt);S._nt=setTimeout(function(){document.querySelectorAll('.chip.need.nudge').forEach(function(e){e.classList.remove('nudge');});},5000);}/* 조건 미적용 상태 진입 시 칩을 약 5초간 강조 후 기본 상태 */
 function enter(pid,c,fromMail){
-  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qvU=S.qvN=false;S.justDone=null;S.done=null;S.kept={};S.from=fromMail?"mail":"popup";pickTab();render();
+  if(pid!==S.pid)S.pos=null;S.pid=pid;S.tab=0;S.sel={};S.cond=c;S.view="app";S.sort=null;S.f={};S.qvU=S.qvN=false;S.justDone=null;S.done=null;S.kept={};S.from=fromMail?"mail":"popup";if(!c)nudgeNow();pickTab();render();
   if(fromMail){S.seen[pid]=true;return;}
   if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total&&!S.snooze[pid])showSummary();}/* 매일 첫 진입 1회 · 일주일 동안 보지 않기면 미노출 */
 }
