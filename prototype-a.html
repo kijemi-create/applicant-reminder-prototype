@@ -1352,7 +1352,7 @@ function renderAD(){
      (S.ad.newProp?'':'<div class="ogrp"><div class="ibox">'+I("info")+'<div>'+esc(a.name)+'님이 일정 변경을 요청했습니다. 새로운 날짜나 시간을 선택해 주세요.</div></div>'+
        '<div class="obox"><b>기존 일정</b><div class="ogrid">'+ADOLD().map(function(x){return '<span>'+fmt(x[0]).replace(/^\d{2}\./,"")+' '+x[1]+'</span>';}).join("")+'</div></div></div>')+/* 기존 일정은 안내 바로 아래 회색 박스(2열 · 최대 5개). 입력란은 면접 제안하기와 같은 기본값(내일 9~10시)으로 시작 */
      ivFields(S.ad.newProp?[dOff(7),dOff(8)]:[adDefault()],0)+
-     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?' 님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
+     '</div><div class="df"><button type="button" class="bt pri lg" data-adsend>'+esc(a.name)+(S.ad.newProp?'님에게 보내기':'님에게 변경 내용 보내기')+'</button></div></aside>':'';
   var confirm=S.ad.confirm?'<div class="cdim"></div><div class="cdlg" role="alertdialog"><h3>'+(req?'면접을 취소하시겠어요?':'면접 제안을 취소하시겠어요?')+'</h3><p>취소 후 복구할 수 없으며, 지원자에게 면접 취소 안내가 발송됩니다.</p><div class="btns"><button type="button" class="bt sec" data-adconfirmx>닫기</button><button type="button" class="bt dng" data-adcancel>'+(req?'면접 취소':'제안 취소')+'</button></div></div>':'';
   $("overlay").innerHTML='<button type="button" class="adim" data-adclose aria-label="닫기"></button><div class="adw" role="dialog" aria-modal="true" aria-label="지원자 상세"><div class="adtop"><span class="nav">이전 지원자 <b>‹</b> <b>›</b> 다음 지원자</span><button type="button" class="xbtn" data-adclose aria-label="닫기">'+I("x")+'</button></div><div class="adbody"><nav class="adrail">'+rail+'</nav><section class="addoc">'+doc+'</section><aside class="adchat">'+chat+'</aside></div></div>'+drawer+confirm;
   var cb=$("overlay").querySelector(".cbody:not(.pv)");if(cb)cb.scrollTop=cb.scrollHeight;
@@ -1421,7 +1421,7 @@ function ivFields(dates,dl,chg){/* 피그마 면접 제안 드로어 입력 항�
 function openPropDrawer(ids){var a=findA(ids[0]),who=esc(a.name)+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
   $("overlay").innerHTML='<button type="button" class="ddim" data-close aria-label="닫기"></button><aside class="ivdr" role="dialog" aria-label="면접 제안하기"><div class="dh"><h2>면접 제안하기</h2><button type="button" class="xbtn" data-close aria-label="닫기">'+I("x")+'</button></div><div class="db">'+(ids.length>1?'<div class="ibox">'+I("info")+'<div>입력한 내용은 선택한 지원자에게 1:1 메시지로 발송됩니다.</div></div>':'')+
    ivFields([dOff(7)],0)+
-   '</div><div class="df"><button type="button" class="bt pri lg" data-propsend="'+ids.join(",")+'">'+who+' 님에게 보내기</button></div></aside>';}
+   '</div><div class="df"><button type="button" class="bt pri lg" data-propsend="'+ids.join(",")+'">'+who+'님에게 보내기</button></div></aside>';}
 function noticeWithAlert(ids){if(!ids.length)return;var a=findA(ids[0]),who=esc(a.name)+'님'+(ids.length>1?' 외 '+(ids.length-1)+'명':'');
   alertDlg(who+'에게<br>결과를 안내할까요?','결과 안내 메시지가 지원자에게 발송됩니다.','취소','안내하기',function(){ids.forEach(function(id){findA(id).noticed=true;});render();toast("결과를 안내했습니다.");});}
 function judgeWithAlert(ids,r){var nm=r==="pass"?"최종 합격":"불합격";
