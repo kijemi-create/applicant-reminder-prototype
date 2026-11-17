@@ -841,6 +841,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
 .rvd ul{margin:0 0 8px;padding-left:18px}.rvd li{margin:0 0 4px}
 .rvd .try{display:flex;gap:6px;align-items:flex-start;margin-top:10px;padding:10px 12px;border-radius:8px;background:#f4f6f7;color:#3d454c;font-size:12px;line-height:18px}
 .rvd .try b{color:#131618}
+.rvd .src{margin:0 0 4px;font-size:11px;line-height:16px;color:#8a949c}
 .rvd .alt{display:flex;flex-direction:column;gap:8px;margin-top:4px}
 .rvd .alt div{padding:10px 12px;border:1px solid #e2e6e8;border-radius:8px}
 .rvd .alt b{display:block;font-size:13px;margin-bottom:2px}
@@ -861,6 +862,28 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
 .rvb.pri{background:#1b55f6;border-color:#1b55f6;color:#fff}.rvb.pri:hover{background:#1446d4}
 .rvb:disabled{opacity:.4;cursor:default}
 .cmbox .tag.rvtag{color:#9db6fb}
+/* ---------- 메일: 피그마 이메일 템플릿 ---------- */
+.mail.m2{border:0;border-radius:0;padding:0;color:#131618}
+.m2logo{padding:36px 32px 0;font-size:18px;font-weight:900;letter-spacing:-.3px;color:#1b55f6}
+.m2h{margin:44px 32px 0;text-align:center;font-size:26px;line-height:38px;font-weight:700;letter-spacing:-.6px}
+.m2h em{font-style:normal;color:#1b55f6}
+.m2s{margin:10px 32px 0;text-align:center;font-size:15px;line-height:22px;color:#3d454c}
+.m2card{margin:28px 32px 0;padding:24px 24px 16px;border:1px solid #e2e6e8;border-radius:10px}
+.m2card hr{border:0;border-top:1px solid #e2e6e8;margin:20px 0}
+.m2k{font-size:14px;line-height:20px;color:#6c767f}
+.m2pt{margin-top:6px;font-size:16px;line-height:24px;font-weight:700;word-break:keep-all}
+.m2big{margin-top:4px;font-size:32px;line-height:40px;font-weight:800;color:#1b55f6}.m2big small{margin-left:4px;font-size:13px;font-weight:500;color:#6c767f}
+.m2r{display:flex;align-items:center;gap:12px;min-height:52px}
+.m2r .l{flex:1;font-size:15px;line-height:22px}
+.m2r .n{font-size:15px;font-weight:700}
+.m2r button{height:32px;padding:0 10px;border:1px solid #d6dbde;border-radius:6px;background:#fff;font-size:13px;color:#131618}
+.m2r button:hover{background:#f4f6f7}
+.m2notes,.m2foot{margin:20px 32px 0;padding:0;list-style:none;font-size:13px;line-height:24px;color:#6c767f}
+.m2notes li:before,.m2foot li:before{content:"• "}
+.m2foot{margin-top:28px;font-size:12px;line-height:22px}.m2foot u{margin-left:6px;color:#131618}
+.m2cta{display:block;width:calc(100% - 64px);margin:24px 32px 0;height:52px;border-radius:8px;background:#1b55f6;color:#fff;font-size:16px;font-weight:600}
+.m2corp{margin-top:28px;padding:24px 32px 28px;border-top:1px solid #e2e6e8;text-align:center;font-size:12px;line-height:24px;color:#6c767f}
+.m2corp i{display:inline-block;width:1px;height:10px;margin:0 10px;background:#d6dbde}.m2corp span{display:block;margin-top:4px;color:#131618}
 </style>
 
 <div class="proto" role="toolbar" aria-label="프로토타입">
@@ -933,17 +956,21 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
 <div id="mailView" hidden>
   <div class="mailc">
     <div class="mailh"><h2 id="mSubj"></h2><div class="fr">보낸 사람 잡코리아 · 받는 사람 공고 인사담당자 · 2026년 11월 2일 (월) 오전 10:00</div></div>
-    <div class="mailb"><div class="mail">
-      <div class="mtop"><span class="logo">JOBKOREA</span><span>지원자 관리 리마인드</span></div>
-      <div class="mhero">
-        <div class="k">11월 1주차 지원자 처리 현황</div>
-        <div class="big" id="mBig"></div>
-        <h3>지원자가 채용 진행 상황을 기다리고 있어요</h3>
-        <p>아래 기준은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간입니다. 바로가기를 누르면 해당 지원자를 오래된 순으로 모아 보여드려요. 화면의 인원은 실시간 기준이라 메일과 다를 수 있습니다.</p>
+    <div class="mailb"><div class="mail m2">
+      <div class="m2logo">JOBKOREA</div>
+      <h3 class="m2h">채용담당자님, <em>채용 결과 처리를<br>기다리는 지원자</em>가 있습니다</h3>
+      <p class="m2s">빠른 확인과 안내로 긍정적인 기업 인상을 남겨보세요.</p>
+      <div class="m2card">
+        <div class="m2k">공고 제목</div><div class="m2pt" id="mPost"></div>
+        <hr>
+        <div class="m2k">처리 대기 중 지원자</div><div class="m2big" id="mBig"></div>
+        <hr>
+        <div id="mRows"></div>
       </div>
-      <div id="mPosts"></div>
-      <button type="button" class="bt pri mcta" id="mCta">지원자 관리 바로가기</button>
-      <div class="mfoot">이 메일은 공고에 등록된 인사담당자 이메일로 매주 월요일에 발송됩니다. 등록된 이메일이 없으면 기업회원 계정 이메일로 보냅니다.<br>수신 설정 변경 · 고객센터</div>
+      <ul class="m2notes"><li>한 지원자가 여러 항목에 해당할 수 있어, 인원 합계가 전체보다 많을 수 있습니다.</li><li>인원은 메일 발송 시점 기준이며, 지원자 관리 화면과 다를 수 있습니다.</li><li>각 항목의 기간은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간입니다.</li></ul>
+      <button type="button" class="m2cta" id="mCta">지원자 관리 바로가기</button>
+      <ul class="m2foot"><li>이용 중 궁금한 사항은 고객센터로 문의해 주세요. <u>고객센터 바로가기</u></li><li>본 메일은 매주 월요일, 공고에 등록된 인사담당자 이메일로 발송됩니다.</li></ul>
+      <div class="m2corp">워크스피어(유) <i></i> 사업자등록번호 : 110-81-34859 <i></i> 대표자 : 윤현준 <i></i> 대표전화 : 1588-9350<br>주소 : 서울특별시 서초구 서초대로 301 동익성봉빌딩 16 ~ 18층<br><span>ⓒ Worxphere LLC.All rights reserved.</span></div>
     </div></div>
   </div>
 </div>
@@ -1422,7 +1449,7 @@ function afterChange(ids){
   /* flow: 범위를 벗어난 지원자는 바로 목록에서 빠짐 (처리 완료 배지 없이) */
   render();setTimeout(function(){S.leaving={};
     /* 조건의 지원자를 모두 처리하면 조건을 풀고 전체 지원자를 보여줌 */
-    if(S.cond&&!overList(S.pid,cond(S.cond)).length){S.sel={};S.sort=null;if(summary(S.pid).total){S.done="cond";S.doneCond=S.cond;CM.empForce=true;}/* 조건 완료 화면에 들어올 때마다 완료 코치마크 다시 노출 */else{S.done="all";S.cond=null;}}
+    if(S.cond&&!overList(S.pid,cond(S.cond)).length){S.sel={};S.sort=null;if(summary(S.pid).total){S.done="cond";S.doneCond=S.cond;}/* 조건 완료 화면에 들어올 때마다 완료 코치마크 다시 노출 */else{S.done="all";S.cond=null;}}
     else if(S.cond&&!visibleRows().length)pickTab();
     render();},Object.keys(S.leaving).length?1400:0);
 }
@@ -1651,11 +1678,13 @@ function enter(pid,c,fromMail){
   if(fromMail){S.seen[pid]=true;return;}
   if(!S.seen[pid]){S.seen[pid]=true;if(summary(pid).total&&!S.snooze[pid])showSummary();}/* 매일 첫 진입 1회 · 일주일 동안 보지 않기면 미노출 */
 }
-function renderMail(){
-  var snap=S.mailSnap,ids=["A","B","C"].filter(function(k){return snap[k].total;}),total=ids.reduce(function(s,k){return s+snap[k].total;},0);
-  $("mSubj").textContent="[잡코리아] 처리를 기다리는 지원자가 "+total+"명 있어요";
-  $("mBig").innerHTML=total+"<small>명</small>";
-  $("mPosts").innerHTML=ids.map(function(k){var p=POSTS.find(function(x){return x.id===k;});return '<div class="mp"><div class="mph"><b>'+esc(p.name)+'</b><span>'+p.period+'</span></div>'+snap[k].rows.map(function(r){return '<div class="mr"><span class="l">'+r.c.t+'</span><span class="n">'+r.n+'명</span><button type="button" data-mgo="'+k+'" data-mcond="'+r.c.id+'">바로가기</button></div>';}).join("")+'</div>';}).join("");
+function renderMail(){/* 메일은 공고별 1통: 첫 번째 공고(A) 기준 */
+  var k="A",snap=S.mailSnap[k],p=POSTS.find(function(x){return x.id===k;});
+  var ML={1:"지원 후 {n}일 동안 최종 결과 미입력",2:"현재 단계 진입 후 {n}일 동안 처리 없음",3:"이력서 미열람 상태로 {n}일 경과",4:"이력서 열람 후 {n}일 동안 처리 없음",6:"면접 일정 변경 요청 후 {n}일 동안 응답 없음",7:"면접 종료 후 {n}일 동안 처리 없음"};
+  $("mSubj").textContent="[잡코리아] 채용 결과 처리를 기다리는 지원자가 "+snap.total+"명 있습니다";
+  $("mPost").textContent=p.name;
+  $("mBig").innerHTML=snap.total+"<small>명</small>";
+  $("mRows").innerHTML=snap.rows.map(function(r){return '<div class="m2r"><span class="l">'+ML[r.c.id].replace("{n}",r.c.n)+'</span><span class="n">'+r.n+'명</span><button type="button" data-mgo="'+k+'" data-mcond="'+r.c.id+'">바로가기</button></div>';}).join("");
 }
 
 /* ---------- 리뷰 진행 ---------- */
@@ -1663,8 +1692,8 @@ function firstCond(){var s=summary("A");return s.rows.length?s.rows[0].c.id:3;}
 function fresh(seen){init();if(seen)S.seen={A:true,B:true,C:true};S.lay="list";CM.rv=null;CM.scn=null;cmClear();closeOverlay();closeAlert();if($("rejv"))closeRej();window.scrollTo(0,0);}
 function hi(sel,t,d){CM.rv={sel:sel,t:t,d:d};coachSoon();}
 var RV=[
- {k:"맥락",t:"이번 리뷰에서 볼 것",
-  d:'<p>PO 리뷰를 마친 PRD를 화면으로 옮긴 시안입니다. 정책 세부는 다루지 않고, 담당자가 겪는 흐름이 자연스러운지만 봅니다.</p>'+
+ {k:"설계 의도",t:"처리할 지원자를 '조건 필터'로 걸러 보여줍니다",
+  d:'<p>PRD의 ‘조건’은 사용자 입장에서 필터와 같다고 보았습니다. 지금 처리해야 할 지원자를 조건 필터로 걸러 보여주고, 그 밖의 필터는 해당 조건 안에서 범위를 좁히는 역할을 합니다.</p>'+
     '<div class="flow"><div><i>알게 된다</i><span>들어오면 처리할 지원자를 요약해 보여줍니다</span></div><div><i>처리한다</i><span>조건을 누르면 해당 지원자만 모인 목록에서 바로 처리합니다</span></div><div><i>돌아온다</i><span>띠 배너와 주간 메일로 다시 들어오게 합니다</span></div></div>'+
     '<p>화면의 지원자와 수치는 예시이며, 조건별 경과일(N일)은 가안입니다.</p>',
   go:function(){fresh(true);enter("A",null);}},
@@ -1673,18 +1702,18 @@ var RV=[
     '<div class="try">👉 <span><b>조건 하나를 눌러 보세요.</b> 다음 단계의 목록으로 바로 이어집니다.</span></div>',
   go:function(){fresh(false);enter("A",null);hi("#overlay .dialog .crit","조건을 '해야 할 일'로 보여줍니다","PRD의 조건 기준은 그대로 두고, 담당자가 바로 행동할 수 있는 문장으로 바꿨습니다.");}},
  {k:"② 처리한다",t:"조건이 곧 필터입니다 (A안)",
-  d:'<p>팝업에서 고른 조건이 목록 위 <b>조건 필터</b>로 걸린 채 열립니다.</p><ul><li>오래 기다린 지원자부터 정렬하고, 기준일을 넘긴 지원자에게 경과일 배지를 붙입니다.</li><li>담당자마다 선별 기준이 있어서 기존 필터를 조건 필터 바로 옆에 두었습니다. 조건 안에서 범위를 좁히는 데 씁니다.</li><li>여러 명을 골라 단계 이동·심사·열람 처리를 한 번에 할 수 있습니다.</li></ul>'+
-    '<div class="try">👉 <span><b>지원자를 선택해 [열람 처리]나 [심사하기]를 해 보세요.</b> 처리한 지원자는 조건에서 빠집니다.</span></div>',
+  d:'<p>팝업에서 고른 조건이 목록 위 <b>조건 필터</b>로 걸린 채 열립니다.</p><ul><li>오래 기다린 지원자부터 정렬하고, 기준일을 넘긴 지원자의 경과일 배지는 노란색으로 강조합니다.</li><li>필터는 화면에 바로 보이는 곳에서 쓰입니다. 필터를 쓴 곳의 약 82%가 툴바 필터만 썼고, 드로어 필터를 쓴 곳은 1.6%입니다. 그래서 기존 필터를 조건 필터 바로 옆에 칩으로 꺼내 두었습니다.</li><li>가장 많이 쓰는 필터는 ‘미열람’(필터를 쓴 곳의 56%)입니다. 담당자는 이미 처리할 지원자를 걸러 보는 데 필터를 쓰고 있어, 조건도 필터로 다루었습니다.</li><li>여러 명을 골라 단계 이동·심사·열람 처리를 한 번에 할 수 있습니다.</li></ul>'+
+    '<p class="src">근거: 지원자 관리 필터 사용성 분석 (11/9~11/16, 7일 · 워크스페이스 45,429곳)</p><div class="try">👉 <span><b>지원자를 선택해 [열람 처리]나 [심사하기]를 해 보세요.</b> 처리한 지원자는 조건에서 빠집니다.</span></div>',
   go:function(){fresh(true);enter("A",firstCond());hi("#fbar","조건이 곧 필터입니다","팝업에서 고른 조건이 여기 걸립니다. 다른 필터는 이 조건 안에서 범위를 좁힙니다. 해제하면 전체 목록으로 돌아갑니다.");}},
  {k:"② 처리한다",t:"다 처리하면 다음 할 일로 이어줍니다",
   d:'<p>조건에 남은 지원자를 모두 처리하면 목록 자리에 완료 화면이 나옵니다.</p><ul><li>조건마다 다른 완료 문구를 보여줍니다.</li><li>[이어서 처리하기]는 남은 조건 중 <b>가장 오래 기다린 지원자</b>가 있는 조건으로 바로 이어집니다.</li><li>모든 조건을 끝내면 전체 완료 화면을 보여줍니다.</li></ul>'+
-    '<div class="try">👉 <span>화면에 남은 지원자 1명이 있습니다. <b>말풍선의 [다음]</b>을 누르면 처리되고 완료 화면으로 넘어갑니다.</span></div>',
-  go:function(){fresh(true);scenario("cond");}},
+    '<div class="try">👉 <span>화면에 남은 지원자 1명이 있습니다. <b>[다음]</b>을 누르면 이 지원자가 처리되고 완료 화면으로 넘어갑니다.</span></div>',
+  go:function(){fresh(true);scenario("cond");RVP=true;}},
  {k:"③ 돌아온다",t:"팝업을 닫아도 다시 열 수 있습니다",
-  d:'<p>공고 선택 영역 아래 띠 배너에 처리 대기 인원을 보여줍니다. [확인하기]를 누르면 첫 진입 때와 같은 요약 팝업이 열립니다.</p><ul><li>배포 후 약 1개월 동안만 노출하고, 팝업 진입률을 보고 유지 여부를 정합니다.</li><li>처리 대기 인원이 0명이면 기존 안내 배너로 돌아갑니다.</li></ul>',
+  d:'<p>공고 선택 영역 아래 띠 배너에 처리 대기 인원을 보여줍니다. [확인하기]를 누르면 첫 진입 때와 같은 요약 팝업이 열립니다.</p><ul><li>배포 후 약 1개월 동안만 노출하고, 팝업 진입률을 보고 유지 여부를 정합니다.</li><li>처리 대기 인원이 0명이면 띠 배너는 미노출됩니다.</li></ul>',
   go:function(){fresh(true);enter("A",null);hi("#pbanner","처리 대기 띠 배너","배포 후 약 1개월 동안 노출합니다. [확인하기]를 누르면 요약 팝업이 다시 열립니다.");}},
  {k:"③ 돌아온다",t:"주간 메일로 다시 데려옵니다",
-  d:'<p>매주 월요일, 공고 인사담당자에게 리마인드 메일을 보냅니다. 메일은 처리하는 곳이 아니라 <b>지원자 관리로 다시 들어오게 하는 입구</b>입니다.</p><ul><li>구성은 요약 팝업과 같은 조건 기준을 공고별로 보여줍니다.</li><li>[바로가기]를 누르면 그 조건이 걸린 목록으로 들어갑니다.</li><li>목록은 실시간 기준이라 메일의 숫자와 다를 수 있다고 안내합니다.</li></ul>'+
+  d:'<p>매주 월요일, 공고 인사담당자에게 리마인드 메일을 보냅니다. 메일은 처리하는 곳이 아니라 <b>지원자 관리로 다시 들어오게 하는 입구</b>입니다.</p><ul><li>공고별로 1통씩 보내고, 처리 대기 중 지원자 수와 조건별 인원을 보여줍니다.</li><li>조건별 [바로가기]를 누르면 그 조건이 걸린 목록으로 들어갑니다.</li><li>인원은 발송 시점 기준이라 지원자 관리 화면과 다를 수 있다고 안내합니다.</li></ul>'+
     '<div class="try">👉 <span><b>조건 옆 [바로가기]를 눌러 보세요.</b></span></div>',
   go:function(){fresh(true);S.view="mail";render();}},
  {k:"왜 A안인가",t:"함께 검토했던 안",
@@ -1693,16 +1722,10 @@ var RV=[
     '<div><b>C안 · 그룹형</b><span>조건별 그룹마다 같은 지원자가 중복으로 보여 혼란스러웠습니다.</span><button type="button" data-rej="c">C안 보기 →</button></div>'+
     '<div><b>D안 · 배너형</b><span>기존 띠 배너와 겹쳐 주목도가 낮고, 배너와 목록이 연결되어 보이지 않았습니다.</span><button type="button" data-rej="d">D안 보기 →</button></div>'+
     '</div>',
-  go:function(){fresh(true);enter("A",firstCond());}},
- {k:"논의",t:"의견을 받고 싶은 부분",
-  d:'<ol class="ask">'+
-    '<li><b>노출 강도</b><span>첫 진입 팝업 + 띠 배너 + 주간 메일. 담당자에게 과하지 않은지</span></li>'+
-    '<li><b>조건 문구</b><span>상태 대신 \'~해 주세요\'로 쓴 표현이 부담스럽지 않은지</span></li>'+
-    '<li><b>A안 구조</b><span>조건을 필터로 다루는 방식이 기존 지원자 목록 사용 흐름과 잘 맞는지</span></li>'+
-    '</ol>',
-  go:function(){fresh(true);enter("A",null);}}
+  go:function(){fresh(true);enter("A",firstCond());}}
 ];
-var RVI=0;
+var RVI=0,RVP=false;/* RVP: 완료 직전 단계에서 아직 처리 전 */
+function rvFinish(){RVP=false;CM.scn=null;cmClear();scnGo();setTimeout(function(){hi("#list .dempty","조건을 다 처리하면 완료 화면이 나옵니다","조건마다 다른 완료 문구를 보여줍니다. [이어서 처리하기]를 누르면 남은 조건 중 가장 오래 기다린 지원자가 있는 조건으로 이어집니다.");},300);}
 function rvRender(){var s=RV[RVI];
   $("rvCount").textContent=(RVI+1)+" / "+RV.length;
   $("rvNav").innerHTML=RV.map(function(x,i){return '<button type="button" data-rvgo="'+i+'" class="'+(i===RVI?'on':i<RVI?'done':'')+'" aria-label="'+(i+1)+'단계: '+esc(x.t)+'" title="'+esc(x.t)+'"></button>';}).join("");
@@ -1710,10 +1733,11 @@ function rvRender(){var s=RV[RVI];
   document.querySelector("[data-rvprev]").disabled=RVI===0;
   var nx=document.querySelector("[data-rvnext]");nx.textContent=RVI===RV.length-1?"처음으로":"다음";
   $("rvDesc").scrollTop=0;document.querySelector(".rvbody").scrollTop=0;}
-function rvGo(i){RVI=Math.max(0,Math.min(RV.length-1,i));GACT="app";rvRender();RV[RVI].go();}
+function rvGo(i){RVP=false;RVI=Math.max(0,Math.min(RV.length-1,i));GACT="app";rvRender();RV[RVI].go();}
 document.addEventListener("click",function(e){var t=e.target.closest("button,.rvh");if(!t)return;var d=t.dataset||{};
   if(t.classList.contains("rvh")&&$("rv").classList.contains("min")&&!e.target.closest("button")){$("rv").classList.remove("min");return;}
-  if(d.rvnext!==undefined){rvGo(RVI===RV.length-1?0:RVI+1);}
+  if(d.rvnext!==undefined){if(RVP){rvFinish();return;}rvGo(RVI===RV.length-1?0:RVI+1);}
+  else if(d.scngo!==undefined&&RVP){e.stopPropagation();rvFinish();}
   else if(d.rvprev!==undefined){rvGo(RVI-1);}
   else if(d.rvreplay!==undefined){rvGo(RVI);}
   else if(d.rvgo!==undefined){rvGo(+d.rvgo);}
@@ -1721,7 +1745,7 @@ document.addEventListener("click",function(e){var t=e.target.closest("button,.rv
   else if(d.rvmin!==undefined){$("rv").classList.toggle("min");}
 },true);
 document.addEventListener("keydown",function(e){var tg=e.target.tagName;if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT"||e.metaKey||e.ctrlKey||e.altKey)return;
-  if(e.key==="ArrowRight"){e.preventDefault();rvGo(RVI+1);}else if(e.key==="ArrowLeft"){e.preventDefault();rvGo(RVI-1);}});
+  if(e.key==="ArrowRight"){e.preventDefault();if(RVP){rvFinish();return;}rvGo(RVI+1);}else if(e.key==="ArrowLeft"){e.preventDefault();rvGo(RVI-1);}});
 rvGo(0);
 })();
 </script>
