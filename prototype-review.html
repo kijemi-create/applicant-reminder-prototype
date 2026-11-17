@@ -841,6 +841,10 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
 .rvd ul{margin:0 0 8px;padding-left:18px}.rvd li{margin:0 0 4px}
 .rvd .try{display:flex;gap:6px;align-items:flex-start;margin-top:10px;padding:10px 12px;border-radius:8px;background:#f4f6f7;color:#3d454c;font-size:12px;line-height:18px}
 .rvd .try b{color:#131618}
+.rvd .sec{padding:0 0 12px;margin:0 0 12px;border-bottom:1px solid #eef0f2}
+.rvd .sec>b{display:block;margin:0 0 4px;font-size:13px;color:#131618}
+.rvd .sec p:last-child,.rvd .sec ul:last-child{margin-bottom:0}
+.rvd .flow{padding-top:4px}
 .rvd .src{margin:0 0 4px;font-size:11px;line-height:16px;color:#8a949c}
 .rvd .alt{display:flex;flex-direction:column;gap:8px;margin-top:4px}
 .rvd .alt div{padding:10px 12px;border:1px solid #e2e6e8;border-radius:8px}
@@ -1693,7 +1697,11 @@ function fresh(seen){init();if(seen)S.seen={A:true,B:true,C:true};S.lay="list";C
 function hi(sel,t,d){CM.rv={sel:sel,t:t,d:d};coachSoon();}
 var RV=[
  {k:"설계 의도",t:"처리할 지원자를 '조건 필터'로 걸러 보여줍니다",
-  d:'<p>PRD의 ‘조건’은 사용자 입장에서 필터와 같다고 보았습니다. 지금 처리해야 할 지원자를 조건 필터로 걸러 보여주고, 그 밖의 필터는 해당 조건 안에서 범위를 좁히는 역할을 합니다.</p>'+
+  d:'<div class="sec"><b>왜 필터인가</b><p>지원자 관리에서 가장 많이 쓰는 필터는 ‘미열람’입니다(필터를 쓴 곳의 56%). 사용자는 이미 ‘처리할 지원자 걸러 보기’ 용도로 필터를 쓰고 있고, 조건은 그 연장선이라고 보았습니다.</p><p>또 필터를 쓴 곳의 약 82%는 화면에 보이는 툴바 필터만 썼습니다. 보이는 위치의 필터가 주로 쓰이므로, 조건도 목록 위에 보이는 필터 칩으로 꺼내 두었습니다.</p></div>'+
+    '<div class="sec"><b>왜 다른 안이 아닌가</b><p>두 가지 기준으로 B·C·D안을 비교했습니다. ① 목록에 조건이 적용된 것이 인지되는가 ② 다른 조건으로 바꾸거나 해제하기 쉬운가</p><ul><li>B안 칩형: ‘처리 대기 12명’이 처리할 인원이 아니라 지금 목록 인원으로 읽힙니다. (①)</li><li>C안 그룹형: 같은 지원자가 여러 그룹에 중복으로 보여 목록이 헷갈립니다. (①)</li><li>D안 배너형: 기존 띠 배너와 겹쳐 눈에 띄지 않고, 배너와 목록이 연결되어 보이지 않습니다. (①②)</li></ul></div>'+
+    '<div class="sec"><b>왜 기존 필터를 옆에 두었나</b><p>조건 칩만 따로 있으면 필터로 인식되지 않았습니다. 기존 필터와 같은 줄, 같은 모양으로 두어야 ‘필터’로 읽히고, 조건 안에서 범위를 더 좁힐 수도 있습니다. 새 영역을 추가한 게 아니라 기존 필터 버튼을 칩 형태로 바꾼 것입니다.</p></div>'+
+    '<div class="sec"><b>제약</b><p>새로고침하거나 다른 공고에 갔다 돌아오면 필터 상태가 유지되지 않는 구조라, 사용자는 필터를 매번 다시 걸어야 합니다. 그래서 항목을 하나씩 거는 방식보다 드로어에서 여러 필터를 한 번에 거는 방식이 덜 번거롭다고 판단했습니다.</p></div>'+
+    '<p class="src">근거: 지원자 관리 필터 사용성 분석 (11/9~11/16, 7일 · 워크스페이스 45,429곳)</p>'+
     '<div class="flow"><div><i>알게 된다</i><span>들어오면 처리할 지원자를 요약해 보여줍니다</span></div><div><i>처리한다</i><span>조건을 누르면 해당 지원자만 모인 목록에서 바로 처리합니다</span></div><div><i>돌아온다</i><span>띠 배너와 주간 메일로 다시 들어오게 합니다</span></div></div>'+
     '<p>화면의 지원자와 수치는 예시이며, 조건별 경과일(N일)은 가안입니다.</p>',
   go:function(){fresh(true);enter("A",null);}},
