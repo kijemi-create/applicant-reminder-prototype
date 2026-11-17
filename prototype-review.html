@@ -96,7 +96,11 @@ body:has(#overlay .ivdr) #gstack,body:has(#overlay .adw) #gstack,body:has(#overl
 #guide .gmin{color:#fff}#guide .gmin:hover{background:rgba(255,255,255,.16)}
 .guide.drop{box-shadow:0 4px 12px rgba(19,22,24,.08)}.guide.drop .gh b{font-weight:500;color:#6c767f;font-size:12px}
 /* 팝업 닫기 · 조건 해제 직후 처리 대기 칩 어포던스 (피그마 100-19490) */
-.chip.need.nudge{border:2px solid #8db0f8;padding:0 9px 0 11px;animation:cpulse 1.6s ease-out 4}
+.chip.need.nudge{animation:cpulse 1.25s ease-out 4,nudgeb 5s step-end 1}/* 처음 5초만 파란 테두리 + 펄스, 끝나면 기본 칩(회색 테두리 · 파란 인원 · 파란 ⌄) */
+@keyframes nudgeb{0%{border-color:#8db0f8;outline:1px solid #8db0f8;outline-offset:-2px}100%{border-color:var(--gray-300);outline:0 solid transparent;outline-offset:0}}
+.fbar .chip.need .cv{color:#1b55f6}
+.note.nl{display:block;margin:0;list-style:none;font-size:12px;line-height:20px;color:var(--gray-600)}
+.note.nl li:before{content:"· "}
 @media (prefers-reduced-motion:reduce){.chip.need.nudge{animation:none}}
 
 .gintro{padding:12px 14px;border-bottom:1px solid #eef0f2;background:#f7f9ff;font-size:12px;line-height:18px;color:#30363c}
@@ -1360,9 +1364,9 @@ function showSummary(){
   var p=POSTS.find(function(x){return x.id===S.pid;}),s=summary(S.pid);
   if(!s.total){toast("지금은 처리가 필요한 지원자가 없습니다");return;}
   $("overlay").innerHTML='<div class="backdrop" data-close></div><div class="dwrap" data-close><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dT">'+
-    '<div class="hd"><h2 id="dT">처리 대기 중 지원자 <em>'+s.total+'명</em></h2><p>오래 기다린 지원자부터 처리하면 기업 인상도 좋아집니다.</p></div>'+
+    '<div class="hd"><h2 id="dT">처리 대기 중 지원자 <em>'+s.total+'명</em></h2><p>빠른 확인과 안내로 긍정적인 기업 인상을 남겨보세요.</p></div>'+
     '<ul class="crit" style="margin:0">'+s.rows.map(function(r){return '<li><button type="button" data-apply="'+r.c.id+'"><span class="t">'+esc(r.c.t)+'<small>'+esc(r.c.sub)+'</small></span><span class="n">'+r.n+'명</span>'+I("chev")+'</button></li>';}).join("")+'</ul>'+
-    '<div class="note">'+I("info")+'<span>한 지원자가 여러 조건에 해당할 수 있어 조건별 인원의 합은 전체 인원보다 많을 수 있습니다.</span></div>'+
+    '<ul class="note nl"><li>한 지원자가 여러 조건에 해당할 수 있어, 인원 합계가 전체보다 많을 수 있습니다.</li><li>각 항목의 기간은 잡코리아 채용 데이터에서 대부분의 지원서가 처리되는 기간입니다.</li></ul>'+
     '<div class="dlgft"><button type="button" class="wkck" data-wk role="checkbox" aria-checked="'+!!S.snooze[S.pid]+'"><span class="ck'+(S.snooze[S.pid]?' on':'')+'"></span>일주일 동안 보지 않기</button><button type="button" class="bt pri" data-close>닫기</button></div>'+
     '</div></div>';/* 노출: 매일 공고별 첫 진입 1회. '일주일 동안 보지 않기' 체크 후 닫으면 그 공고에서 7일간 자동 노출 안 함 */
   var f=$("overlay").querySelector("[data-apply]");if(f)f.focus();
