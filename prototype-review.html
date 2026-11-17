@@ -829,7 +829,8 @@ body{padding-right:calc(var(--rvw) + 16px)}
 .sheet,.ivdr{right:var(--rvw);width:min(720px,calc(100vw - var(--rvw)))}
 .toast{right:calc(var(--rvw) + 20px)}
 .adw{left:calc((100vw - var(--rvw)) / 2);width:min(1360px,calc(100vw - var(--rvw) - 80px))}
-.cdlg,.bulk{left:calc((100vw - var(--rvw)) / 2)}
+.cdlg{left:calc((100vw - var(--rvw)) / 2)}
+.bulk{left:calc((100vw - var(--rvw)) / 2 / var(--fz,1))}/* 축소된 시안 안의 고정 요소라 배율만큼 보정 */
 .rvkey{font-size:12px;color:#8a949c}
 .rv{position:fixed;top:0;right:0;bottom:0;z-index:95;width:var(--rvw);display:flex;flex-direction:column;background:#fff;border-left:1px solid #e2e6e8;box-shadow:-4px 0 16px rgba(19,22,24,.06);font-size:13px;color:#131618}
 .rvh{display:flex;align-items:center;gap:8px;padding:12px 14px 12px 18px;border-bottom:1px solid #eef0f2}
@@ -1772,6 +1773,11 @@ document.addEventListener("click",function(e){var t=e.target.closest("button,.rv
 },true);
 document.addEventListener("keydown",function(e){var tg=e.target.tagName;if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT"||e.metaKey||e.ctrlKey||e.altKey)return;
   if(e.key==="ArrowRight"){e.preventDefault();if(RVP){rvFinish();return;}rvGo(RVI+1);}else if(e.key==="ArrowLeft"){e.preventDefault();rvGo(RVI-1);}});
+/* 시안(1440px 고정)을 패널 왼쪽 영역 폭에 맞춰 축소 */
+function fitFrame(){var f=document.querySelector("#appView .frame");if(!f)return;var avail=document.body.clientWidth-parseFloat(getComputedStyle(document.body).paddingLeft)-parseFloat(getComputedStyle(document.body).paddingRight);var z=Math.min(1,avail/1440);f.style.width="1440px";f.style.maxWidth="none";f.style.overflow="visible";f.style.zoom=String(z);document.documentElement.style.setProperty("--fz",String(z));coachSoon();}
+addEventListener("resize",fitFrame);
+new MutationObserver(fitFrame).observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
+fitFrame();
 rvGo(0);
 })();
 </script>
