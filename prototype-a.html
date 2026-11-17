@@ -883,7 +883,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
         <div class="seg" id="seg"><button type="button" data-lay="list" aria-label="리스트뷰"><span class="ic" data-i="list"></span></button><button type="button" data-lay="board" aria-label="칸반뷰"><span class="ic" data-i="board"></span></button></div>
         <span class="sp"></span>
         
-        <button type="button" class="qck" id="qvN" data-qck="n" title="합불은 정했지만 결과를 안내하지 않은 지원자"><span class="ck"></span>안내 전 지원자만 보기</button>
+        <button type="button" class="qck" id="qvU" data-qck="u"><span class="ck"></span>미열람 지원자만 보기</button>         <button type="button" class="qck" id="qvN" data-qck="n" title="합불은 정했지만 결과를 안내하지 않은 지원자"><span class="ck"></span>안내 전 지원자만 보기</button>
         <span class="vdiv"></span>
         <button type="button" class="ibtn" data-todo aria-label="검색"><span class="ic" data-i="search"></span></button>
         <span class="fwrap"><button type="button" class="ibtn" id="tbSort" data-fmenu="sort" data-r="1" aria-label="정렬"><span class="ic" data-i="sort"></span></button></span>
@@ -1217,7 +1217,7 @@ function renderFbar(){
   /* 처리할 지원자도, 건 정렬·필터도 없으면 줄 전체를 숨겨 실서비스 화면과 같게 */
   $("fbar").hidden=!h;$("fbar").innerHTML=h;
   /* 피그마: '전체 지원자' 셀렉트 대신 체크 필터 2개. 조건 목록(최종 결과 전 지원자)에서는 '안내 전'은 비활성 */
-  $("qvN").querySelector(".ck").classList.toggle("on",!!S.qvN);$("qvN").disabled=!!S.cond;
+  $("qvU").querySelector(".ck").classList.toggle("on",!!S.qvU);$("qvN").querySelector(".ck").classList.toggle("on",!!S.qvN);/* 미열람 지원자만 보기: 조건과 관계없이 쓰도록 툴바에 유지 */$("qvN").disabled=!!S.cond;
   $("tbSort").classList.toggle("on",!!S.sort);/* 정렬 규칙: 조건의 기본 순서는 알리지 않음. 사용자가 직접 고른 정렬만 활성 표시 */
 }
 function dfmt(d){return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}
