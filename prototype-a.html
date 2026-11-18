@@ -589,6 +589,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 @keyframes gfill{from{width:var(--p0)}to{width:var(--p)}}
 .chip.need.hot>.ic .hand{transform-origin:12px 12px}.chip.need.hot.peek>.ic .hand{animation:hand 1s cubic-bezier(.4,0,.2,1) .2s both}.chip.cond .cb>.ic .hand{transform-origin:12px 12px}.chip.cond.spin .cb>.ic .hand{animation:hand 1s cubic-bezier(.4,0,.2,1) .1s both}/* 조건을 고르면 시계 초침이 한 바퀴 */
 .chip.need.hot.pulse{animation:cpulse 1.6s ease-out 3}/* 조건 처리 중 전체 목록으로 돌아오면 파란 펄스 약 5초 */
+.chip.absorbed{animation:absorbBump .45s cubic-bezier(.2,.9,.3,1.4)}@keyframes absorbBump{0%{transform:scale(1)}35%{transform:scale(1.08)}100%{transform:scale(1)}}/* 흡수 직후 칩이 받는 반동 */
+.absorb-ghost{box-shadow:0 12px 32px rgba(19,22,24,.18)}
 @keyframes hand{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .xtra{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;opacity:0;vertical-align:bottom;font-weight:500;color:#30363c;padding-left:4px;animation:peek 3.8s .3s both}/* 진입 시 칩이 펼쳐지며 최장 대기일을 말해 줌 → 다시 닫힘 */
 @keyframes peek{0%{max-width:0;opacity:0;animation-timing-function:cubic-bezier(.2,.9,.3,1.1)}14%{max-width:400px;opacity:1}80%{max-width:400px;opacity:1;animation-timing-function:cubic-bezier(.4,0,.2,1)}100%{max-width:0;opacity:0}}
@@ -1317,6 +1319,8 @@ function render(){
 }
 
 /* ---------- 오버레이 ---------- */
+function absorbPrep(src){/* 닫히기 전에 위치와 모양을 저장 */if(!src||!window.matchMedia||matchMedia('(prefers-reduced-motion: reduce)').matches)return null;return {fr:src.getBoundingClientRect(),g:src.cloneNode(true)};}
+function absorbFrom(pp,sel){/* 쇽- 흡수: 팝업(또는 고른 조건 행)이 작아지며 칩으로 빨려 들어감 → 칩이 살짝 튕기며 받음 */if(!pp)return;var fr=pp.fr,g=pp.g;g.removeAttribute('id');g.querySelectorAll('[id]').forEach(function(x){x.removeAttribute('id');});g.classList.add('absorb-ghost');g.style.cssText+=';position:fixed;left:'+fr.left+'px;top:'+fr.top+'px;width:'+fr.width+'px;height:'+fr.height+'px;margin:0;z-index:9999;pointer-events:none;transform-origin:0 0;overflow:hidden';document.body.appendChild(g);requestAnimationFrame(function(){var to=document.querySelector(sel);if(!to){g.remove();return;}var tr=to.getBoundingClientRect();var sx=tr.width/fr.width,sy=tr.height/fr.height,dx=tr.left-fr.left,dy=tr.top-fr.top;var an=g.animate([{transform:'translate(0,0) scale(1,1)',opacity:1,borderRadius:'16px'},{offset:.55,opacity:.85},{transform:'translate('+dx+'px,'+dy+'px) scale('+sx+','+sy+')',opacity:0,borderRadius:'999px'}],{duration:460,easing:'cubic-bezier(.55,0,.75,.2)'});an.onfinish=function(){g.remove();var t2=document.querySelector(sel);if(t2){t2.classList.remove('absorbed');void t2.offsetWidth;t2.classList.add('absorbed');setTimeout(function(){t2.classList.remove('absorbed');},500);}};});}
 function closeOverlay(){$("overlay").innerHTML="";}
 function showSummary(){
   var p=POSTS.find(function(x){return x.id===S.pid;}),s=summary(S.pid);
@@ -1552,11 +1556,11 @@ document.addEventListener("click",function(e){
   var t=e.target.closest("button,[data-close]");if(!t)return;var d=t.dataset;
   if(d.go){GACT=d.go;S.view=d.go;closeOverlay();if(d.go==="app")enter(S.pid,null);else render();return;}
   if(t.id==="resetBtn"){GACT="app";init();closeOverlay();enter("A",null);return;}
-  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON"){var wasSum=!!$("dT");closeOverlay();if(wasSum&&!S.cond){S.nudge=true;nudgeNow();renderFbar();}}return;}
+  if(d.close!==undefined){if(e.target===t||t.tagName==="BUTTON"){var wasSum=!!$("dT"),dlg=wasSum?absorbPrep($("dT").closest(".dialog")):null;closeOverlay();if(wasSum&&!S.cond){S.nudge=true;nudgeNow();renderFbar();absorbFrom(dlg,"#fbar .chip.need");}}return;}
   if(d.post){if(d.post!==S.pid)enter(d.post,null);return;}
   if(d.tab){S.tab=+d.tab;S.sel={};render();return;}
   if(t.id==="doneBtn"){GACT="done";closeOverlay();S.db.B.forEach(function(a){if(a.lv<0)a.lv=0;});S.seen.B=true;enter("B",null);toast("사무보조 공고의 대기 지원자를 모두 처리한 상태입니다");return;}
-  if(d.apply){S._spin=Date.now()+1300;S.nudge=false;S.done=null;S.kept={};S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();return;}
+  if(d.apply){var srcRow=absorbPrep(t.closest("[data-apply]"));S._spin=Date.now()+1300;S.nudge=false;S.done=null;S.kept={};S.qvN=false;S.cond=+d.apply;pruneF();S.sel={};S.sort=null;S.from="popup";pickTab();closeOverlay();render();absorbFrom(srcRow,"#fbar .chip.cond");return;}
   if(t.id==="cclear"){S.nudge=true;S.done=null;S.cond=null;S.kept={};S.sel={};S.sort=null;nudgeNow('pulse');render();return;}
   if(d.fmenu){openF(t);return;}
   if(d.dall!==undefined){nudgeNow('pulse');S.done=null;S.cond=null;S.kept={};S.sort=null;S.sel={};pickTab();closeF();render();return;}
