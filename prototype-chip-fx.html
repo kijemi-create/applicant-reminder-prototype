@@ -59,6 +59,9 @@ h1{font-size:22px;line-height:30px;font-weight:700}
 .gauge{position:relative;overflow:hidden;isolation:isolate}
 .gauge::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p);background:rgba(27,85,246,.16);z-index:-1;animation:gfill .7s cubic-bezier(.2,.9,.3,1.1) both}
 .chip.need.gauge::before{background:rgba(27,85,246,.14)}
+.chip.need:active,.chip.need.is-pressed{background:#dbe6ff;border-color:#1446d8;color:#1446d8}.chip.cond:active,.chip.cond.is-pressed{background:#dbe6ff;border-color:#1446d8;color:#1446d8}.chip.cond.is-pressed .cx{color:#1446d8}/* Pressed: 누르는 동안 · 조건 드롭다운이 열린 동안 */
+.chip.need.is-hover{background:var(--brand-50)}.chip.is-done{background:var(--ok)!important;border-color:var(--ok)!important;color:#fff!important}.chip.is-done .cx{color:#fff}
+.states{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px 16px}.states figure{margin:0}.states figcaption{font-size:12px;line-height:18px;color:var(--g600);margin-bottom:6px}
 @keyframes gfill{from{width:var(--p0)}to{width:var(--p)}}
 
 /* ① 진입: 칩이 펼쳐지며 최장 대기일 → 다시 접힘, 시계 바늘 한 바퀴 */
@@ -119,6 +122,12 @@ h1{font-size:22px;line-height:30px;font-weight:700}
       </div>
     </section>
 
+
+    <section class="card">
+      <h2>상태 한눈에</h2>
+      <p class="sub">움직임 없이 각 상태의 모양만 비교합니다. 위 A · B의 칩을 누르면 Pressed(드롭다운 열림)가 켜지고 꺼집니다.</p>
+      <div class="states" id="states"></div>
+    </section>
     <section class="card">
       <h2>효과 정리</h2>
       <dl class="spec">
@@ -126,7 +135,7 @@ h1{font-size:22px;line-height:30px;font-weight:700}
         <dt>② 처리</dt><dd>숫자가 바뀐 자리만 굴러 바뀜(0.5초, 줄면 위에서 내려옴). 칩 오른쪽 위에 'N명 처리 완료'가 떠올랐다 사라짐(1.5초).</dd>
         <dt>③ 진행 게이지</dt><dd>처음 본 인원 대비 처리한 비율만큼 칩 배경이 왼쪽부터 채워짐(0.7초).</dd>
         <dt>④ 0명</dt><dd>칩이 잠시(약 1.5초) 초록으로 채워지고 흰 체크 아이콘이 톡 튀어 오름. 기본 칩은 이후 비활성 '처리 대기 중 지원자 0명', 조건 칩은 체크 아이콘 유지.</dd>
-        <dt>아이콘</dt><dd>기본 칩 · 조건 칩 모두 시계. 0명 완료 순간에만 체크, 0명 비활성 칩은 회색 시계.</dd><dt>연속 처리</dt><dd>보상 문구가 떠 있는 동안(1.5초) 또 처리하면 새로 띄우지 않고 숫자만 늘어남(예: 1명 → 3명 처리 완료). 이전 롤링이 끝나기 전 숫자가 또 바뀌면 0.2초로 짧게 굴러감.</dd><dt>공통 이징</dt><dd>빠르게 시작해 부드럽게 감속, 끝에 살짝 반동. 기기에서 '동작 줄이기'를 켜면 움직임 없이 결과만 표시.</dd>
+        <dt>Pressed</dt><dd>누르는 동안 · 조건 드롭다운이 열린 동안 배경 #dbe6ff, 테두리 · 글자 · 아이콘 #1446d8 (기본 칩 · 조건 칩 공통).</dd><dt>아이콘</dt><dd>기본 칩 · 조건 칩 모두 시계. 0명 완료 순간에만 체크, 0명 비활성 칩은 회색 시계.</dd><dt>연속 처리</dt><dd>보상 문구가 떠 있는 동안(1.5초) 또 처리하면 새로 띄우지 않고 숫자만 늘어남(예: 1명 → 3명 처리 완료). 이전 롤링이 끝나기 전 숫자가 또 바뀌면 0.2초로 짧게 굴러감.</dd><dt>공통 이징</dt><dd>빠르게 시작해 부드럽게 감속, 끝에 살짝 반동. 기기에서 '동작 줄이기'를 켜면 움직임 없이 결과만 표시.</dd>
       </dl>
       <div class="ctrl"><label><input type="checkbox" id="rm"> 동작 줄이기 상태로 보기</label></div>
     </section>
@@ -161,6 +170,19 @@ function stepB(k){var old=B.n,p0=pct(B.base,B.n);
 document.addEventListener('click',function(e){var t=e.target.closest('[data-a],[data-b]');if(!t)return;if(t.dataset.a)stepA(t.dataset.a);else stepB(t.dataset.b);});
 document.getElementById('rm').addEventListener('change',function(e){document.body.classList.toggle('rm',e.target.checked);});
 drawA({peek:true});drawB();
+function stateGallery(){var cv='<span class="cv">'+I("chev")+'</span>',x='<span class="cx">'+I("x")+'</span>';
+  var L=[["기본","<span class='chip need'>"+I("clock")+"처리 대기 중 지원자 <b class='num'>12명</b>"+cv+"</span>"],
+  ["Hover","<span class='chip need is-hover'>"+I("clock")+"처리 대기 중 지원자 <b class='num'>12명</b>"+cv+"</span>"],
+  ["Pressed (드롭다운 열림)","<span class='chip need is-pressed'>"+I("clock")+"처리 대기 중 지원자 <b class='num'>12명</b>"+cv+"</span>"],
+  ["진입 펼침","<span class='chip need'>"+I("clock")+"처리 대기 중 지원자 <b class='num'>12명</b><span style='padding-left:4px;font-weight:500;color:#30363c'>· 좋은 지원자를 놓치지 마세요</span>"+cv+"</span>"],
+  ["처리 중 (게이지 25%)","<span class='fwrap'><span class='chip need gauge' style='--p:25%;--p0:25%'>"+I("clock")+"처리 대기 중 지원자 <b class='num'>9명</b>"+cv+"</span><span class='cfloat hold' style='animation:none'><b>3</b>명 처리 완료</span></span>"],
+  ["조건 선택","<span class='chip cond'><span class='cb'>"+I("clock")+"지원서를 열람해 주세요 <span class='n'>6명</span>"+cv+"</span>"+x+"</span>"],
+  ["조건 Pressed (드롭다운 열림)","<span class='chip cond is-pressed'><span class='cb'>"+I("clock")+"지원서를 열람해 주세요 <span class='n'>6명</span>"+cv+"</span>"+x+"</span>"],
+  ["모두 처리한 순간 (약 1.4초)","<span class='chip cond is-done'><span class='cb'>"+I("check")+"지원서를 열람해 주세요 <span class='n'>0명</span>"+cv+"</span>"+x+"</span>"],
+  ["0명 (비활성)","<span class='chip need off'>"+I("clock")+"처리 대기 중 지원자 0명</span>"]];
+  document.getElementById('states').innerHTML=L.map(function(r){return '<figure><figcaption>'+r[0]+'</figcaption>'+r[1]+'</figure>';}).join('');}
+document.addEventListener('click',function(e){var c=e.target.closest('#stA .chip.need:not(.off), #stB .chip.cond');if(c)c.classList.toggle('is-pressed');});
+stateGallery();
 </script>
 </body>
 </html>

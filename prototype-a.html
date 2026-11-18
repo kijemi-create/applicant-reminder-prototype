@@ -585,6 +585,8 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 @media (prefers-reduced-motion:reduce){.chip.need.hot .shm{animation:none;background:none;color:#1b55f6}.rs.up,.rs.dn,.fmsg.anim,.fmsg.anim .fin2>*{animation:none}.rs.up{transform:translateY(-20px)}}
 .gauge{position:relative;overflow:hidden;isolation:isolate}.gauge::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p);background:rgba(27,85,246,.16);z-index:-1;animation:gfill .7s cubic-bezier(.2,.9,.3,1.1) both}/* 진행 게이지 */
 .chip.need.hot.gauge::before{background:rgba(27,85,246,.14)}
+.chip.need.hot:active,.fwrap:has(.fmenu)>.chip.need.hot{background:#dbe6ff;border-color:#1446d8;color:#1446d8}.chip.need.hot:active>.ic,.fwrap:has(.fmenu)>.chip.need.hot>.ic,.chip.need.hot:active .num,.fwrap:has(.fmenu)>.chip.need.hot .num,.fwrap:has(.fmenu)>.chip.need.hot .cv .ic{color:#1446d8}
+.chip.cond:active,.fwrap:has(.fmenu)>.chip.cond{background:#dbe6ff;border-color:#1446d8;color:#1446d8}/* Pressed: 누르는 동안 · 조건 드롭다운이 열린 동안 한 단계 진한 파랑 */
 @keyframes gfill{from{width:var(--p0)}to{width:var(--p)}}
 .chip.need.hot>.ic .hand{transform-origin:12px 12px}.chip.need.hot.peek>.ic .hand{animation:hand 1s cubic-bezier(.4,0,.2,1) .2s both}@keyframes hand{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .xtra{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;opacity:0;vertical-align:bottom;font-weight:500;color:#30363c;padding-left:4px;animation:peek 3.8s .3s both}/* 진입 시 칩이 펼쳐지며 최장 대기일을 말해 줌 → 다시 닫힘 */
