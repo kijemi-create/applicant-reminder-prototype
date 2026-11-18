@@ -849,7 +849,7 @@ button.fin{font:inherit;background:#fff;cursor:pointer;text-align:left;width:100
   <div class="gs"><button type="button" class="gt" data-dstep="P3" aria-expanded="false"><span class="gn">3</span>전체 목록에서는 dot을 표시하지 않습니다<span class="gc"></span></button>
     <div class="gsub"><p class="drs">처리 대기 dot은 조건 필터를 골랐을 때만 표시합니다.</p><button type="button" class="gi dlink" data-cmgo="dot">화면에서 보기</button></div></div>
   <div class="gs"><button type="button" class="gt" data-dstep="P4" aria-expanded="false"><span class="gn">4</span>조건마다 다른 완료 화면을 보여줍니다<span class="gc"></span></button>
-    <div class="gsub"><p class="drs">조건을 모두 처리하면 목록 자리에 완료 화면이 나오고, [이어서 처리하기]는 가장 오래 기다린 지원자가 있는 조건으로 이어집니다.</p><button type="button" class="gi dlink" data-cmgo="emp">화면에서 보기</button></div></div>
+    <div class="gsub"><p class="drs">조건을 모두 처리하면 목록 자리에 완료 화면이 나오고, [{대상} 지원자 보기]를 누르면 가장 오래 기다린 지원자가 있는 다른 조건의 목록으로 이동합니다. 버튼에 그 조건의 지원자 그룹 이름(예: 심사 대기 지원자 보기)을 넣었습니다.</p><button type="button" class="gi dlink" data-cmgo="emp">화면에서 보기</button></div></div>
 </aside>
 <aside class="guide drop min" id="drop" aria-label="탈락한 시안">
   <div class="gh" data-ghead><b>탈락한 시안도 보실래요?</b><button type="button" class="gmin" data-gmin aria-label="탈락한 시안 펼치기"><svg class="co" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.5 2.5v4h4M6.5 13.5v-4h-4M9.5 6.5l4.5-4.5M6.5 9.5 2 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ex" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 2h4v4M6 14H2v-4M14 2 9.5 6.5M2 14l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
@@ -1109,6 +1109,7 @@ function visibleRows(){
 }
 /* 완료 empty: 조건 이름 대신 끝낸 행동으로 말하고, '처리' 반복을 피함. 조건 완료 시 남은 조건 중 가장 오래 기다린 지원자가 있는 1개만 이어서 제안 */
 var DONE_T={1:"최종합격 · 불합격 심사를 모두 마쳤습니다",2:"현재 단계에 머물던 지원자를 모두 정리했습니다",3:"지원서를 모두 열람했습니다",4:"열람한 지원자의 다음 단계를 모두 정했습니다",6:"일정 변경 요청에 모두 답했습니다",7:"면접 결과를 모두 반영했습니다"};
+var NEXT_B={1:"심사 대기 지원자 보기",2:"오래 머문 지원자 보기",3:"미열람 지원자 보기",4:"열람한 지원자 보기",6:"변경 요청 지원자 보기",7:"면접 완료 지원자 보기"};/* 완료 화면 버튼: 다음 조건의 지원자 그룹 이름 */
 var WAIT_T={1:"최종합격 · 불합격을",2:"단계 이동이나 심사를",3:"지원서 열람을",4:"다음 단계 결정을",6:"일정 변경 답변을",7:"면접 결과 반영을"};
 /* 필터 결과가 모든 단계에서 0명이면 단계 탭도 숨김 (피그마 '필터 적용 시 결과 없음') */
 function noneAnyStage(){if(!fActive())return false;var c=S.cond?cond(S.cond):null;return !S.db[S.pid].filter(posOK).some(function(a){return (!c||inList(c,a))&&passF(a)&&a.final!=="fail";});}
@@ -1116,7 +1117,7 @@ function doneHtml(){
   if(S.done==="all")return '<div class="dempty">'+I("ok")+'<b>기다리던 지원자를 모두 처리했습니다</b><span>처리 대기 중인 지원자가 생기면 다시 알려드릴게요.</span><div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div></div>';
   var rest=CONDS.map(function(c,i){var l=overListP(c);return {c:c,n:l.length,i:i,od:l.reduce(function(m,a){return Math.max(m,c.el(a)-c.n);},-1)};}).filter(function(x){return x.n;}).sort(function(a,b){return b.od-a.od||a.i-b.i;}),nx=rest[0];/* 다음 조건: 기준일을 가장 많이 넘긴(가장 오래 기다린) 지원자가 있는 조건 1개. 같으면 조건 번호 순 */
   return '<div class="dempty">'+I("ok")+'<b>'+DONE_T[S.doneCond]+'</b>'+
-    (nx?'<span>'+WAIT_T[nx.c.id]+' 기다리는 지원자가<br>'+nx.n+'명 남아 있어요.</span><div class="dbtns"><button type="button" class="bt sec" data-dall>지원자 전체보기</button><button type="button" class="bt pri" data-fcond="'+nx.c.id+'">이어서 처리하기</button></div>':'<div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div>')+'</div>';}
+    (nx?'<span>'+WAIT_T[nx.c.id]+' 기다리는 지원자가<br>'+nx.n+'명 남아 있어요.</span><div class="dbtns"><button type="button" class="bt sec" data-dall>지원자 전체보기</button><button type="button" class="bt pri" data-fcond="'+nx.c.id+'">'+NEXT_B[nx.c.id]+'</button></div>':'<div class="dbtns"><button type="button" class="bt pri" data-dall>지원자 전체보기</button></div>')+'</div>';}
 /* ---------- [07] 칸반뷰: 리스트뷰와 같은 조건 · 필터 · 정렬 · 일괄 처리. 카드는 정보만(버튼 없음) ---------- */
 function selStage(){var k=Object.keys(S.sel).filter(function(i){return S.sel[i];});if(!k.length)return null;var a=findA(k[0]);return a?a.stage:null;}/* 일괄 선택은 같은 단계 지원자끼리만 */
 function boardRows(i){var l=S.db[S.pid].filter(posOK);
@@ -1452,7 +1453,7 @@ var CMS=[
  {k:"pop",sel:"#overlay .dialog .crit",ov:true,t:"조건명을 행동 문장으로 바꿨습니다",d:"PRD의 조건을 사용자가 취해야 할 액션으로 표현했습니다. 표현만 다를 뿐 조건 기준은 PRD와 같습니다."},
  {k:"fil",sel:"#fbar",t:"필터를 칩으로 바꿨습니다",d:"툴바의 필터 아이콘 버튼을 삭제했습니다. [필터 추가]를 누르면 필터 드로어가 열리고, 적용한 항목을 필터 칩으로 보여줍니다."},
  {k:"dot",sel:"#list .lr",when:function(){return !S.cond&&!S.done&&S.lay!=="board";},t:"전체 목록에서는 dot과 경과일 배지를 표시하지 않습니다",d:"처리 대기 지원자의 dot, 단계 탭 dot, '지원 후 N일 경과' 같은 경과일 배지는 조건 필터를 골랐을 때만 표시합니다. 전체 목록에서는 처리할 내용을 알 수 없어 빼고, 조건 필터 칩 하나로 진입하게 했습니다."},
- {k:"emp",sel:"#list .dempty",t:function(){return S.done==="cond"?"조건 하나를 모두 처리하면 완료 화면이 나옵니다":"처리 대기 지원자를 모두 처리하면 완료 화면이 나옵니다";},d:function(){return S.done==="cond"?"목록 자리에 조건마다 다른 완료 문구를 보여줍니다.<br><br>[이어서 처리하기]를 누르면 아직 처리 전인 조건 중 가장 오래 기다린 지원자가 있는 조건으로 바로 이어집니다.":"목록 자리에 완료 문구를 보여주고, 조건(리마인드) 필터는 0명으로 강조합니다.";}}
+ {k:"emp",sel:"#list .dempty",t:function(){return S.done==="cond"?"조건 하나를 모두 처리하면 완료 화면이 나옵니다":"처리 대기 지원자를 모두 처리하면 완료 화면이 나옵니다";},d:function(){return S.done==="cond"?"목록 자리에 조건마다 다른 완료 문구를 보여줍니다.<br><br>[{대상} 지원자 보기]를 누르면 아직 처리 전인 조건 중 가장 오래 기다린 지원자가 있는 조건의 목록으로 이동합니다.":"목록 자리에 완료 문구를 보여주고, 조건(리마인드) 필터는 0명으로 강조합니다.";}}
 ];
 function scnCoach(t,d){CM.scn={sel:"#list .lr.need",t:t,d:d};coachSoon();}
 function scnGo(){CM.scn=null;cmClear();var c=document.querySelector("#list .lr.need [data-sel]");if(!c)return;c.click();setTimeout(function(){$("bView").click();},60);}
