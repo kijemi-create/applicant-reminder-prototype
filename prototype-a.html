@@ -571,6 +571,9 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .chip.need.off.hl{border:2px solid #8db0f8;padding:0 9px 0 11px;color:#30363c;animation:cpulse 1.8s ease-out infinite}.chip.need.off.hl>.ic{color:#6c767f}.chip.need.off.hl:hover{border-color:#8db0f8}
 .chip.need.hot{background:#eef3ff;border-color:#1b55f6;color:#1b55f6}.chip.need.hot:hover{background:#e1eaff;border-color:#1b55f6}.chip.need.hot>.ic{color:#1b55f6}.chip.need.hot .cv .ic{color:#1b55f6}.chip.need.hot .cnt{margin-left:2px}
 .ctip{position:absolute;left:0;top:calc(100% + 8px);z-index:30;background:#30363c;color:#fff;font-size:12px;line-height:18px;font-weight:500;padding:6px 10px;border-radius:6px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.16);animation:ctipIn .2s ease-out;transition:opacity .2s}.ctip:before{content:"";position:absolute;left:18px;top:-5px;border:5px solid transparent;border-top:0;border-bottom-color:#30363c}.ctip.out{opacity:0}
+.chip.need.hot.nudge{border:1px solid #1b55f6;padding:0 10px 0 12px;animation:cpulse 1.6s ease-out 3}.chip.need.hot.nudge>.ic{animation:bellring 1.2s ease-in-out 3;transform-origin:50% 15%}
+@keyframes bellring{0%,55%,100%{transform:rotate(0)}8%{transform:rotate(16deg)}16%{transform:rotate(-14deg)}24%{transform:rotate(11deg)}32%{transform:rotate(-8deg)}40%{transform:rotate(4deg)}}
+@media (prefers-reduced-motion:reduce){.chip.need.hot.nudge,.chip.need.hot.nudge>.ic,.ctip{animation:none}}
 @keyframes ctipIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 @keyframes cpulse{0%{box-shadow:0 0 0 0 rgba(27,85,246,.32)}70%{box-shadow:0 0 0 8px rgba(27,85,246,0)}100%{box-shadow:0 0 0 0 rgba(27,85,246,0)}}
 @media (prefers-reduced-motion:reduce){.chip.need.off.hl{animation:none;box-shadow:0 0 0 3px rgba(27,85,246,.15)}}
@@ -1203,7 +1206,7 @@ function renderFbar(){
   if(bn){bn.hidden=true;bn.innerHTML="";}
   var left="",rest="";
   if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n'+(overListP(c).length?'':' z')+'">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
-  else if(tot){var nz=Date.now()<(S.nudgeUntil||0),mw=maxWait(S.pid);left='<span class="fwrap"><button type="button" class="chip need hot" data-fmenu="cond" aria-haspopup="menu" aria-label="처리 대기 중 지원자 '+tot+'명">'+I("bell")+'처리 대기 중 지원자<span class="cnt">'+(tot>99?'99+':tot)+'</span><span class="cv">'+I("chev")+'</span></button>'+(nz&&mw?'<span class="ctip" role="status">'+mw+'일째 기다리는 지원자가 있습니다</span>':'')+'</span>';}/* 강조안: 파란 채움 칩 + 빨간 숫자 배지 + 종 아이콘. 진입 시 5초 글로우 대신 말풍선 */
+  else if(tot){var nz=Date.now()<(S.nudgeUntil||0);left='<span class="fwrap"><button type="button" class="chip need hot'+(nz?' nudge':'')+'" data-fmenu="cond" aria-haspopup="menu" aria-label="처리 대기 중 지원자 '+tot+'명">'+I("bell")+'처리 대기 중 지원자<span class="cnt">'+(tot>99?'99+':tot)+'</span><span class="cv">'+I("chev")+'</span></button>'+(nz?'<span class="ctip" role="status">빠르게 연락할수록 좋은 지원자를 놓치지 않습니다</span>':'')+'</span>';}/* 강조안: 파란 채움 칩 + 빨간 숫자 배지 + 종 아이콘. 진입 시 5초: 종 흔들림 + 파란 펄스 + 이익 강조 말풍선 */
   else{left='<span class="chip need off'+(S.done==="all"?' hl':'')+'" aria-disabled="true">'+I("lac")+'처리 대기 중 지원자 0명</span>';}/* 전체 완료 · 0명: 비활성 · 숫자도 글자와 같은 색 · ⌄ 없음 */
   /* 필터 줄에는 사용자가 건 필터만 pill로. 정렬은 pill 없이 툴바 정렬 버튼 selected 상태로만 표시 */
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
