@@ -143,8 +143,10 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .allp{position:absolute;left:0;top:23px;width:68px;height:68px;border:1px solid var(--gray-100);border-radius:16px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:var(--gray-800)}
 .allp .ic{font-size:22px}
 .card{width:280px;flex:none;border:1px solid var(--gray-100);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;text-align:left;background:#fff}
-.card:hover{border-color:var(--gray-300)}
-.card.on{border-color:var(--gray-950)}
+.card{border-color:#e2e6e8;cursor:pointer}
+.card:hover{background:linear-gradient(rgba(22,22,24,.04),rgba(22,22,24,.04)),#fff}/* 공고선택.card 상태: default · hover · pressed · selected */
+.card:active{background:#f4f6f7;border-color:#131618}
+.card.on{border-color:#131618;box-shadow:0 0 6px rgba(0,0,0,.04),0 8px 16px rgba(0,0,0,.08)}
 .card .top{min-height:28px;display:flex;align-items:center;justify-content:space-between}
 .card .top .ic{font-size:18px;color:var(--gray-500)}
 .card .tt{font-size:14px;line-height:18px;font-weight:700;color:var(--gray-950);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
