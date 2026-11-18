@@ -36,7 +36,7 @@ h1{font-size:22px;line-height:30px;font-weight:700}
 /* ===== 칩 (프로토타입과 동일) ===== */
 .fwrap{position:relative;display:inline-flex}
 .chip{height:36px;display:inline-flex;align-items:center;gap:4px;border-radius:999px;font-size:14px;line-height:20px;font-weight:600;border:1px solid var(--g200);white-space:nowrap}
-.chip.need{padding:0 10px 0 12px;background:var(--brand-50);border-color:var(--brand);color:var(--brand)}
+.chip.need{padding:0 10px 0 12px;background:var(--brand);border-color:var(--brand);color:#fff}.chip.need:hover{background:#1446d8;border-color:#1446d8}/* 기본 칩: 브랜드 블루 채움 + 흰 글자 · 아이콘 */
 .chip.need>.ic{font-size:18px}
 .chip.need .num{font-weight:700;display:inline-flex;align-items:flex-end}
 .chip .cv{display:inline-grid;font-size:14px;transform:rotate(90deg)}
@@ -58,22 +58,26 @@ h1{font-size:22px;line-height:30px;font-weight:700}
 /* ③ 진행 게이지 */
 .gauge{position:relative;overflow:hidden;isolation:isolate}
 .gauge::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p);background:rgba(27,85,246,.16);z-index:-1;animation:gfill .7s cubic-bezier(.2,.9,.3,1.1) both}
+.chip.need.gauge::before{background:rgba(9,30,110,.32)}/* 파란 채움 칩 위 게이지는 더 진한 파랑 */
 @keyframes gfill{from{width:var(--p0)}to{width:var(--p)}}
 
 /* ① 진입: 칩이 펼쳐지며 최장 대기일 → 다시 접힘, 시계 바늘 한 바퀴 */
 .chip.need>.ic .hand{transform-origin:12px 12px}
 .chip.need.peek>.ic .hand{animation:hand 1s cubic-bezier(.4,0,.2,1) .2s both}
 @keyframes hand{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.xtra{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;opacity:0;vertical-align:bottom;font-weight:500;color:var(--g800);padding-left:4px;animation:peek 3.8s .3s both}
-@keyframes peek{0%{max-width:0;opacity:0;animation-timing-function:cubic-bezier(.2,.9,.3,1.1)}14%{max-width:360px;opacity:1}80%{max-width:360px;opacity:1;animation-timing-function:cubic-bezier(.4,0,.2,1)}100%{max-width:0;opacity:0}}
+.xtra{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;opacity:0;vertical-align:bottom;font-weight:500;color:#fff;padding-left:4px;animation:peek 3.8s .3s both}
+@keyframes peek{0%{max-width:0;opacity:0;animation-timing-function:cubic-bezier(.2,.9,.3,1.1)}14%{max-width:400px;opacity:1}80%{max-width:400px;opacity:1;animation-timing-function:cubic-bezier(.4,0,.2,1)}100%{max-width:0;opacity:0}}
 
 /* ② 보상 문구 */
 .cfloat{position:absolute;right:-4px;top:-16px;z-index:20;font-size:12px;line-height:18px;font-weight:700;color:var(--brand);background:#fff;border:1px solid #c9d8ff;border-radius:999px;padding:1px 8px;white-space:nowrap;pointer-events:none;box-shadow:0 2px 8px rgba(27,85,246,.15);animation:cfloat 1.5s cubic-bezier(.2,.9,.3,1) both}
 @keyframes cfloat{0%{opacity:0;transform:translateY(8px) scale(.9)}15%{opacity:1;transform:translateY(0) scale(1)}75%{opacity:1;transform:translateY(-6px)}100%{opacity:0;transform:translateY(-14px)}}
 
 /* ④ 0명 완료 체크 */
-.chip.donepop{border-color:var(--ok)}
-.chip.donepop .cb>.ic,.chip.need.donepop>.ic{color:var(--ok);animation:dpop .55s cubic-bezier(.2,.9,.3,1.4) both}
+.chip.donepop{animation:dfillN 1.8s ease both}.chip.cond.donepop{animation-name:dfillC}.chip.donepop .cx,.chip.donepop .n,.chip.donepop .num,.chip.donepop .cb>.ic,.chip.need.donepop>.ic{color:inherit}.chip.donepop.gauge::before{animation:gfade 1.8s ease both}/* 모두 처리: 약 1.4초 초록 채움 + 흰 체크 · 글자 → 원래 색으로 */
+.chip.donepop .cb>.ic,.chip.need.donepop>.ic{animation:dpop .55s cubic-bezier(.2,.9,.3,1.4) both}
+@keyframes dfillN{0%{background:var(--brand);border-color:var(--brand);color:#fff}12%,100%{background:var(--ok);border-color:var(--ok);color:#fff}}
+@keyframes dfillC{0%{background:var(--brand-50);border-color:var(--brand);color:var(--brand)}12%,78%{background:var(--ok);border-color:var(--ok);color:#fff}100%{background:var(--brand-50);border-color:var(--brand);color:var(--brand)}}
+@keyframes gfade{0%,78%{opacity:0}100%{opacity:1}}
 @keyframes dpop{0%{transform:scale(.3)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
 
 .rm .rs,.rm .gauge::before,.rm .xtra,.rm .cfloat,.rm .donepop .ic,.rm .peek .hand{animation:none!important}.rm .rs.up{transform:translateY(-20px)}.rm .xtra{display:none}
@@ -98,7 +102,6 @@ h1{font-size:22px;line-height:30px;font-weight:700}
         <button class="btn" data-a="add">새 처리 대기 +1</button>
         <button class="btn" data-a="reset">처음으로</button>
         <label>시작 인원 <input type="number" id="nA" min="1" max="250" value="12"></label>
-        <label>최장 대기일 <input type="number" id="dA" min="1" max="99" value="33"></label>
       </div>
     </section>
 
@@ -117,11 +120,11 @@ h1{font-size:22px;line-height:30px;font-weight:700}
     <section class="card">
       <h2>효과 정리</h2>
       <dl class="spec">
-        <dt>① 진입</dt><dd>칩이 옆으로 펼쳐지며 '· 가장 오래 기다린 지원자 N일째'를 보여 주고 약 3초 뒤 접힘. 시계 바늘이 한 바퀴 돎. 첫 진입 · 요약 팝업 닫기 · 조건 해제 · [지원자 전체보기] 후에만.</dd>
+        <dt>① 진입</dt><dd>칩이 옆으로 펼쳐지며 '· 좋은 지원자를 놓치기 전에 확인해 주세요'를 보여 주고 약 3초 뒤 접힘. 시계 바늘이 한 바퀴 돎. 첫 진입 · 요약 팝업 닫기 · 조건 해제 · [지원자 전체보기] 후에만.</dd>
         <dt>② 처리</dt><dd>숫자가 바뀐 자리만 굴러 바뀜(0.5초, 줄면 위에서 내려옴). 칩 오른쪽 위에 'N명 처리 완료'가 떠올랐다 사라짐(1.5초).</dd>
         <dt>③ 진행 게이지</dt><dd>처음 본 인원 대비 처리한 비율만큼 칩 배경이 왼쪽부터 채워짐(0.7초).</dd>
-        <dt>④ 0명</dt><dd>아이콘이 초록 체크로 바뀌며 톡 튀어 오르고 게이지가 끝까지 참. 기본 칩은 이후 비활성 '처리 대기 중 지원자 0명'.</dd>
-        <dt>공통 이징</dt><dd>빠르게 시작해 부드럽게 감속, 끝에 살짝 반동. 기기에서 '동작 줄이기'를 켜면 움직임 없이 결과만 표시.</dd>
+        <dt>④ 0명</dt><dd>칩이 잠시(약 1.5초) 초록으로 채워지고 흰 체크 아이콘이 톡 튀어 오름. 기본 칩은 이후 비활성 '처리 대기 중 지원자 0명', 조건 칩은 체크 아이콘 유지.</dd>
+        <dt>아이콘</dt><dd>기본 칩 · 조건 칩 모두 시계. 0명 완료 순간에만 체크, 0명 비활성 칩은 기존 아이콘(회색).</dd><dt>공통 이징</dt><dd>빠르게 시작해 부드럽게 감속, 끝에 살짝 반동. 기기에서 '동작 줄이기'를 켜면 움직임 없이 결과만 표시.</dd>
       </dl>
       <div class="ctrl"><label><input type="checkbox" id="rm"> 동작 줄이기 상태로 보기</label></div>
     </section>
@@ -138,19 +141,19 @@ function pct(base,v){return base?Math.round((base-v)/base*100):0;}
 var A={base:12,n:12,days:33},B={base:6,n:6};
 function drawA(o){o=o||{};var off=A.n===0&&!o.done,p=pct(A.base,A.n),p0=o.p0==null?p:o.p0;
   var chip=off?'<span class="chip need off">'+I("lac")+'처리 대기 중 지원자 0명</span>':
-   '<span class="fwrap"><button type="button" class="chip need gauge'+(o.peek?' peek':'')+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%">'+(o.done?I("check"):I("clock"))+'처리 대기 중 지원자 <b class="num">'+roll(o.old,A.n)+'명</b>'+(o.peek?'<span class="xtra">· 가장 오래 기다린 지원자 '+A.days+'일째</span>':'')+'<span class="cv">'+I("chev")+'</span></button>'+(o.fl?'<span class="cfloat">'+o.fl+'명 처리 완료</span>':'')+'</span>';
+   '<span class="fwrap"><button type="button" class="chip need gauge'+(o.peek?' peek':'')+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%">'+(o.done?I("check"):I("clock"))+'처리 대기 중 지원자 <b class="num">'+roll(o.old,A.n)+'명</b>'+(o.peek?'<span class="xtra">· 좋은 지원자를 놓치기 전에 확인해 주세요</span>':'')+'<span class="cv">'+I("chev")+'</span></button>'+(o.fl?'<span class="cfloat">'+o.fl+'명 처리 완료</span>':'')+'</span>';
   document.getElementById('stA').innerHTML=chip+'<span class="fdiv"></span><span class="fadd">'+I("plus")+'필터 추가</span>';
   if(o.done)setTimeout(function(){drawA();},1600);}
 function drawB(o){o=o||{};var p=pct(B.base,B.n),p0=o.p0==null?p:o.p0,z=B.n===0;
-  document.getElementById('stB').innerHTML='<span class="fwrap"><span class="chip cond gauge'+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%"><span class="cb">'+(z?I("check"):I("lac"))+'지원서를 열람해 주세요 <span class="n">'+roll(o.old,B.n)+'명</span><span class="cv">'+I("chev")+'</span></span><span class="cx">'+I("x")+'</span></span>'+(o.fl?'<span class="cfloat">'+o.fl+'명 처리 완료</span>':'')+'</span><span class="fdiv"></span><span class="fadd">'+I("plus")+'필터 추가</span>';}
+  document.getElementById('stB').innerHTML='<span class="fwrap"><span class="chip cond gauge'+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%"><span class="cb">'+(z?I("check"):I("clock"))+'지원서를 열람해 주세요 <span class="n">'+roll(o.old,B.n)+'명</span><span class="cv">'+I("chev")+'</span></span><span class="cx">'+I("x")+'</span></span>'+(o.fl?'<span class="cfloat">'+o.fl+'명 처리 완료</span>':'')+'</span><span class="fdiv"></span><span class="fadd">'+I("plus")+'필터 추가</span>';}
 function stepA(k){var old=A.n,p0=pct(A.base,A.n);
   if(k==='enter'){if(!A.n){A.n=A.base;}drawA({peek:true});return;}
-  if(k==='reset'){A.base=A.n=Math.max(1,+document.getElementById('nA').value||12);A.days=Math.max(1,+document.getElementById('dA').value||33);drawA({peek:true});return;}
+  if(k==='reset'){A.base=A.n=Math.max(1,+document.getElementById('nA').value||12);drawA({peek:true});return;}
   if(k==='add'){if(!A.n){A.base=1;A.n=1;drawA({old:0});return;}A.n++;A.base=Math.max(A.base,A.n);drawA({old:old,p0:p0});return;}
   if(!A.n)return;var d=k==='p1'?1:k==='p3'?Math.min(3,A.n):A.n;A.n-=d;drawA({old:old,p0:p0,fl:d,done:A.n===0});}
 function stepB(k){var old=B.n,p0=pct(B.base,B.n);
   if(k==='reset'){B.base=B.n=Math.max(1,+document.getElementById('nB').value||6);drawB();return;}
-  if(!B.n)return;var d=k==='p1'?1:B.n;B.n-=d;drawB({old:old,p0:p0,fl:d,done:B.n===0});}
+  if(!B.n)return;var d=k==='p1'?1:B.n;B.n-=d;drawB({old:old,p0:p0,fl:d,done:B.n===0});if(B.n===0)setTimeout(function(){drawB();},1700);}
 document.addEventListener('click',function(e){var t=e.target.closest('[data-a],[data-b]');if(!t)return;if(t.dataset.a)stepA(t.dataset.a);else stepB(t.dataset.b);});
 document.getElementById('rm').addEventListener('change',function(e){document.body.classList.toggle('rm',e.target.checked);});
 drawA({peek:true});drawB();
