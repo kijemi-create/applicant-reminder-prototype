@@ -574,6 +574,11 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .chip.need.hot.nudge{border:1px solid #1b55f6;padding:0 10px 0 12px;animation:cpulse 1.6s ease-out 3}.chip.need.hot.nudge>.ic{animation:bellring 1.2s ease-in-out 3;transform-origin:50% 15%}
 @keyframes bellring{0%,55%,100%{transform:rotate(0)}8%{transform:rotate(16deg)}16%{transform:rotate(-14deg)}24%{transform:rotate(11deg)}32%{transform:rotate(-8deg)}40%{transform:rotate(4deg)}}
 @media (prefers-reduced-motion:reduce){.chip.need.hot.nudge,.chip.need.hot.nudge>.ic,.ctip{animation:none}}
+.chip.need.hot .shm{display:inline-block}.chip.need.hot.nudge .shm{background:linear-gradient(100deg,#1b55f6 0%,#1b55f6 38%,#a9c2ff 50%,#1b55f6 62%,#1b55f6 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 1.4s linear 3}/* 글자 반짝임: 빛이 왼쪽→오른쪽으로 3번 지나감 */
+@keyframes shimmer{from{background-position:100% 0}to{background-position:0 0}}
+.chip.need.hot .cnt{display:inline-flex;align-items:center;justify-content:center;overflow:hidden}.chip.need .cnt .rd{display:inline-block;height:20px;line-height:20px;overflow:hidden;vertical-align:top}.chip.need .cnt .rs{display:flex;flex-direction:column;transform:translateY(calc(-20px * var(--n)));animation:roll var(--d) cubic-bezier(.15,.75,.25,1) both}.chip.need .cnt .rs>span{height:20px;line-height:20px;text-align:center}
+@keyframes roll{from{transform:translateY(0)}to{transform:translateY(calc(-20px * var(--n)))}}
+@media (prefers-reduced-motion:reduce){.chip.need.hot.nudge .shm{animation:none;background:none;color:inherit}.chip.need .cnt .rs{animation:none}}
 @keyframes ctipIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 @keyframes cpulse{0%{box-shadow:0 0 0 0 rgba(27,85,246,.32)}70%{box-shadow:0 0 0 8px rgba(27,85,246,0)}100%{box-shadow:0 0 0 0 rgba(27,85,246,0)}}
 @media (prefers-reduced-motion:reduce){.chip.need.off.hl{animation:none;box-shadow:0 0 0 3px rgba(27,85,246,.15)}}
@@ -1190,6 +1195,7 @@ function renderList(){
   $("list").innerHTML=h;
 }
 function josa(w){var ch=w.charCodeAt(w.length-1);return (ch>=0xAC00&&ch<=0xD7A3&&(ch-0xAC00)%28)?"을":"를";}
+function rollNum(t){/* 숫자 롤링: 자리마다 0→목표 숫자로 굴러 올라감. 오른쪽 자리가 먼저 멈추고 왼쪽일수록 오래 굴러감 */var ch=t.split(''),L=ch.length;return ch.map(function(c,k){if(!/\d/.test(c))return '<span class="rd">'+c+'</span>';var i=L-1-k,d=+c,seq=[],r;for(r=0;r<=i;r++)for(var x=0;x<10;x++)seq.push(x);for(r=0;r<=d;r++)seq.push(r);return '<span class="rd"><span class="rs" style="--n:'+(seq.length-1)+';--d:'+(900+300*i)+'ms">'+seq.map(function(v){return '<span>'+v+'</span>';}).join('')+'</span></span>';}).join('');}
 function maxWait(pid){var m=0;CONDS.forEach(function(c){overList(pid,c).forEach(function(a){var e=c.el(a);if(e>m)m=e;});});return m;}/* 처리 대기 지원자 중 가장 오래 기다린 일수 */
 function renderFbar(){
   var h="",c=S.cond?cond(S.cond):null,n=0;
@@ -1205,7 +1211,7 @@ function renderFbar(){
   if(bn){bn.hidden=true;bn.innerHTML="";}
   var left="",rest="";
   if(c){left='<span class="fwrap"><span class="chip cond"><button type="button" class="cb" data-fmenu="cond" aria-label="조건 바꾸기">'+I("lac")+esc(c.t)+' <span class="n'+(overListP(c).length?'':' z')+'">'+overListP(c).length+'명</span><span class="cv">'+I("chev")+'</span></button><button type="button" class="cx" id="cclear" aria-label="조건 해제">'+I("x")+'</button></span></span>';}
-  else if(tot){var nz=Date.now()<(S.nudgeUntil||0);left='<span class="fwrap"><button type="button" class="chip need hot'+(nz?' nudge':'')+'" data-fmenu="cond" aria-haspopup="menu" aria-label="처리 대기 중 지원자 '+tot+'명">'+I("bell")+'처리 대기 중 지원자<span class="cnt">'+(tot>99?'99+':tot)+'</span><span class="cv">'+I("chev")+'</span></button>'+(nz?'<span class="ctip" role="status">빠르게 연락할수록 좋은 지원자를 놓치지 않습니다</span>':'')+'</span>';}/* 강조안: 파란 채움 칩 + 빨간 숫자 배지 + 종 아이콘. 진입 시 5초: 종 흔들림 + 파란 펄스 + 이익 강조 말풍선 */
+  else if(tot){var nz=Date.now()<(S.nudgeUntil||0);left='<span class="fwrap"><button type="button" class="chip need hot'+(nz?' nudge':'')+'" data-fmenu="cond" aria-haspopup="menu" aria-label="처리 대기 중 지원자 '+tot+'명">'+I("bell")+'<span class="shm">처리 대기 중 지원자</span><span class="cnt">'+(nz?rollNum(tot>99?'99+':String(tot)):(tot>99?'99+':tot))+'</span><span class="cv">'+I("chev")+'</span></button>'+(nz?'<span class="ctip" role="status">빠르게 연락할수록 좋은 지원자를 놓치지 않습니다</span>':'')+'</span>';}/* 강조안: 파란 채움 칩 + 빨간 숫자 배지 + 종 아이콘. 진입 시 5초: 종 흔들림 + 파란 펄스 + 글자 반짝임 + 숫자 롤링 + 이익 강조 말풍선 */
   else{left='<span class="chip need off'+(S.done==="all"?' hl':'')+'" aria-disabled="true">'+I("lac")+'처리 대기 중 지원자 0명</span>';}/* 전체 완료 · 0명: 비활성 · 숫자도 글자와 같은 색 · ⌄ 없음 */
   /* 필터 줄에는 사용자가 건 필터만 pill로. 정렬은 pill 없이 툴바 정렬 버튼 selected 상태로만 표시 */
   Object.keys(S.f).forEach(function(k){var g=FG[k],vs=S.f[k];
