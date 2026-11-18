@@ -1151,7 +1151,7 @@ init();
 function renderPosts(){
   $("posts").innerHTML='<button type="button" class="allp" data-todo>'+I("all")+'전체보기</button>'+POSTS.map(function(p){
     var unread=S.db[p.id].filter(function(a){return a.lv<0&&!a.final;}).length;
-    var need=summary(p.id).total;/* 공고 카드 '처리 대기 N명' 배지: 진행중 · 채용마감(마감 후 90일 이내) 모두 노출, 0명이면 미노출, 100명 이상은 99+명 */
+    var need=0;/* 공고 카드 '처리 대기 N명' 배지: 개발 · 부하 비용으로 이번 범위에서 제외 */
     return '<button type="button" class="card'+(p.id===S.pid?' on':'')+'" data-post="'+p.id+'"><div class="top"><span class="tl">'+(p.open?'<span class="bdg info">진행중</span>':'<span class="bdg line">채용마감</span>')+(need?'<span class="bdg red" title="처리 대기 중인 지원자 '+need+'명">처리 대기 '+(need>99?'99+':need)+'명</span>':'')+'</span>'+I("ext")+'</div><span class="tt">'+esc(p.name)+'</span><span class="mt">'+p.period+' · 미열람 '+unread+'</span></button>';
   }).join("");
 }
@@ -1780,10 +1780,10 @@ var RV=[
   d:'<p>조건에 남은 지원자를 모두 처리하면 목록 자리에 완료 화면이 나옵니다.</p><ul><li>조건마다 다른 완료 문구를 보여줍니다.</li><li>[{대상} 지원자 보기]는 남은 조건 중 <b>가장 오래 기다린 지원자</b>가 있는 조건의 목록으로 이동합니다. 버튼에 그 조건의 지원자 그룹 이름(예: 심사 대기 지원자 보기)을 넣어, 방금 처리한 지원자가 아닌 다른 지원자로 넘어간다는 걸 알려줍니다.</li><li>모든 조건을 끝내면 전체 완료 화면을 보여줍니다.</li></ul>'+
     '<div class="try">👉 <span>화면에 남은 지원자 1명이 있습니다. <b>[다음]</b>을 누르면 이 지원자가 처리되고 완료 화면으로 넘어갑니다.</span></div>',
   go:function(){fresh(true);scenario("cond");RVP=true;}},
- {k:"③ 재방문",t:"팝업을 닫아도 칩과 공고 카드가 계속 알려줍니다",
-  d:'<p>팝업을 닫은 뒤에도 처리할 지원자가 있다는 걸 놓치지 않게 두 곳에서 알려줍니다.</p><ul><li><b>조건 필터 칩</b>: 파란 채움 칩과 빨간 숫자 배지로 다른 필터와 구분합니다. 들어오면 5초간 종 아이콘이 흔들리고, \'빠르게 연락할수록 좋은 지원자를 놓치지 않습니다\' 말풍선이 나타납니다.</li><li><b>공고 카드</b>: 상태 배지 옆에 \'처리 대기 N명\'을 보여줘, 들어가 보지 않은 공고의 할 일도 확인할 수 있습니다. 진행중 · 채용마감 공고 모두 노출하고, 0명이면 숨깁니다.</li></ul>'+
+ {k:"③ 재방문",t:"팝업을 닫아도 조건 필터 칩이 계속 알려줍니다",
+  d:'<p>팝업을 닫은 뒤에도 처리할 지원자가 있다는 걸 놓치지 않게 조건 필터 칩을 강조합니다.</p><ul><li>파란 채움 칩과 빨간 숫자 배지로 다른 필터와 구분합니다.</li><li>들어오면 5초간 종 아이콘이 흔들리고, \'빠르게 연락할수록 좋은 지원자를 놓치지 않습니다\' 말풍선이 나타납니다.</li></ul>'+
     '<div class="try">👉 <span><b>칩을 눌러 보세요.</b> 처리할 조건을 골라 바로 목록에 적용할 수 있습니다.</span></div>',
-  go:function(){fresh(true);enter("A",null);hi("#posts","공고 카드에도 처리 대기 인원을 보여줍니다","상태 배지 옆 \'처리 대기 N명\'으로 어느 공고에 할 일이 있는지 바로 알 수 있습니다.");}},
+  go:function(){fresh(true);enter("A",null);hi("#fbar .chip.need","조건 필터 칩을 강조합니다","파란 채움 칩과 빨간 숫자 배지로 다른 필터와 구분하고, 들어오면 5초간 흔들림과 말풍선으로 알려줍니다.");}},
  {k:"③ 재방문",t:"주간 메일로 다시 데려옵니다",
   d:'<p>매주 월요일, 공고 인사담당자에게 리마인드 메일을 보냅니다. 메일은 처리하는 곳이 아니라 <b>지원자 관리로 다시 들어오게 하는 입구</b>입니다.</p><ul><li>공고별로 1통씩 보내고, 처리 대기 중 지원자 수와 조건별 인원을 보여줍니다.</li><li>조건별 [바로가기]를 누르면 그 조건이 걸린 목록으로 들어갑니다.</li><li>인원은 발송 시점 기준이라 지원자 관리 화면과 다를 수 있다고 안내합니다.</li></ul>'+
     '<div class="try">👉 <span><b>조건 옆 [바로가기]를 눌러 보세요.</b></span></div>',
