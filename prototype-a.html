@@ -569,7 +569,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 .chip.need b{color:#1b55f6;font-weight:600}
 .chip.need .cv .ic{font-size:14px;color:#6c767f}
 .chip.need.off.hl{border:2px solid #8db0f8;padding:0 9px 0 11px;color:#30363c;animation:cpulse 1.8s ease-out infinite}.chip.need.off.hl>.ic{color:#6c767f}.chip.need.off.hl:hover{border-color:#8db0f8}
-.chip.need.hot{background:#fff;border-color:#1b55f6;color:#1b55f6}.chip.need.hot:hover{background:#eef3ff;border-color:#1b55f6}.chip.need.hot>.ic{color:#1b55f6}.chip.need.hot .cv .ic{color:#1b55f6}/* 기본 칩: 흰 바탕 + 파란 테두리 · 글자 · 아이콘 (조건 선택 시 연한 파랑 채움) */.chip.need.hot .cnt{margin-left:2px}
+.chip.need.hot{background:#fff;border-color:#1b55f6;color:#1b55f6}.chip.need.hot:hover{background:#f4f6f7;border-color:#1b55f6}.chip.need.hot>.ic{color:#1b55f6}.chip.need.hot .cv .ic{color:#1b55f6}/* 기본 칩: 흰 바탕 + 파란 테두리 · 글자 · 아이콘 (조건 선택 시 연한 파랑 채움) */.chip.need.hot .cnt{margin-left:2px}
 .ctip{position:absolute;left:0;top:calc(100% + 8px);z-index:30;background:#30363c;color:#fff;font-size:12px;line-height:18px;font-weight:500;padding:6px 10px;border-radius:6px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.16);animation:ctipIn .2s ease-out;transition:opacity .2s}.ctip:before{content:"";position:absolute;left:18px;top:-5px;border:5px solid transparent;border-top:0;border-bottom-color:#30363c}.ctip.out{opacity:0}
 .chip.need.hot.nudge{border:1px solid #1b55f6;padding:0 10px 0 12px;animation:cpulse 1.6s ease-out 3}.chip.need.hot.nudge>.ic{animation:bellring 1.2s ease-in-out 3;transform-origin:50% 15%}
 @keyframes bellring{0%,55%,100%{transform:rotate(0)}8%{transform:rotate(16deg)}16%{transform:rotate(-14deg)}24%{transform:rotate(11deg)}32%{transform:rotate(-8deg)}40%{transform:rotate(4deg)}}
@@ -585,8 +585,7 @@ main{padding:32px 40px 140px;display:flex;flex-direction:column}
 @media (prefers-reduced-motion:reduce){.chip.need.hot .shm{animation:none;background:none;color:#1b55f6}.rs.up,.rs.dn,.fmsg.anim,.fmsg.anim .fin2>*{animation:none}.rs.up{transform:translateY(-20px)}}
 .gauge{position:relative;overflow:hidden;isolation:isolate}.gauge::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p);background:rgba(27,85,246,.16);z-index:-1;animation:gfill .7s cubic-bezier(.2,.9,.3,1.1) both}/* 진행 게이지 */
 .chip.need.hot.gauge::before{background:rgba(27,85,246,.14)}
-.chip.need.hot:active,.fwrap:has(.fmenu)>.chip.need.hot{background:#dbe6ff;border-color:#1446d8;color:#1446d8}.chip.need.hot:active>.ic,.fwrap:has(.fmenu)>.chip.need.hot>.ic,.chip.need.hot:active .num,.fwrap:has(.fmenu)>.chip.need.hot .num,.fwrap:has(.fmenu)>.chip.need.hot .cv .ic{color:#1446d8}
-.chip.cond:active,.fwrap:has(.fmenu)>.chip.cond{background:#dbe6ff;border-color:#1446d8;color:#1446d8}/* Pressed: 누르는 동안 · 조건 드롭다운이 열린 동안 한 단계 진한 파랑 */
+.chip.need.hot:active,.fwrap:has(.fmenu)>.chip.need.hot,.chip.cond:active,.fwrap:has(.fmenu)>.chip.cond{background:#e2e6e8;border-color:#1b55f6;color:#1b55f6}/* Pressed: BZFliterChip outlined · Pressed (바탕 #e2e6e8, 테두리 · 글자 브랜드). Hover는 #f4f6f7 */
 @keyframes gfill{from{width:var(--p0)}to{width:var(--p)}}
 .chip.need.hot>.ic .hand{transform-origin:12px 12px}.chip.need.hot.peek>.ic .hand{animation:hand 1s cubic-bezier(.4,0,.2,1) .2s both}@keyframes hand{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .xtra{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;opacity:0;vertical-align:bottom;font-weight:500;color:#30363c;padding-left:4px;animation:peek 3.8s .3s both}/* 진입 시 칩이 펼쳐지며 최장 대기일을 말해 줌 → 다시 닫힘 */
