@@ -120,7 +120,7 @@ h1{font-size:22px;line-height:30px;font-weight:700}
     <section class="card">
       <h2>효과 정리</h2>
       <dl class="spec">
-        <dt>① 진입</dt><dd>칩이 옆으로 펼쳐지며 '· 좋은 지원자를 놓치기 전에 확인해 주세요'를 보여 주고 약 3초 뒤 접힘. 시계 바늘이 한 바퀴 돎. 첫 진입 · 요약 팝업 닫기 · 조건 해제 · [지원자 전체보기] 후에만.</dd>
+        <dt>① 진입</dt><dd>칩이 옆으로 펼쳐지며 '· 좋은 지원자를 놓치지 마세요'를 보여 주고 약 3초 뒤 접힘. 시계 바늘이 한 바퀴 돎. 첫 진입 · 요약 팝업 닫기 · 조건 해제 · [지원자 전체보기] 후에만.</dd>
         <dt>② 처리</dt><dd>숫자가 바뀐 자리만 굴러 바뀜(0.5초, 줄면 위에서 내려옴). 칩 오른쪽 위에 'N명 처리 완료'가 떠올랐다 사라짐(1.5초).</dd>
         <dt>③ 진행 게이지</dt><dd>처음 본 인원 대비 처리한 비율만큼 칩 배경이 왼쪽부터 채워짐(0.7초).</dd>
         <dt>④ 0명</dt><dd>칩이 잠시(약 1.5초) 초록으로 채워지고 흰 체크 아이콘이 톡 튀어 오름. 기본 칩은 이후 비활성 '처리 대기 중 지원자 0명', 조건 칩은 체크 아이콘 유지.</dd>
@@ -141,7 +141,7 @@ function pct(base,v){return base?Math.round((base-v)/base*100):0;}
 var A={base:12,n:12,days:33},B={base:6,n:6};
 function drawA(o){o=o||{};var off=A.n===0&&!o.done,p=pct(A.base,A.n),p0=o.p0==null?p:o.p0;
   var chip=off?'<span class="chip need off">'+I("lac")+'처리 대기 중 지원자 0명</span>':
-   '<span class="fwrap"><button type="button" class="chip need gauge'+(o.peek?' peek':'')+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%">'+(o.done?I("check"):I("clock"))+'처리 대기 중 지원자 <b class="num">'+roll(o.old,A.n)+'명</b>'+(o.peek?'<span class="xtra">· 좋은 지원자를 놓치기 전에 확인해 주세요</span>':'')+'<span class="cv">'+I("chev")+'</span></button>'+(o.fl?'<span class="cfloat">'+o.fl+'명 처리 완료</span>':'')+'</span>';
+   '<span class="fwrap"><button type="button" class="chip need gauge'+(o.peek?' peek':'')+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%">'+(o.done?I("check"):I("clock"))+'처리 대기 중 지원자 <b class="num">'+roll(o.old,A.n)+'명</b>'+(o.peek?'<span class="xtra">· 좋은 지원자를 놓치지 마세요</span>':'')+'<span class="cv">'+I("chev")+'</span></button>'+(o.fl?'<span class="cfloat">'+o.fl+'명 처리 완료</span>':'')+'</span>';
   document.getElementById('stA').innerHTML=chip+'<span class="fdiv"></span><span class="fadd">'+I("plus")+'필터 추가</span>';
   if(o.done)setTimeout(function(){drawA();},1600);}
 function drawB(o){o=o||{};var p=pct(B.base,B.n),p0=o.p0==null?p:o.p0,z=B.n===0;
