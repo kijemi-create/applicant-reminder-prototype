@@ -1,0 +1,84 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시계 아이콘 바늘 회전 스펙</title>
+<style>
+:root{--brand:#1b55f6;--b50:#eef3ff;--g950:#131618;--g800:#30363c;--g600:#6c767f;--g200:#e2e6e8;--g100:#f4f6f7;--bg:#f7f8f9;--card:#fff}
+*{box-sizing:border-box;margin:0}body{font-family:Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;background:var(--bg);color:var(--g950);line-height:1.6;padding:40px 16px}
+.wrap{max-width:880px;margin:0 auto}h1{font-size:24px;line-height:32px}.lead{margin-top:6px;color:var(--g600);font-size:14px}
+section{margin-top:24px;background:var(--card);border:1px solid var(--g200);border-radius:14px;padding:24px}h2{font-size:17px;margin-bottom:12px}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}.cell{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;color:var(--g600)}
+.box{width:96px;height:72px;border-radius:10px;border:1px dashed var(--g200);display:grid;place-items:center}
+.clk{width:1em;height:1em;display:block}.clock-hand{transform-origin:12px 12px;transform-box:view-box}
+.spin .clock-hand{animation:clock-hand-spin 1s cubic-bezier(.4,0,.2,1) both}
+@keyframes clock-hand-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin .clock-hand{animation:none}}
+.chip{display:inline-flex;align-items:center;gap:4px;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--brand);font-size:14px;font-weight:600;color:var(--g800);background:#fff}
+.chip .num{color:var(--brand);font-weight:700}.chip.cond{background:var(--b50);color:var(--brand)}.chip.off{border-color:var(--g200);color:#b8bfc5}
+.btn{height:36px;padding:0 16px;border-radius:8px;border:0;background:var(--brand);color:#fff;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--g200);vertical-align:top}th{width:150px;color:var(--g600);font-weight:600;background:var(--g100)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}code{background:var(--g100);padding:1px 6px;border-radius:4px}
+pre{background:#131618;color:#e6e8ea;padding:16px;border-radius:10px;overflow:auto;line-height:1.55}
+.note{margin-top:12px;font-size:13px;color:var(--g600)}a{color:var(--brand)}
+@media (max-width:600px){th{width:96px}}
+</style></head><body><div class="wrap">
+<h1>시계 아이콘 · 바늘 회전 스펙</h1>
+<p class="lead">조건(리마인드) 필터 칩의 leading 아이콘. XDS <code>biz/clock-fill</code>과 모양이 같고, 원과 바늘만 분리해 바늘이 한 바퀴 돌 수 있게 한 버전입니다.</p>
+
+<section><h2>미리보기</h2>
+<div class="row" id="demo">
+<div class="cell"><div class="box" style="font-size:16px;color:var(--brand)"><svg class="clk spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><mask id="m0" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path class="clock-hand" d="M12.75 11.6962V7.75C12.75 7.5375 12.6781 7.35933 12.5343 7.2155C12.3904 7.07183 12.2122 7 11.9998 7C11.7871 7 11.609 7.07183 11.4655 7.2155C11.3218 7.35933 11.25 7.5375 11.25 7.75V11.927C11.25 12.0447 11.2718 12.1587 11.3155 12.269C11.359 12.3793 11.4276 12.4813 11.5213 12.575L14.9462 16C15.0846 16.1385 15.2586 16.2093 15.4682 16.2125C15.6779 16.2157 15.8552 16.1448 16 16C16.1448 15.8552 16.2172 15.6795 16.2172 15.473C16.2172 15.2667 16.1448 15.0911 16 14.9462L12.75 11.6962Z" fill="#000"/></mask></defs><path class="clock-body" d="M12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5Z" fill="currentColor" mask="url(#m0)"/></svg></div>16px · 조건 칩</div>
+<div class="cell"><div class="box" style="font-size:18px;color:var(--brand)"><svg class="clk spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><mask id="m1" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path class="clock-hand" d="M12.75 11.6962V7.75C12.75 7.5375 12.6781 7.35933 12.5343 7.2155C12.3904 7.07183 12.2122 7 11.9998 7C11.7871 7 11.609 7.07183 11.4655 7.2155C11.3218 7.35933 11.25 7.5375 11.25 7.75V11.927C11.25 12.0447 11.2718 12.1587 11.3155 12.269C11.359 12.3793 11.4276 12.4813 11.5213 12.575L14.9462 16C15.0846 16.1385 15.2586 16.2093 15.4682 16.2125C15.6779 16.2157 15.8552 16.1448 16 16C16.1448 15.8552 16.2172 15.6795 16.2172 15.473C16.2172 15.2667 16.1448 15.0911 16 14.9462L12.75 11.6962Z" fill="#000"/></mask></defs><path class="clock-body" d="M12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5Z" fill="currentColor" mask="url(#m1)"/></svg></div>18px · 기본 칩</div>
+<div class="cell"><div class="box" style="font-size:48px;color:var(--brand)"><svg class="clk spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><mask id="m2" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path class="clock-hand" d="M12.75 11.6962V7.75C12.75 7.5375 12.6781 7.35933 12.5343 7.2155C12.3904 7.07183 12.2122 7 11.9998 7C11.7871 7 11.609 7.07183 11.4655 7.2155C11.3218 7.35933 11.25 7.5375 11.25 7.75V11.927C11.25 12.0447 11.2718 12.1587 11.3155 12.269C11.359 12.3793 11.4276 12.4813 11.5213 12.575L14.9462 16C15.0846 16.1385 15.2586 16.2093 15.4682 16.2125C15.6779 16.2157 15.8552 16.1448 16 16C16.1448 15.8552 16.2172 15.6795 16.2172 15.473C16.2172 15.2667 16.1448 15.0911 16 14.9462L12.75 11.6962Z" fill="#000"/></mask></defs><path class="clock-body" d="M12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5Z" fill="currentColor" mask="url(#m2)"/></svg></div>48px · 확대</div>
+<div class="cell"><div class="box" style="font-size:48px;color:var(--brand);background:var(--b50)"><svg class="clk spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><mask id="m3" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path class="clock-hand" d="M12.75 11.6962V7.75C12.75 7.5375 12.6781 7.35933 12.5343 7.2155C12.3904 7.07183 12.2122 7 11.9998 7C11.7871 7 11.609 7.07183 11.4655 7.2155C11.3218 7.35933 11.25 7.5375 11.25 7.75V11.927C11.25 12.0447 11.2718 12.1587 11.3155 12.269C11.359 12.3793 11.4276 12.4813 11.5213 12.575L14.9462 16C15.0846 16.1385 15.2586 16.2093 15.4682 16.2125C15.6779 16.2157 15.8552 16.1448 16 16C16.1448 15.8552 16.2172 15.6795 16.2172 15.473C16.2172 15.2667 16.1448 15.0911 16 14.9462L12.75 11.6962Z" fill="#000"/></mask></defs><path class="clock-body" d="M12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5Z" fill="currentColor" mask="url(#m3)"/></svg></div>배경 위 (구멍 투명)</div>
+</div>
+<div class="row" style="margin-top:20px" id="chips">
+<span class="chip spin" style="font-size:14px"><span style="font-size:18px;color:var(--brand)"><svg class="clk " viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><mask id="m4" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path class="clock-hand" d="M12.75 11.6962V7.75C12.75 7.5375 12.6781 7.35933 12.5343 7.2155C12.3904 7.07183 12.2122 7 11.9998 7C11.7871 7 11.609 7.07183 11.4655 7.2155C11.3218 7.35933 11.25 7.5375 11.25 7.75V11.927C11.25 12.0447 11.2718 12.1587 11.3155 12.269C11.359 12.3793 11.4276 12.4813 11.5213 12.575L14.9462 16C15.0846 16.1385 15.2586 16.2093 15.4682 16.2125C15.6779 16.2157 15.8552 16.1448 16 16C16.1448 15.8552 16.2172 15.6795 16.2172 15.473C16.2172 15.2667 16.1448 15.0911 16 14.9462L12.75 11.6962Z" fill="#000"/></mask></defs><path class="clock-body" d="M12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5Z" fill="currentColor" mask="url(#m4)"/></svg></span>처리 대기 중 지원자 <span class="num">12명</span></span>
+<span class="chip cond spin"><span style="font-size:16px"><svg class="clk " viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><mask id="m5" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path class="clock-hand" d="M12.75 11.6962V7.75C12.75 7.5375 12.6781 7.35933 12.5343 7.2155C12.3904 7.07183 12.2122 7 11.9998 7C11.7871 7 11.609 7.07183 11.4655 7.2155C11.3218 7.35933 11.25 7.5375 11.25 7.75V11.927C11.25 12.0447 11.2718 12.1587 11.3155 12.269C11.359 12.3793 11.4276 12.4813 11.5213 12.575L14.9462 16C15.0846 16.1385 15.2586 16.2093 15.4682 16.2125C15.6779 16.2157 15.8552 16.1448 16 16C16.1448 15.8552 16.2172 15.6795 16.2172 15.473C16.2172 15.2667 16.1448 15.0911 16 14.9462L12.75 11.6962Z" fill="#000"/></mask></defs><path class="clock-body" d="M12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5Z" fill="currentColor" mask="url(#m5)"/></svg></span>지원서를 열람해 주세요 <span class="num">6명</span></span>
+<span class="chip off"><span style="font-size:18px"><svg class="clk " viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><mask id="m6" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path class="clock-hand" d="M12.75 11.6962V7.75C12.75 7.5375 12.6781 7.35933 12.5343 7.2155C12.3904 7.07183 12.2122 7 11.9998 7C11.7871 7 11.609 7.07183 11.4655 7.2155C11.3218 7.35933 11.25 7.5375 11.25 7.75V11.927C11.25 12.0447 11.2718 12.1587 11.3155 12.269C11.359 12.3793 11.4276 12.4813 11.5213 12.575L14.9462 16C15.0846 16.1385 15.2586 16.2093 15.4682 16.2125C15.6779 16.2157 15.8552 16.1448 16 16C16.1448 15.8552 16.2172 15.6795 16.2172 15.473C16.2172 15.2667 16.1448 15.0911 16 14.9462L12.75 11.6962Z" fill="#000"/></mask></defs><path class="clock-body" d="M12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5Z" fill="currentColor" mask="url(#m6)"/></svg></span>처리 대기 중 지원자 0명</span>
+</div>
+<div style="margin-top:20px"><button class="btn" id="replay">다시 재생</button></div>
+<p class="note">비활성(0명) 칩은 회색으로 표시하고 회전하지 않습니다.</p>
+</section>
+
+<section><h2>파일</h2>
+<table>
+<tr><th>SVG</th><td><a href="clock-fill-hand.svg" download>clock-fill-hand.svg</a> (24×24)<br>원 <code>.clock-body</code> = <code>fill="currentColor"</code> · 바늘 <code>.clock-hand</code> = mask 안의 구멍(투명)</td></tr>
+<tr><th>원본</th><td>XDS Core <code>biz/clock-fill</code>의 벡터를 그대로 나눔 (모양 · 크기 동일)</td></tr>
+<tr><th>바늘을 mask로 둔 이유</th><td>원본처럼 바늘 자리가 비어 있어야 칩 배경(흰색 · #eef3ff · 호버 #f4f6f7)이 그대로 비쳐 보입니다. 흰색으로 칠하면 연한 파랑 칩에서 바늘만 하얗게 뜹니다.</td></tr>
+</table></section>
+
+<section><h2>움직임</h2>
+<table>
+<tr><th>대상</th><td>바늘(<code>.clock-hand</code>)만 회전. 원은 고정</td></tr>
+<tr><th>회전</th><td>0° → 360° 한 바퀴, 1회</td></tr>
+<tr><th>회전 중심</th><td>아이콘 정중앙 <code>12px 12px</code> (viewBox 기준)</td></tr>
+<tr><th>시간 · 이징</th><td>1초 · <code>cubic-bezier(.4, 0, .2, 1)</code></td></tr>
+<tr><th>시작 시점</th><td>
+· 진입 펼침(조건 미선택으로 목록 진입 · 요약 팝업 두 번째 닫기부터): 0.2초 뒤<br>
+· 요약 팝업 첫 닫기(툴팁 노출): 0.25초 뒤<br>
+· 조건 선택(드롭다운 · 요약 팝업): 0.1초 뒤</td></tr>
+<tr><th>돌지 않는 경우</th><td>처리로 숫자만 바뀔 때 · 돌아왔을 때(펄스) · 비활성 0명 · OS '동작 줄이기' 설정</td></tr>
+<tr><th>색 · 크기</th><td>기본 칩 18px · 조건 칩 16px · 브랜드 <code>#1b55f6</code> · 비활성 <code>#b8bfc5</code></td></tr>
+<tr><th>0명 완료 순간</th><td>시계 대신 XDS <code>interface/check</code>로 바뀌고 톡 튀어 오름: scale .3 → 1.3 → 1, 0.55초, <code>cubic-bezier(.2, .9, .3, 1.4)</code></td></tr>
+</table></section>
+
+<section><h2>CSS 예시</h2>
+<pre>.clock-hand {
+  transform-origin: 12px 12px;
+  transform-box: view-box;
+}
+.is-spinning .clock-hand {
+  animation: clock-hand-spin 1s cubic-bezier(.4, 0, .2, 1) var(--spin-delay, 0s) both;
+}
+@keyframes clock-hand-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-spinning .clock-hand { animation: none; }
+}</pre>
+<p class="note">한 화면에 아이콘이 여러 개면 mask <code>id</code>가 겹치지 않게 인스턴스마다 고유 id를 붙여 주세요(React라면 <code>useId()</code>). 다시 돌릴 때는 클래스를 뺐다가 다음 프레임에 다시 붙이면 됩니다.</p>
+</section>
+</div>
+<script>
+document.getElementById('replay').addEventListener('click',function(){document.querySelectorAll('.spin').forEach(function(e){e.classList.remove('spin');void e.offsetWidth;e.classList.add('spin');});});
+</script></body></html>
