@@ -72,6 +72,9 @@ h1{font-size:22px;line-height:30px;font-weight:700}
 .chip.need.pulse{animation:cpulse 1.6s ease-out 3}
 .chip.absorbed{animation:absorbBump .45s cubic-bezier(.2,.9,.3,1.4)}@keyframes absorbBump{0%{transform:scale(1)}35%{transform:scale(1.08)}100%{transform:scale(1)}}
 .absorb-ghost{box-shadow:0 12px 32px rgba(19,22,24,.18)}
+.fly-pill{position:fixed!important;z-index:10000;pointer-events:none;margin:0;box-sizing:border-box;justify-content:center;overflow:hidden;border:1px solid}.fly-pill::before{display:none}
+.fly-x{position:fixed;z-index:10000;pointer-events:none}.fly-y{display:inline-block;font-size:18px;line-height:26px;font-weight:700;color:var(--brand);white-space:nowrap;transform-origin:50% 50%}
+.mock-pop .hint{margin-top:10px;font-size:12px;color:var(--g400)}
 .mock-dim{position:fixed;inset:0;background:rgba(19,22,24,.4);z-index:9000;display:grid;place-items:center;animation:mdIn .2s ease both}@keyframes mdIn{from{opacity:0}}
 .mock-pop{width:420px;background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 48px rgba(0,0,0,.2)}
 .mock-pop h3{font-size:18px;line-height:26px}.mock-pop h3 em{font-style:normal;color:var(--brand)}.mock-pop p{margin-top:4px;font-size:13px;color:var(--g600)}
@@ -114,8 +117,9 @@ h1{font-size:22px;line-height:30px;font-weight:700}
       <p class="sub">들어왔을 때 펼침 · 처리할 때 롤링과 보상 문구 · 진행 게이지 · 0명 완료</p>
       <div class="stage" id="stA"></div>
       <div class="ctrl">
-        <button class="btn pri" data-a="enter">① 진입 효과 다시 보기</button>
-        <button class="btn" data-a="pop">요약 팝업 닫기 (흡수)</button>
+        <button class="btn" data-a="enter">① 진입 효과 다시 보기</button>
+        <button class="btn pri" data-a="popN">요약 팝업 닫기 · 새 안 (숫자가 칩으로)</button>
+        <button class="btn" data-a="pop">요약 팝업 닫기 · 이전 안 (레이어 닫힘)</button>
         <button class="btn" data-a="back">전체 목록으로 돌아오기 (펄스)</button>
         <button class="btn" data-a="p1">② 1명 처리</button>
         <button class="btn" data-a="p3">3명 처리</button>
@@ -131,8 +135,9 @@ h1{font-size:22px;line-height:30px;font-weight:700}
       <p class="sub">처리할 때 롤링과 보상 문구 · 진행 게이지 · 0명 완료 체크</p>
       <div class="stage" id="stB"></div>
       <div class="ctrl">
-        <button class="btn pri" data-b="pick">조건 선택 (초침 회전)</button>
-        <button class="btn" data-b="pop">팝업에서 조건 선택 (흡수)</button>
+        <button class="btn" data-b="pick">조건 선택 (초침 회전)</button>
+        <button class="btn pri" data-b="popN">팝업에서 조건 선택 · 새 안 (조건이 칩으로)</button>
+        <button class="btn" data-b="pop">팝업에서 조건 선택 · 이전 안 (레이어 닫힘)</button>
         <button class="btn" data-b="p1">② 1명 처리</button>
         <button class="btn" data-b="all">④ 모두 처리</button>
         <button class="btn" data-b="reset">처음으로</button>
@@ -150,7 +155,7 @@ h1{font-size:22px;line-height:30px;font-weight:700}
       <h2>효과 정리</h2>
       <dl class="spec">
         <dt>① 진입</dt><dd>첫 진입에 요약 팝업이 뜨면 팝업이 열린 동안은 펼치지 않고, 팝업을 닫을 때 한 번만 펼침. 칩이 옆으로 펼쳐지며 '· 좋은 지원자를 놓치지 마세요'를 보여 주고 약 3초 뒤 접힘. 시계 바늘이 한 바퀴 돎. 첫 진입 · 요약 팝업 닫기 · 조건 해제 · [지원자 전체보기] 후에만.</dd>
-        <dt>흡수 (레이어 닫힘)</dt><dd>요약 팝업을 닫거나 팝업에서 조건을 고르면, 팝업은 제자리에서 20px 내려가며 94%로 작아지고 사라짐(0.2초, 빠르게 가속해 퇴장) · 배경 딤도 함께 걷힘. 0.12초 뒤 칩이 제자리에서 8px 아래 · 92% 크기에서 떠오르며 등장(이동 0.36초 감속, 크기 0.4초 · 0.16초 시작, 끝에 살짝 튕김). 등장이 끝난 뒤 펼침 · 초침 시작.</dd><dt>돌아왔을 때</dt><dd>조건을 처리하다가 조건이 남은 채 조건 해제 · [지원자 전체보기]로 전체 목록에 돌아오면, 펼침 대신 파란 펄스가 약 5초(1.6초 × 3번) 퍼짐. 펼침 문구는 이미 본 상태라 반복하지 않음.</dd><dt>조건 선택</dt><dd>드롭다운이나 요약 팝업에서 조건을 고르면 조건 칩의 시계 초침이 한 바퀴 돎(1초).</dd><dt>② 처리</dt><dd>숫자가 바뀐 자리만 굴러 바뀜(0.5초, 줄면 위에서 내려옴). 칩 오른쪽 위에 'N명 처리 완료'가 떠올랐다 사라짐(1.5초).</dd>
+        <dt>새 안 · 팝업 닫기</dt><dd>팝업은 제자리에서 닫히고(레이어 닫힘), 제목의 'N명'만 떨어져 나와 곡선을 그리며 칩의 숫자 자리로 날아감(0.46초, 출발할 때 살짝 커졌다가 칩 글자 크기로 줄어듦). 도착하면 숫자가 한 번 튕기고 칩도 살짝 튕긴 뒤 펼침 · 초침 시작. 칩 자체는 움직이지 않음.</dd><dt>새 안 · 팝업에서 조건 선택</dt><dd>누른 조건 행이 그 자리에서 칩 모양 알약(연한 파랑 · 파란 테두리)으로 줄어들고(0.2초), 나머지 팝업은 제자리에서 닫힘. 알약이 곡선을 그리며 필터 칩 자리로 날아가 꽂힘(0.42초). 도착하면 칩이 한 번 튕기고 초침이 한 바퀴 돎.</dd><dt>이전 안 · 흡수 (레이어 닫힘)</dt><dd>요약 팝업을 닫거나 팝업에서 조건을 고르면, 팝업은 제자리에서 20px 내려가며 94%로 작아지고 사라짐(0.2초, 빠르게 가속해 퇴장) · 배경 딤도 함께 걷힘. 0.12초 뒤 칩이 제자리에서 8px 아래 · 92% 크기에서 떠오르며 등장(이동 0.36초 감속, 크기 0.4초 · 0.16초 시작, 끝에 살짝 튕김). 등장이 끝난 뒤 펼침 · 초침 시작.</dd><dt>돌아왔을 때</dt><dd>조건을 처리하다가 조건이 남은 채 조건 해제 · [지원자 전체보기]로 전체 목록에 돌아오면, 펼침 대신 파란 펄스가 약 5초(1.6초 × 3번) 퍼짐. 펼침 문구는 이미 본 상태라 반복하지 않음.</dd><dt>조건 선택</dt><dd>드롭다운이나 요약 팝업에서 조건을 고르면 조건 칩의 시계 초침이 한 바퀴 돎(1초).</dd><dt>② 처리</dt><dd>숫자가 바뀐 자리만 굴러 바뀜(0.5초, 줄면 위에서 내려옴). 칩 오른쪽 위에 'N명 처리 완료'가 떠올랐다 사라짐(1.5초).</dd>
         <dt>③ 진행 게이지</dt><dd>처음 본 인원 대비 처리한 비율만큼 칩 배경이 왼쪽부터 채워짐(0.7초).</dd>
         <dt>④ 0명</dt><dd>칩이 잠시(약 1.5초) 초록으로 채워지고 흰 체크 아이콘이 톡 튀어 오름. 기본 칩은 이후 비활성 '처리 대기 중 지원자 0명', 조건 칩은 체크 아이콘 유지.</dd>
         <dt>Pressed</dt><dd>누르는 동안 · 조건 드롭다운이 열린 동안 바탕 #eef3ff, 테두리 브랜드 (BZFliterChip outlined · Pressed). 기본 칩 글자는 검정(#30363c), 숫자+명 · 아이콘 · ⌄는 파랑.</dd><dt>아이콘</dt><dd>기본 칩 · 조건 칩 모두 시계. 0명 완료 순간에만 체크, 0명 비활성 칩은 회색 시계.</dd><dt>연속 처리</dt><dd>보상 문구가 떠 있는 동안(1.5초) 또 처리하면 새로 띄우지 않고 숫자만 늘어남(예: 1명 → 3명 처리 완료). 이전 롤링이 끝나기 전 숫자가 또 바뀌면 0.2초로 짧게 굴러감.</dd><dt>공통 이징</dt><dd>빠르게 시작해 부드럽게 감속, 끝에 살짝 반동. 기기에서 '동작 줄이기'를 켜면 움직임 없이 결과만 표시.</dd>
@@ -170,8 +175,30 @@ function absorbPrep(src){/* 닫히기 전에 위치와 모양을 저장 */if(!sr
 function absorbFrom(pp,sel){/* 레이어 닫힘(참고 프로토타입의 플로팅 카드 → 작은 진입점 전환과 같은 방식)
  1) 팝업은 제자리에서 20px 내려가며 94%로 작아지고 사라짐 (0.2초, 빠르게 가속해 퇴장)
  2) 0.12초 뒤 칩이 제자리에서 8px 아래 · 92% 크기에서 떠오르며 등장 (이동 0.36초 감속, 크기 0.4초 · 0.16초 시작, 끝에 살짝 튕김) */if(!pp)return;var fr=pp.fr,g=pp.g;var to=document.querySelector(sel);if(!to)return;to.classList.add('late');g.removeAttribute('id');g.querySelectorAll('[id]').forEach(function(x){x.removeAttribute('id');});g.classList.add('absorb-shell');g.style.cssText+=';position:fixed;left:'+fr.left+'px;top:'+fr.top+'px;width:'+fr.width+'px;height:'+fr.height+'px;margin:0;z-index:9999;pointer-events:none;transform-origin:50% 100%';var dim=document.createElement('div');dim.style.cssText='position:fixed;inset:0;background:rgba(19,22,24,.4);z-index:9998;pointer-events:none';document.body.appendChild(dim);document.body.appendChild(g);var clean=function(){if(g.isConnected)g.remove();if(dim.isConnected)dim.remove();};setTimeout(clean,400);setTimeout(function(){to.classList.remove('late');},2000);try{g.animate([{transform:'translateY(0) scale(1)'},{transform:'translateY(20px) scale(.94)'}],{duration:200,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});g.animate([{opacity:1},{opacity:0}],{duration:160,easing:'ease-in',fill:'forwards'}).onfinish=function(){g.remove();};dim.animate([{opacity:1},{opacity:0}],{duration:200,easing:'ease-in',fill:'forwards'}).onfinish=function(){dim.remove();};to.animate([{translate:'0 8px'},{translate:'0 0'}],{duration:360,delay:120,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'});to.animate([{scale:.92},{scale:1}],{duration:400,delay:160,easing:'cubic-bezier(.34,1.32,.64,1)',fill:'backwards'});to.animate([{opacity:0},{opacity:1}],{duration:200,delay:120,easing:'ease-out',fill:'backwards'});}catch(e){clean();}}
-function mockPop(onClose,onPick){var d=document.createElement('div');d.className='mock-dim';d.innerHTML='<div class="mock-pop" role="dialog"><h3>처리 대기 중 지원자 <em>12명</em></h3><p>빠른 확인과 안내로 긍정적인 기업 인상을 남겨보세요.</p><div class="r" data-mp="pick">지원서를 열람해 주세요 <b>6명 ›</b></div><div class="r">최종합격 · 불합격 처리해 주세요 <b>4명 ›</b></div><div class="ft"><button type="button" data-mp="close">닫기</button></div></div>';document.body.appendChild(d);
-  d.addEventListener('click',function(e){var t=e.target.closest('[data-mp]');if(!t)return;e.stopPropagation();var src=d.querySelector('.mock-pop');var pp=absorbPrep(src);d.remove();(t.dataset.mp==='pick'?onPick:onClose)(pp);});}
+function layerClose(pp,hide){/* 팝업은 제자리에서 닫힘 (이전 안과 같은 레이어 닫힘). hide: 날아갈 요소 자리는 비워 둠 */var fr=pp.fr,g=pp.g;g.removeAttribute('id');g.querySelectorAll('[id]').forEach(function(x){x.removeAttribute('id');});if(hide)g.querySelectorAll(hide).forEach(function(h){h.style.visibility='hidden';});g.style.cssText+=';position:fixed;left:'+fr.left+'px;top:'+fr.top+'px;width:'+fr.width+'px;height:'+fr.height+'px;margin:0;z-index:9999;pointer-events:none;transform-origin:50% 100%';var dim=document.createElement('div');dim.style.cssText='position:fixed;inset:0;background:rgba(19,22,24,.4);z-index:9998;pointer-events:none';document.body.appendChild(dim);document.body.appendChild(g);var clean=function(){if(g.isConnected)g.remove();if(dim.isConnected)dim.remove();};setTimeout(clean,400);try{g.animate([{transform:'translateY(0) scale(1)'},{transform:'translateY(20px) scale(.94)'}],{duration:200,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});g.animate([{opacity:1},{opacity:0}],{duration:160,easing:'ease-in',fill:'forwards'}).onfinish=function(){g.remove();};dim.animate([{opacity:1},{opacity:0}],{duration:200,easing:'ease-in',fill:'forwards'}).onfinish=function(){dim.remove();};}catch(e){clean();}}
+function pillFly(pp,sel){/* 새 안 · 조건 선택: 누른 조건 행이 그 자리에서 칩 모양 알약으로 줄어든 뒤(0.2초), 곡선을 그리며 필터 칩 자리로 날아가 꽂힘(0.42초). 도착하면 칩이 한 번 튕기고 초침이 돎 */
+  if(!pp||!pp.row)return;var to=document.querySelector(sel);if(!to)return;layerClose(pp,'[data-mp=pick]');
+  var r=pp.row,t=to.getBoundingClientRect();to.style.opacity='0';
+  var p=to.cloneNode(true);p.classList.remove('gauge','spin','late','absorbed');p.classList.add('fly-pill');p.removeAttribute('style');
+  p.style.cssText='left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;height:'+r.height+'px';document.body.appendChild(p);
+  var cx=r.left+(r.width-t.width)/2,cy=r.top+(r.height-t.height)/2,done=false;
+  var land=function(){if(done)return;done=true;if(p.isConnected)p.remove();to.style.opacity='';to.classList.remove('spin','absorbed');void to.offsetWidth;to.classList.add('spin','absorbed');setTimeout(function(){to.classList.remove('absorbed');},600);};
+  setTimeout(land,680);
+  try{p.animate([{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px',borderRadius:'10px',background:'#fff',borderColor:'#e2e6e8',color:'#30363c',boxShadow:'0 0 0 rgba(27,85,246,0)'},{left:cx+'px',top:cy+'px',width:t.width+'px',height:t.height+'px',borderRadius:'999px',background:'#eef3ff',borderColor:'#1b55f6',color:'#1b55f6',boxShadow:'0 10px 24px rgba(27,85,246,.28)'}],{duration:200,easing:'cubic-bezier(.2,0,0,1)',fill:'forwards'});
+    p.animate([{left:cx+'px'},{left:t.left+'px'}],{duration:420,delay:200,easing:'cubic-bezier(.45,0,.25,1)',fill:'forwards'});
+    p.animate([{top:cy+'px'},{top:t.top+'px'}],{duration:420,delay:200,easing:'cubic-bezier(.15,.75,.3,1)',fill:'forwards'});
+    p.animate([{boxShadow:'0 10px 24px rgba(27,85,246,.28)'},{boxShadow:'0 0 0 rgba(27,85,246,0)'}],{duration:160,delay:460,easing:'ease-out',fill:'forwards'}).onfinish=land;}catch(e){land();}}
+function numFly(pp,sel){/* 새 안 · 닫기: 팝업은 제자리에서 닫히고, 제목의 'N명'만 떨어져 나와 곡선을 그리며 칩 숫자 자리로 날아감(0.46초, 출발할 때 살짝 커짐). 도착하면 숫자가 튕기고 이어서 펼침 */
+  if(!pp||!pp.em)return;var to=document.querySelector(sel);if(!to)return;var nm=to.querySelector('.num');if(!nm)return;layerClose(pp,'h3 em');to.classList.add('late');
+  var e=pp.em,t=nm.getBoundingClientRect();nm.style.visibility='hidden';
+  var fx=document.createElement('div');fx.className='fly-x';fx.style.cssText+=';left:'+e.left+'px;top:'+e.top+'px';var fy=document.createElement('span');fy.className='fly-y';fy.textContent=pp.emText;fx.appendChild(fy);document.body.appendChild(fx);
+  var dx=(t.left+t.width/2)-(e.left+e.width/2),dy=(t.top+t.height/2)-(e.top+e.height/2),s=t.width/e.width,done=false;
+  var land=function(){if(done)return;done=true;if(fx.isConnected)fx.remove();nm.style.visibility='';try{nm.animate([{transform:'scale(1.35)'},{transform:'scale(1)'}],{duration:380,easing:'cubic-bezier(.34,1.56,.64,1)'});to.classList.remove('absorbed');void to.offsetWidth;to.classList.add('absorbed');}catch(_){}setTimeout(function(){to.classList.remove('late','absorbed');},2000);};
+  setTimeout(land,560);
+  try{fx.animate([{transform:'translateX(0)'},{transform:'translateX('+dx+'px)'}],{duration:460,delay:40,easing:'cubic-bezier(.45,0,.25,1)',fill:'forwards'});
+    fy.animate([{transform:'translateY(0) scale(1)'},{transform:'translateY('+(dy*0.15)+'px) scale(1.25)',offset:.25},{transform:'translateY('+dy+'px) scale('+s+')'}],{duration:460,delay:40,easing:'cubic-bezier(.3,.6,.35,1)',fill:'forwards'}).onfinish=land;}catch(err){land();}}
+function mockPop(onClose,onPick,n){var d=document.createElement('div');d.className='mock-dim';d.innerHTML='<div class="mock-pop" role="dialog"><h3>처리 대기 중 지원자 <em>'+(n||12)+'명</em></h3><p>빠른 확인과 안내로 긍정적인 기업 인상을 남겨보세요.</p><div class="r" data-mp="pick">지원서를 열람해 주세요 <b>6명 ›</b></div><div class="r">최종합격 · 불합격 처리해 주세요 <b>4명 ›</b></div><div class="ft"><button type="button" data-mp="close">닫기</button></div></div>';document.body.appendChild(d);
+  d.addEventListener('click',function(e){var t=e.target.closest('[data-mp]');if(!t)return;e.stopPropagation();var src=d.querySelector('.mock-pop');var pp=absorbPrep(src);if(pp){var rw=d.querySelector('[data-mp=pick]'),em=d.querySelector('h3 em');pp.row=rw.getBoundingClientRect();pp.em=em.getBoundingClientRect();pp.emText=em.textContent;}d.remove();(t.dataset.mp==='pick'?onPick:onClose)(pp);});}
 function pct(base,v){return base?Math.round((base-v)/base*100):0;}
 var A={base:12,n:12,lt:0,fl:null},B={base:6,n:6,lt:0,fl:null};
 function fx(X,d){var now=Date.now(),fast=now-X.lt<500;X.lt=now;if(X.fl&&now<X.fl.t){X.fl.n+=d;X.fl.cont=true;}else X.fl={n:d,cont:false};X.fl.t=now+1500;return fast;}/* 연속 처리: 롤링 단축 · 보상 문구 합산 */
@@ -186,6 +213,7 @@ function drawB(o){o=o||{};var p=pct(B.base,B.n),p0=o.p0==null?p:o.p0,z=B.n===0;
 function stepA(k){var old=A.n,p0=pct(A.base,A.n);
   if(k==='enter'){if(!A.n){A.n=A.base;}drawA({peek:true});return;}
   if(k==='pop'){mockPop(function(pp){if(!A.n)A.n=A.base;drawA({peek:true});absorbFrom(pp,'#stA .chip');},function(pp){if(!A.n)A.n=A.base;drawA({peek:true});absorbFrom(pp,'#stA .chip');});return;}
+  if(k==='popN'){if(!A.n)A.n=A.base;document.getElementById('stA').scrollIntoView({block:'nearest'});var go=function(pp){drawA({peek:true});numFly(pp,'#stA .chip');};mockPop(go,go,A.n);return;}
   if(k==='back'){if(!A.n){A.n=A.base;}drawA({pulse:true});return;}
   if(k==='reset'){A.base=A.n=Math.max(1,+document.getElementById('nA').value||12);drawA({peek:true});return;}
   if(k==='add'){if(!A.n){A.base=1;A.n=1;drawA({old:0});return;}A.n++;A.base=Math.max(A.base,A.n);drawA({old:old,p0:p0});return;}
@@ -193,6 +221,7 @@ function stepA(k){var old=A.n,p0=pct(A.base,A.n);
 function stepB(k){var old=B.n,p0=pct(B.base,B.n);
   if(k==='reset'){B.base=B.n=Math.max(1,+document.getElementById('nB').value||6);drawB();return;}
   if(k==='pick'){drawB({spin:true});return;}
+  if(k==='popN'){if(!B.n)B.base=B.n=Math.max(1,+document.getElementById('nB').value||6);document.getElementById('stB').scrollIntoView({block:'nearest'});mockPop(function(pp){drawB();absorbFrom(pp,'#stB .chip');},function(pp){drawB();pillFly(pp,'#stB .chip');});return;}
   if(k==='pop'){mockPop(function(pp){drawB();absorbFrom(pp,'#stB .chip');},function(pp){drawB({spin:true});absorbFrom(pp,'#stB .chip');});return;}
   if(!B.n)return;var d=k==='p1'?1:B.n;B.n-=d;var fb=fx(B,d);drawB({old:old,p0:p0,fl:d,fast:fb,done:B.n===0});if(B.n===0)setTimeout(function(){drawB();},1700);}
 document.addEventListener('click',function(e){var t=e.target.closest('[data-a],[data-b]');if(!t)return;if(t.dataset.a)stepA(t.dataset.a);else stepB(t.dataset.b);});
