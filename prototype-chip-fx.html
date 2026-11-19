@@ -115,7 +115,7 @@ h1{font-size:22px;line-height:30px;font-weight:700}
   <div class="grid">
     <section class="card">
       <h2>A. 기본 칩 (조건을 고르지 않은 상태)</h2>
-      <p class="sub">들어왔을 때 펼침 · 처리할 때 롤링과 보상 문구 · 진행 게이지 · 0명 완료</p>
+      <p class="sub">들어왔을 때 펼침 · 처리할 때 롤링과 보상 문구 · 0명 완료 (게이지 없음)</p>
       <div class="stage" id="stA"></div>
       <div class="ctrl">
         <button class="btn" data-a="enter">① 진입 효과 다시 보기</button>
@@ -156,7 +156,7 @@ h1{font-size:22px;line-height:30px;font-weight:700}
       <dl class="spec">
         <dt>① 진입</dt><dd>첫 진입에 요약 팝업이 뜨면 팝업이 열린 동안은 펼치지 않고, 팝업을 닫을 때 한 번만 펼침. 칩이 옆으로 펼쳐지며 '· 좋은 지원자를 놓치지 마세요'를 보여 주고 약 3초 뒤 접힘. 시계 바늘이 한 바퀴 돎. 첫 진입 · 요약 팝업 닫기 · 조건 해제 · [지원자 전체보기] 후에만.</dd>
         <dt>팝업에서 조건 선택</dt><dd>팝업은 제자리에서 바로 닫힘(0.2초). 칩이 조건 칩으로 바뀌면서 배경이 한 번 진한 연파랑으로 빛나고 바깥으로 옅은 테두리가 퍼지며 사라짐(0.9초) · 초침 한 바퀴. 실제 화면에서는 목록 행도 짧게 페이드되며 바뀜.</dd><dt>팝업 닫기</dt><dd>필터는 걸리지 않으므로 '적용' 표현 없이 위치만 안내. 첫 1회만 칩 아래 말풍선 '처리할 지원자는 여기서 다시 확인할 수 있습니다'(4초 뒤 또는 아무 곳이나 누르면 사라짐) · 초침 한 바퀴. 메시지가 겹치지 않도록 이때는 펼침 문구를 띄우지 않음. 두 번째부터는 기존 펼침만.</dd><dt>돌아왔을 때</dt><dd>조건을 처리하다가 조건이 남은 채 조건 해제 · [지원자 전체보기]로 전체 목록에 돌아오면, 펼침 대신 파란 펄스가 약 5초(1.6초 × 3번) 퍼짐. 펼침 문구는 이미 본 상태라 반복하지 않음.</dd><dt>조건 선택</dt><dd>드롭다운이나 요약 팝업에서 조건을 고르면 조건 칩의 시계 초침이 한 바퀴 돎(1초).</dd><dt>② 처리</dt><dd>숫자가 바뀐 자리만 굴러 바뀜(0.5초, 줄면 위에서 내려옴). 칩 오른쪽 위에 'N명 처리 완료'가 떠올랐다 사라짐(1.5초).</dd>
-        <dt>③ 진행 게이지</dt><dd>처음 본 인원 대비 처리한 비율만큼 칩 배경이 왼쪽부터 채워짐(0.7초).</dd>
+        <dt>③ 진행 게이지</dt><dd>조건 칩에만 적용. 조건을 고른 순간의 인원 대비 처리한 비율만큼 칩 배경이 왼쪽부터 채워짐(0.7초). 기본 칩은 새 지원자가 계속 들어와 분모가 모호하고 게이지가 줄어들 수 있어 적용하지 않음(숫자 롤링 · 보상 문구로 피드백).</dd>
         <dt>④ 0명</dt><dd>칩이 잠시(약 1.5초) 초록으로 채워지고 흰 체크 아이콘이 톡 튀어 오름. 기본 칩은 이후 비활성 '처리 대기 중 지원자 0명', 조건 칩은 체크 아이콘 유지.</dd>
         <dt>Pressed</dt><dd>누르는 동안 · 조건 드롭다운이 열린 동안 바탕 #eef3ff, 테두리 브랜드 (BZFliterChip outlined · Pressed). 기본 칩 글자는 검정(#30363c), 숫자+명 · 아이콘 · ⌄는 파랑.</dd><dt>아이콘</dt><dd>기본 칩 · 조건 칩 모두 시계. 0명 완료 순간에만 체크, 0명 비활성 칩은 회색 시계.</dd><dt>연속 처리</dt><dd>보상 문구가 떠 있는 동안(1.5초) 또 처리하면 새로 띄우지 않고 숫자만 늘어남(예: 1명 → 3명 처리 완료). 이전 롤링이 끝나기 전 숫자가 또 바뀌면 0.2초로 짧게 굴러감.</dd><dt>공통 이징</dt><dd>빠르게 시작해 부드럽게 감속, 끝에 살짝 반동. 기기에서 '동작 줄이기'를 켜면 움직임 없이 결과만 표시.</dd>
       </dl>
@@ -183,7 +183,7 @@ function fx(X,d){var now=Date.now(),fast=now-X.lt<500;X.lt=now;if(X.fl&&now<X.fl
 function flH(X){return '<span class="cfloat'+(X.fl.cont?' hold':'')+'"><b>'+X.fl.n+'</b>명 처리 완료</span>';}
 function drawA(o){o=o||{};var off=A.n===0&&!o.done,p=pct(A.base,A.n),p0=o.p0==null?p:o.p0;
   var chip=off?'<span class="chip need off">'+I("clock")+'처리 대기 중 지원자 0명</span>':
-   '<span class="fwrap"><button type="button" class="chip need gauge'+(o.peek?' peek':'')+(o.pulse?' pulse':'')+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%">'+(o.done?I("check"):I("clock"))+'<span class="lbl">처리 대기 중 지원자</span><b class="num">'+roll(o.old,A.n,o.fast)+'명</b>'+(o.peek?'<span class="xtra"><span class="dot">·</span> <span class="msg">좋은 지원자를 놓치지 마세요</span></span>':'')+'<span class="cv">'+I("chev")+'</span></button>'+(o.fl?flH(A):'')+'</span>';
+   '<span class="fwrap"><button type="button" class="chip need'+(o.peek?' peek':'')+(o.pulse?' pulse':'')+(o.done?' donepop':'')+'" style="--p:'+p+'%;--p0:'+p0+'%">'+(o.done?I("check"):I("clock"))+'<span class="lbl">처리 대기 중 지원자</span><b class="num">'+roll(o.old,A.n,o.fast)+'명</b>'+(o.peek?'<span class="xtra"><span class="dot">·</span> <span class="msg">좋은 지원자를 놓치지 마세요</span></span>':'')+'<span class="cv">'+I("chev")+'</span></button>'+(o.fl?flH(A):'')+'</span>';
   document.getElementById('stA').innerHTML=chip+'<span class="fdiv"></span><span class="fadd">'+I("plus")+'필터 추가</span>';
   if(o.done)setTimeout(function(){drawA();},1600);}
 function drawB(o){o=o||{};var p=pct(B.base,B.n),p0=o.p0==null?p:o.p0,z=B.n===0;
@@ -209,7 +209,7 @@ function stateGallery(){var cv='<span class="cv">'+I("chev")+'</span>',x='<span 
   ["Pressed (드롭다운 열림)","<span class='chip need is-pressed'>"+I("clock")+"<span class='lbl'>처리 대기 중 지원자</span><b class='num'>12명</b>"+cv+"</span>"],
   ["돌아왔을 때 (펄스)","<span class='chip need' style='box-shadow:0 0 0 6px rgba(27,85,246,.18)'>"+I("clock")+"<span class='lbl'>처리 대기 중 지원자</span><b class='num'>12명</b>"+cv+"</span>"],
   ["진입 펼침","<span class='chip need'>"+I("clock")+"<span class='lbl'>처리 대기 중 지원자</span><b class='num'>12명</b><span style='padding-left:4px;font-weight:500'><span style='color:#30363c'>·</span> <span style='color:#6c767f'>좋은 지원자를 놓치지 마세요</span></span>"+cv+"</span>"],
-  ["처리 중 (게이지 25%)","<span class='fwrap'><span class='chip need gauge' style='--p:25%;--p0:25%'>"+I("clock")+"<span class='lbl'>처리 대기 중 지원자</span><b class='num'>9명</b>"+cv+"</span><span class='cfloat hold' style='animation:none'><b>3</b>명 처리 완료</span></span>"],
+  ["처리 중","<span class='fwrap'><span class='chip need'>"+I("clock")+"<span class='lbl'>처리 대기 중 지원자</span><b class='num'>9명</b>"+cv+"</span><span class='cfloat hold' style='animation:none'><b>3</b>명 처리 완료</span></span>"],
   ["조건 선택","<span class='chip cond'><span class='cb'>"+I("clock")+"<span class='lbl'>지원서를 열람해 주세요</span><span class='n'>6명</span>"+cv+"</span>"+x+"</span>"],
   ["조건 Pressed (드롭다운 열림)","<span class='chip cond is-pressed'><span class='cb'>"+I("clock")+"<span class='lbl'>지원서를 열람해 주세요</span><span class='n'>6명</span>"+cv+"</span>"+x+"</span>"],
   ["모두 처리한 순간 (약 1.4초)","<span class='chip cond is-done'><span class='cb'>"+I("check")+"<span class='lbl'>지원서를 열람해 주세요</span><span class='n'>0명</span>"+cv+"</span>"+x+"</span>"],
