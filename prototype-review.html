@@ -1750,7 +1750,7 @@ document.addEventListener("click",function(e){
     var had=t.querySelector(".pop");closePops();if(had)return;
     var m=document.createElement("div");m.className="pop";
     if(d.menu==="move"){var curS=S.cond?-1:S.tab;m.innerHTML=STAGES.map(function(s,i){return '<button type="button" data-bmove="'+i+'"'+(i===curS?' disabled':'')+'>'+s+(i===curS?'<span class="bdg brand">현재 단계</span>':'')+'</button>';}).join("");}
-    else m.innerHTML='<p class="nonoti pn">'+I("info")+'<span>처리해도 지원자에게 결과가 자동으로 안내되지 않습니다. 결과 안내는 처리 후 따로 보낼 수 있습니다.</span></p><button type="button" data-bfinal="pass">최종합격</button><button type="button" data-bfinal="fail">불합격</button>';
+    else m.innerHTML='<p class="nonoti pn">'+I("info")+'<span>지원자에게 결과가 자동 안내되지 않습니다</span></p><button type="button" data-bfinal="pass">최종합격</button><button type="button" data-bfinal="fail">불합격</button>';
     t.appendChild(m);return;
   }
   if(d.bmove){var ids=selected(),st0=+d.bmove;closePops();moveWithAlert(ids,st0);return;}
